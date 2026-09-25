@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboarding step 2: upgrade reasons</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:#1D1F1C;background:#F4F1EA}
+button,input,select{font:inherit}
+a{color:#3F6B4A}a:hover{color:#2C4D35}
+</style>
+</helmet>
+<div style="width: 380px; height: 560px; box-sizing: border-box; padding: 20px; background: #F4F1EA; display: flex; flex-direction: column; gap: 18px; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #1D1F1C;">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><path d="M9.5 12.5l2 2 3.5-4"></path></svg>
+<div style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 18px;">Holdout</div>
+</div>
+<div style="font-size: 13px; color: #5A5D55;">Step 2 of 2</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px; line-height: 1.15;">What would make you replace it?</h1>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #3E413B;">Pick any that apply. The need test checks these first when you are tempted.</p>
+</div>
+<div role="group" aria-label="Reasons to replace" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<button type="button" aria-pressed="true" style="height: 44px; padding: 0 14px; display: flex; align-items: center; gap: 6px; border: 1px solid {{accent}}; background: {{accent}}; color: #FFFFFF; border-radius: 22px; font-size: 14px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Battery life</button>
+<button type="button" aria-pressed="false" style="height: 44px; padding: 0 14px; border: 1px solid #CFC9BB; background: #FFFFFF; color: #1D1F1C; border-radius: 22px; font-size: 14px; cursor: pointer;">Performance</button>
+<button type="button" aria-pressed="false" style="height: 44px; padding: 0 14px; border: 1px solid #CFC9BB; background: #FFFFFF; color: #1D1F1C; border-radius: 22px; font-size: 14px; cursor: pointer;">Camera</button>
+<button type="button" aria-pressed="false" style="height: 44px; padding: 0 14px; border: 1px solid #CFC9BB; background: #FFFFFF; color: #1D1F1C; border-radius: 22px; font-size: 14px; cursor: pointer;">Screen</button>
+<button type="button" aria-pressed="false" style="height: 44px; padding: 0 14px; border: 1px solid #CFC9BB; background: #FFFFFF; color: #1D1F1C; border-radius: 22px; font-size: 14px; cursor: pointer;">Storage</button>
+<button type="button" aria-pressed="true" style="height: 44px; padding: 0 14px; display: flex; align-items: center; gap: 6px; border: 1px solid {{accent}}; background: {{accent}}; color: #FFFFFF; border-radius: 22px; font-size: 14px; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Updates ending</button>
+<button type="button" aria-pressed="false" style="height: 44px; padding: 0 14px; border: 1px solid #CFC9BB; background: #FFFFFF; color: #1D1F1C; border-radius: 22px; font-size: 14px; cursor: pointer;">Damage</button>
+<button type="button" aria-pressed="false" style="height: 44px; padding: 0 14px; border: 1px solid #CFC9BB; background: #FFFFFF; color: #1D1F1C; border-radius: 22px; font-size: 14px; cursor: pointer;">Something else</button>
+</div>
+<div style="padding: 12px 14px; background: #FBFAF6; border: 1px solid #E2DDD1; border-radius: 12px; font-size: 13px; line-height: 1.45; color: #3E413B;">Later you will see how this compares with what actually tempts you.</div>
+<div style="display: flex; flex-direction: column; gap: 4px; margin-top: auto;">
+<a href="Popup.dc.html" style="height: 48px; display: flex; align-items: center; justify-content: center; background: {{accent}}; color: #FFFFFF; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none;">Continue</a>
+<a href="Popup.dc.html" style="height: 44px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #3E413B;">Skip for now</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3F6B4A","options":["#3F6B4A","#2F5D7C","#7A3E2E","#1D1F1C"]},"$preview":{"width":380,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3F6B4A' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# The counts endpoint (V7). Deploy: see README.md in this folder.
+name = "upgraditch-counts"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+# B4 spec: keep request logging off. No Workers Logs, no traces, no Logpush.
+logpush = false
+
+[observability]
+enabled = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "upgraditch-counts"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[vars]
+# Optional: the Chrome Web Store build's origin, e.g. "chrome-extension://abcdefghijklmnopabcdefghijklmnop".
+# Empty allows any Chrome extension origin. Firefox origins are random per install and always allowed.
+ALLOWED_ORIGINS = ""

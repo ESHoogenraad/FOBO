@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Device bar, Tokyo Night dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;color:#C0CAF5;background:#1A1B26}
+button,input,select{font:inherit}
+a{color:#7AA2F7}a:hover{color:#9DB8FA}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; position: relative; overflow: hidden; background: #1A1B26; font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; color: #C0CAF5;">
+<section aria-label="Holdout" style="position: absolute; top: 12px; left: 12px; width: 1256px; box-sizing: border-box; padding: 8px 10px 8px 18px; background: #16161E; border: 1px solid #292E42; border-radius: 16px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45); display: flex; align-items: flex-start; gap: 16px;">
+<div style="display: flex; align-items: center; gap: 10px; height: 44px; width: 128px; flex-shrink: 0;">
+<div style="width: 24px; height: 24px; border-radius: 7px; background: {{accent}}; display: flex; align-items: center; justify-content: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16161E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+<div style="font-weight: 700; font-size: 17px; letter-spacing: -0.01em; color: #C0CAF5;">holdout</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1;">
+<sc-for list="{{devices}}" as="item" hint-placeholder-count="2">
+<button type="button" onClick="{{item.toggle}}" aria-expanded="{{item.expanded}}" style="height: 44px; width: 100%; box-sizing: border-box; padding: 0 14px 0 12px; display: flex; align-items: center; gap: 16px; border: 1px solid {{item.borderColor}}; border-radius: 12px; background: {{item.rowBg}}; color: #C0CAF5; font-size: 14px; text-align: left; cursor: pointer;">
+<div style="width: 8px; height: 8px; flex-shrink: 0; border-radius: 4px; background: {{item.color}}; box-shadow: 0 0 10px {{item.color}};"></div>
+<div style="width: 134px; font-weight: 600; color: {{item.nameColor}};">{{item.name}}</div>
+<div style="width: 118px;">
+<sc-if value="{{item.match}}" hint-placeholder-val="{{true}}"><div style="display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 6px; background: rgba(115, 218, 202, 0.14); color: #73DACA; font-size: 12px; font-weight: 600;">on this page</div></sc-if>
+</div>
+<div style="width: 80px; color: #9AA5CE;"><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: #C0CAF5;">{{item.age}}</span></div>
+<div style="width: 124px; color: #9AA5CE;"><span style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: #C0CAF5;">{{item.month}}</span> / mo</div>
+<div style="flex-grow: 1; color: #9AA5CE;">updates until <span style="font-family: 'JetBrains Mono', ui-monospace, monospace; color: #C0CAF5;">{{item.support}}</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA5CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{item.chevron}};"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+</sc-for>
+<button type="button" onClick="{{toggleAll}}" aria-expanded="{{allExpanded}}" style="height: 44px; align-self: flex-start; padding: 0 12px; display: flex; align-items: center; gap: 6px; border: none; background: transparent; border-radius: 10px; color: #7AA2F7; font-size: 13px; font-weight: 600; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{allChevron}};"><path d="M6 9l6 6 6-6"></path></svg>{{toggleLabel}}</button>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+<button type="button" style="height: 44px; padding: 0 18px; border: none; background: {{accent}}; color: #16161E; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;">Log urge</button>
+<button type="button" style="height: 44px; padding: 0 18px; border: 1px solid #3B4261; background: #1F2335; color: #C0CAF5; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">Cooldown</button>
+<button type="button" aria-label="Hide for 24 hours" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; border-radius: 10px; color: #9AA5CE; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</section>
+<div style="position: absolute; top: {{pageTop}}; left: 0; width: 1280px; height: 620px; box-sizing: border-box; padding: 16px 56px; display: flex; flex-direction: column; gap: 28px;">
+<div style="height: 48px; background: #1F2335; border-radius: 10px;"></div>
+<div style="display: flex; gap: 40px;">
+<div style="width: 520px; height: 400px; background: #1F2335; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #9AA5CE;">Placeholder: trigger page, not dimmed</div>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<div style="width: 420px; height: 32px; background: #24283B; border-radius: 8px;"></div>
+<div style="width: 180px; height: 40px; background: #24283B; border-radius: 8px;"></div>
+<div style="width: 480px; height: 14px; background: #1F2335; border-radius: 4px;"></div>
+</div>
+</div>
+</div>
+<sc-if value="{{hasOpen}}" hint-placeholder-val="{{true}}">
+<section aria-label="Your own rule" style="position: absolute; top: {{cardTop}}; left: 170px; width: 440px; box-sizing: border-box; padding: 20px 22px 22px; background: #1F2335; border: 1px solid #3B4261; border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55); display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; align-items: center; justify-content: space-between; margin: -8px -10px -4px 0;">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #9AA5CE;"><div style="width: 8px; height: 8px; border-radius: 4px; background: {{openColor}};"></div><span style="color: {{openColor}};">{{openName}}</span> · your own rule</div>
+<button type="button" onClick="{{closeCard}}" aria-label="Collapse" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; border-radius: 10px; color: #9AA5CE; cursor: pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg></button>
+</div>
+<sc-if value="{{openHasRule}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<h2 style="margin: 0; font-weight: 700; font-size: 25px; line-height: 1.2; letter-spacing: -0.01em; color: #C0CAF5;">Does this fix battery life or updates ending?</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<div style="padding: 14px; border-radius: 12px; background: rgba(224, 175, 104, 0.1); border: 1px solid rgba(224, 175, 104, 0.35); display: flex; flex-direction: column; gap: 4px;">
+<div style="font-size: 12px; font-weight: 600; color: #E0AF68;">Battery life</div>
+<div style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 500; color: #E0AF68;">81%</div>
+<div style="font-size: 12px; color: #9AA5CE;">close to the 80% line</div>
+</div>
+<div style="padding: 14px; border-radius: 12px; background: rgba(158, 206, 106, 0.1); border: 1px solid rgba(158, 206, 106, 0.35); display: flex; flex-direction: column; gap: 4px;">
+<div style="font-size: 12px; font-weight: 600; color: #9ECE6A;">Updates</div>
+<div style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 500; color: #9ECE6A;">377d</div>
+<div style="font-size: 12px; color: #9AA5CE;">until Oct 2027</div>
+</div>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #A9B1D6;">Neither has tipped over. A new battery costs €[QUOTE] and fixes the first one.</p>
+<div style="display: flex; gap: 10px;">
+<button type="button" style="flex-grow: 1; height: 46px; border: none; background: {{accent}}; color: #16161E; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;">Close this tab</button>
+<button type="button" style="flex-grow: 1; height: 46px; border: 1px solid #3B4261; background: transparent; color: #C0CAF5; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;">Something else</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{openNoRule}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<h2 style="margin: 0; font-weight: 700; font-size: 23px; line-height: 1.2; color: #C0CAF5;">No rule for this device yet</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #A9B1D6;">Pick what would make you replace it, and this check shows up here next time.</p>
+<a href="Onboarding2.dc.html" style="height: 46px; display: flex; align-items: center; justify-content: center; border: 1px solid #BB9AF7; color: #BB9AF7; border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none;">Set my reasons</a>
+</div>
+</sc-if>
+</section>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#73DACA","options":["#73DACA","#9ECE6A","#7AA2F7","#BB9AF7"]},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { open: 'pixel', showAll: false };
+  }
+  renderVals() {
+    const base = [
+      { id: 'pixel', name: 'Pixel 7 Pro', color: '#BB9AF7', tint: 'rgba(187, 154, 247, 0.12)', match: true, age: '3y 11m', month: '€19.13', support: 'Oct 2027', rule: true, recent: 1 },
+      { id: 'laptop', name: '[Laptop]', color: '#7AA2F7', tint: 'rgba(122, 162, 247, 0.12)', match: false, age: '[age]', month: '€[x]', support: '[date]', rule: false, recent: 2 },
+      { id: 'audio', name: '[Headphones]', color: '#FF9E64', tint: 'rgba(255, 158, 100, 0.12)', match: false, age: '[age]', month: '€[x]', support: 'n/a', rule: false, recent: 3 },
+      { id: 'tablet', name: '[Tablet]', color: '#7DCFFF', tint: 'rgba(125, 207, 255, 0.12)', match: false, age: '[age]', month: '€[x]', support: '[date]', rule: false, recent: 4 }
+    ];
+    const sorted = base.slice().sort((a, b) => a.recent - b.recent);
+    const open = this.state.open;
+    const showAll = this.state.showAll;
+    const visible = showAll ? sorted : sorted.slice(0, 2);
+    const hidden = sorted.length - 2;
+    const devices = visible.map((d) => ({
+      ...d,
+      expanded: open === d.id ? 'true' : 'false',
+      rowBg: open === d.id ? d.tint : 'transparent',
+      borderColor: open === d.id ? '#3B4261' : 'transparent',
+      nameColor: open === d.id ? d.color : '#C0CAF5',
+      chevron: open === d.id ? 'rotate(180deg)' : 'none',
+      toggle: () => this.setState({ open: open === d.id ? null : d.id })
+    }));
+    const current = visible.find((d) => d.id === open);
+    const barBottom = showAll ? 266 : 170;
+    return {
+      accent: this.props.accent ?? '#73DACA',
+      devices,
+      toggleAll: () => this.setState({ showAll: !showAll }),
+      allExpanded: showAll ? 'true' : 'false',
+      allChevron: showAll ? 'rotate(180deg)' : 'none',
+      toggleLabel: showAll ? 'Show fewer' : ('Show all devices (+' + hidden + ')'),
+      pageTop: (barBottom + 10) + 'px',
+      cardTop: (barBottom + 12) + 'px',
+      hasOpen: !!current,
+      openName: current ? current.name : '',
+      openColor: current ? current.color : '#C0CAF5',
+      openHasRule: !!(current && current.rule),
+      openNoRule: !!(current && !current.rule),
+      closeCard: () => this.setState({ open: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+web-ext-artifacts/
+.wrangler/
+e2e/browsers/
+e2e/.build/
+e2e/out/
+research/data/
+.playwright-mcp/

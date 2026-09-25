@@ -1,0 +1,10 @@
+{
+  "categories": { "firefox": ["shopping"] },
+  "summary": {
+    "en-US": "Shows up when you are tempted to replace a phone that still works, and checks the page against your own reasons.",
+    "nl": "Verschijnt als je in de verleiding komt een telefoon te vervangen die het nog doet, en legt de pagina naast je eigen redenen."
+  },
+  "tags": ["shopping", "privacy"],
+  "requires_payment": false,
+  "version": { "license": "REPLACE_WITH_LICENSE_SLUG" }
+}

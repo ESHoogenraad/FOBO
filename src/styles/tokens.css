@@ -1,0 +1,35 @@
+/* Tokyo Night, dark (HANDOFF section 7). :host makes the same tokens work inside the bar's shadow root. */
+:root,
+:host {
+  --bg: #1A1B26;           /* page-level surfaces */
+  --bg-deep: #16161E;      /* bar background */
+  --surface: #1F2335;      /* card */
+  --surface-2: #24283B;
+  --line: #292E42;
+  --line-strong: #3B4261;
+  --text: #C0CAF5;
+  --text-2: #A9B1D6;
+  --muted: #9AA5CE;
+
+  --brand: #73DACA;        /* logo badge + primary actions ONLY, with --on-brand text */
+  --on-brand: #16161E;
+  --ok: #9ECE6A;           /* status fine, never used for buttons */
+  --warn: #E0AF68;         /* status near a limit */
+
+  --device-1: #BB9AF7;     /* purple: the phone */
+  --device-2: #7AA2F7;     /* blue */
+  --device-3: #FF9E64;     /* orange */
+  --device-4: #7DCFFF;     /* cyan */
+
+  --link: #7AA2F7;         /* link colour from the reference */
+  --link-hover: #9DB8FA;
+
+  --radius-sm: 10px;       /* buttons */
+  --radius-md: 12px;       /* rows, tiles */
+  --radius-lg: 16px;       /* bar, card */
+  --shadow-bar: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.55);
+
+  --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-num: "JetBrains Mono", ui-monospace, monospace;
+}

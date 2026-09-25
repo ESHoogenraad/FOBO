@@ -1,0 +1,19 @@
+{
+  "name": "upgraditch-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser checks of the built extension in Chrome for Testing and Firefox",
+  "type": "module",
+  "scripts": {
+    "browsers": "playwright-core install chromium && browsers install firefox@stable --path browsers",
+    "chrome": "node chrome-pages.mjs",
+    "firefox": "node firefox-pages.mjs",
+    "bar": "node bar-live.mjs",
+    "shots": "node store-shots.mjs"
+  },
+  "devDependencies": {
+    "@puppeteer/browsers": "^3.2.3",
+    "playwright-core": "^1.63.0",
+    "selenium-webdriver": "^4.49.0"
+  }
+}

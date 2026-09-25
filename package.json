@@ -1,0 +1,31 @@
+{
+  "name": "upgraditch",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser extension that shows up when you are tempted to replace a phone that still works",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "watch": "node scripts/build.js --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint:firefox": "web-ext lint --source-dir dist",
+    "start:firefox": "web-ext run --source-dir dist",
+    "start:chrome": "web-ext run --source-dir dist --target chromium",
+    "package": "web-ext build --source-dir dist --overwrite-dest",
+    "package:source": "mkdir -p web-ext-artifacts && zip -qr web-ext-artifacts/source.zip . -x 'node_modules/*' 'worker/node_modules/*' 'e2e/node_modules/*' 'e2e/browsers/*' 'e2e/.build/*' 'e2e/out/*' 'dist/*' 'web-ext-artifacts/*' '.git/*' '.wrangler/*' 'worker/.wrangler/*'",
+    "sign:firefox": "web-ext sign --source-dir dist --channel listed --amo-metadata store/amo-metadata.json --upload-source-code web-ext-artifacts/source.zip"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "preact": "^10.29.8",
+    "webextension-polyfill": "^0.12.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1",
+    "web-ext": "^10.7.0"
+  }
+}

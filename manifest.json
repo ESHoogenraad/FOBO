@@ -1,0 +1,75 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_appName__",
+  "short_name": "__MSG_appName__",
+  "description": "__MSG_appDescription__",
+  "version": "0.1.0",
+  "default_locale": "en",
+  "minimum_chrome_version": "121",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "__MSG_appName__",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "scripts": [
+      "background/service-worker.js"
+    ],
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "alarms"
+  ],
+  "optional_host_permissions": [
+    "https://tweakers.net/*",
+    "https://www.gsmarena.com/*",
+    "https://www.coolblue.nl/*",
+    "https://www.bol.com/*",
+    "https://www.mediamarkt.nl/*",
+    "https://gathering.tweakers.net/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/plus-jakarta-sans.woff2",
+        "assets/jetbrains-mono.woff2"
+      ],
+      "matches": [
+        "https://tweakers.net/*",
+        "https://www.gsmarena.com/*",
+        "https://www.coolblue.nl/*",
+        "https://www.bol.com/*",
+        "https://www.mediamarkt.nl/*",
+        "https://gathering.tweakers.net/*"
+      ]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{1e6450ce-c22e-4ef8-bd3b-bb6d1d8f2170}",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ],
+        "optional": [
+          "technicalAndInteraction"
+        ]
+      }
+    }
+  }
+}

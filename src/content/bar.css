@@ -1,0 +1,389 @@
+/* The bar and its card. Loaded only inside the bar's shadow root, never into the page. */
+@import "../styles/tokens.css";
+@import "../styles/components.css";
+
+/* Nothing the page sets carries over into the bar. The fonts are registered under their own
+   names (bar.jsx), so they never change how the page looks. */
+:host {
+  all: initial;
+  --font-ui: "Plus Jakarta Sans (bar)", system-ui, sans-serif;
+  --font-num: "JetBrains Mono (bar)", ui-monospace, monospace;
+}
+
+.root {
+  color-scheme: dark;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+h2,
+p {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* ---- The bar: one line, laid over the top of the page */
+
+.bar {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 14px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-bar);
+}
+
+.bar-toggle {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.bar-toggle:hover {
+  background: var(--surface);
+}
+
+/* Open: device colour at 12%, --line-strong border, name in the device colour. */
+.bar-toggle[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--device-1) 12%, transparent);
+  border-color: var(--line-strong);
+}
+
+.bar-toggle[aria-expanded="true"] .bar-name {
+  color: var(--device-1);
+}
+
+.device-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: var(--device-1);
+  box-shadow: 0 0 10px var(--device-1);
+}
+
+.bar-name {
+  flex-shrink: 0;
+  max-width: 30%;
+  overflow: hidden;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tag {
+  flex-shrink: 0;
+  height: 22px;
+  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--device-1) 16%, transparent);
+  color: var(--device-1);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bar-headline {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text-2);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.15s;
+}
+
+.chevron-open {
+  transform: rotate(180deg);
+}
+
+.bar-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-actions .btn {
+  white-space: nowrap;
+}
+
+/* "Log urge" and "Cooldown": icons only, so the headline keeps the room. The tour and the
+   tooltips name them. */
+.btn-icon {
+  width: 44px;
+  padding: 0;
+  color: var(--text-2);
+}
+
+.btn-icon:hover:not(:disabled) {
+  color: var(--text);
+}
+
+/* Below 720 px the bar takes two rows: the phone and headline, then the buttons. */
+@media (max-width: 719px) {
+  .bar {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+  .logo-badge {
+    display: none;
+  }
+  .bar-toggle {
+    flex-basis: 100%;
+  }
+  .bar-actions {
+    flex: 1 1 100%;
+  }
+  .bar-close {
+    flex: 1;
+  }
+}
+
+/* ---- The first-run tour: a tip beneath the bar, its arrow on the part it explains */
+
+.tour {
+  position: fixed;
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.tour::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: calc(var(--arrow) - 6px);
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+  border-top: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line-strong);
+  transform: rotate(45deg);
+}
+
+.tour-title {
+  font-weight: 700;
+}
+
+.tour-text {
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.tour-actions {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.tour-step {
+  margin-right: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* The part the tip is about. */
+.tour-target {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ---- The card, beneath the bar */
+
+.card {
+  position: fixed;
+  top: 78px;
+  left: 8px;
+  width: min(440px, calc(100vw - 16px));
+  max-height: calc(100vh - 94px);
+  overflow: auto;
+  padding: 16px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -8px -12px -4px 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.card-head .device-dot {
+  margin-right: 8px;
+  vertical-align: 1px;
+  box-shadow: none;
+}
+
+.card-device {
+  color: var(--device-1);
+}
+
+.card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.card-text {
+  color: var(--text-2);
+  line-height: 1.55;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.card-actions .btn {
+  flex: 1;
+}
+
+/* "Set my reasons": the phone's own colour, as in the reference. */
+.btn-device {
+  background: transparent;
+  border-color: var(--device-1);
+  color: var(--device-1);
+  font-weight: 700;
+}
+
+.btn-device:hover {
+  background: color-mix(in srgb, var(--device-1) 12%, transparent);
+}
+
+/* Status tiles: status colour at 10% background, 35% border, number in the status colour. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tile {
+  --status: var(--ok);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: color-mix(in srgb, var(--status) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--status) 35%, transparent);
+  border-radius: var(--radius-md);
+}
+
+.tile-warn {
+  --status: var(--warn);
+}
+
+.tile-label {
+  color: var(--status);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tile-value {
+  color: var(--status);
+  font-family: var(--font-num);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.tile-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* The bar's second row pushes the card down. */
+@media (max-width: 719px) {
+  .card {
+    top: 128px;
+    max-height: calc(100vh - 144px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

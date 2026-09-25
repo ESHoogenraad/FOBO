@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Onboarding</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:#1D1F1C;background:#F4F1EA}
+button,input,select{font:inherit}
+a{color:#3F6B4A}a:hover{color:#2C4D35}
+</style>
+</helmet>
+<div style="width: 380px; height: 560px; box-sizing: border-box; padding: 20px; background: #F4F1EA; display: flex; flex-direction: column; gap: 20px; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #1D1F1C;">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><path d="M9.5 12.5l2 2 3.5-4"></path></svg>
+<div style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 18px;">Holdout</div>
+</div>
+<div style="font-size: 13px; color: #5A5D55;">Step 1 of 2</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: #5A5D55;">Before you buy</div>
+<h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 26px; line-height: 1.15;">Which device are you currently holding on to?</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label for="device" style="font-size: 13px; font-weight: 600;">Device name</label>
+<input id="device" type="text" value="Pixel 7 Pro" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFC9BB; border-radius: 10px; background: #FFFFFF; color: #1D1F1C; font-size: 15px;">
+<div style="font-size: 12px; color: #5A5D55;">We look up support dates when we recognise the name</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label for="bought" style="font-size: 13px; font-weight: 600;">Purchase date</label>
+<input id="bought" type="date" value="2022-10-20" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFC9BB; border-radius: 10px; background: #FFFFFF; color: #1D1F1C; font-size: 15px;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label for="price" style="font-size: 13px; font-weight: 600;">Price paid (EUR)</label>
+<input id="price" type="text" inputmode="decimal" value="899" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFC9BB; border-radius: 10px; background: #FFFFFF; color: #1D1F1C; font-size: 15px; font-family: 'IBM Plex Mono', ui-monospace, monospace;">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto;">
+<a href="Onboarding2.dc.html" style="height: 48px; display: flex; align-items: center; justify-content: center; background: {{accent}}; color: #FFFFFF; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none;">Continue</a>
+<div style="font-size: 12px; text-align: center; color: #5A5D55;">No account. Nothing leaves this browser unless you opt in.</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3F6B4A","options":["#3F6B4A","#2F5D7C","#7A3E2E","#1D1F1C"]},"$preview":{"width":380,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3F6B4A' };
+  }
+}
+</script>
+</body>
+</html>

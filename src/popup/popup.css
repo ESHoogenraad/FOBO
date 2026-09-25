@@ -1,0 +1,554 @@
+body {
+  width: 380px;
+}
+
+.pop {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pop h1 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pop h2 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  margin: -4px -6px -4px 0;
+}
+
+.pop-header-back {
+  justify-content: flex-start;
+  gap: 4px;
+  margin-left: -10px;
+}
+
+/* ---- Phone summary */
+
+.phone-card {
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.phone-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pop .phone-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--device-1);
+  overflow-wrap: anywhere;
+}
+
+.device-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: var(--device-1);
+  box-shadow: 0 0 10px var(--device-1);
+}
+
+.phone-since {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.phone-cost {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  color: var(--text-2);
+}
+
+.phone-cost-value {
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+}
+
+.lifespan {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+
+.lifespan > div {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--device-1);
+}
+
+.phone-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.phone-urges {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.warn {
+  color: var(--warn);
+}
+
+/* ---- Notices (setup, sites not allowed, paused) */
+
+.notice {
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-2);
+}
+
+.notice-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ---- This page tempted me */
+
+.tempted {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tempted p {
+  font-weight: 600;
+}
+
+/* ---- Settings */
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.setting:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.setting-text {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.setting .switch {
+  font-size: 14px;
+}
+
+.setting .switch input:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pause-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pop-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 13px;
+}
+
+/* ---- Cooling down */
+
+.cooldowns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cooldown-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cooldown-row {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  text-align: left;
+  cursor: pointer;
+}
+
+.cooldown-row:hover {
+  background: var(--surface-2);
+}
+
+.cooldown-item {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cooldown-when {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* The end date has come: an action waits, so the action colour. */
+.cooldown-due {
+  border-color: var(--brand);
+}
+
+.cooldown-due .cooldown-when {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.cooldown-saved {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+/* ---- Cooldown end screen */
+
+.end-step {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pop .end-step h2 {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.want-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.want-compare > div {
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.want-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.want-value {
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.outcomes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Cooldown answers: colour at 10% background and 35% border, as the status tiles.
+   Buying: amber. Dropping: the phone's own colour (keeping it). Letting it go: neutral. */
+.outcome {
+  --tone: var(--muted);
+  width: 100%;
+  min-height: 56px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: color-mix(in srgb, var(--tone) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tone) 35%, transparent);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.outcome:hover {
+  background: color-mix(in srgb, var(--tone) 18%, transparent);
+}
+
+.outcome svg {
+  flex-shrink: 0;
+  color: var(--tone);
+}
+
+.outcome-bought {
+  --tone: var(--warn);
+}
+
+.outcome-dropped {
+  --tone: var(--device-1);
+}
+
+.outcome-label {
+  display: block;
+  font-weight: 600;
+}
+
+.outcome-hint {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.end-question {
+  font-weight: 600;
+}
+
+.pop-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pop-links .link-btn {
+  align-self: center;
+}
+
+/* ---- Need test */
+
+.need {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pop .need-intro {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.battery-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.battery-row input[type="text"] {
+  width: 72px;
+}
+
+.battery-row .check {
+  margin-left: auto;
+  font-size: 13px;
+}
+
+.need-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.need-badge {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg-deep);
+}
+
+/* Status colours: keep is "fine", repair is "near a limit". Upgrade is an honest answer, not a
+   failure, so it stays neutral. */
+.need-keep {
+  background: var(--ok);
+}
+
+.need-repair {
+  background: var(--warn);
+}
+
+.need-upgrade {
+  background: var(--text);
+}
+
+.pop .need-verdict {
+  font-size: 26px;
+  line-height: 1.1;
+}
+
+.need-summary {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.need-checks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.need-check {
+  display: flex;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.need-check:last-child {
+  border-bottom: none;
+}
+
+.need-check-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+}
+
+.need-check-ok .need-check-icon {
+  color: var(--ok);
+}
+
+.need-check-warn .need-check-icon,
+.need-check-bad .need-check-icon {
+  color: var(--warn);
+}
+
+.need-check-unknown .need-check-icon {
+  color: var(--muted);
+}
+
+.need-check-title {
+  font-weight: 600;
+}
+
+.need-check-detail {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.need-check-bad .need-check-detail {
+  color: var(--warn);
+}
+
+.need-advice {
+  padding: 14px;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-2);
+}
+
+.pop .need-advice h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.need-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.need-links a,
+.feel-new a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.feel-new {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.need-done {
+  font-weight: 600;
+}
+
+.need-footnote {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---- Share my stats */
+
+.share-json {
+  margin: 0;
+  max-height: 300px;
+  overflow: auto;
+  padding: 12px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.share-status {
+  min-height: 1.5em;
+  font-size: 13px;
+  text-align: center;
+}

@@ -1,0 +1,1156 @@
+{
+  "appName": {
+    "message": "Upgraditch",
+    "description": "Working name. Change it together with APP_NAME in src/config.js"
+  },
+  "appDescription": {
+    "message": "Shows up when you are tempted to replace a phone that still works, and checks the page against your own reasons.",
+    "description": "Store and add-on manager description"
+  },
+  "locale": {
+    "message": "en-GB",
+    "description": "Locale used to format numbers and dates in this language. Not shown"
+  },
+  "continue": {
+    "message": "Continue"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "done": {
+    "message": "Done"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "back": {
+    "message": "Back"
+  },
+  "skipForNow": {
+    "message": "Skip for now"
+  },
+  "stepOf": {
+    "message": "Step $step$ of $total$",
+    "placeholders": {
+      "step": {
+        "content": "$1",
+        "example": "1"
+      },
+      "total": {
+        "content": "$2",
+        "example": "3"
+      }
+    }
+  },
+  "onbPageTitle": {
+    "message": "Set up $app$",
+    "description": "Browser tab title of the onboarding page",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbPhoneEyebrow": {
+    "message": "Before you buy"
+  },
+  "onbPhoneTitle": {
+    "message": "Which phone are you currently holding on to?"
+  },
+  "onbPhoneName": {
+    "message": "Phone"
+  },
+  "onbPhoneNamePlaceholder": {
+    "message": "e.g. Pixel 7 Pro"
+  },
+  "onbPurchaseDate": {
+    "message": "Bought in"
+  },
+  "onbPrice": {
+    "message": "Price paid (EUR)"
+  },
+  "onbPrivacy": {
+    "message": "No account. Nothing leaves this browser unless you opt in."
+  },
+  "errPhoneName": {
+    "message": "Enter the name of your phone."
+  },
+  "errPurchaseDate": {
+    "message": "Pick the month and year you bought it."
+  },
+  "errPurchaseDateFuture": {
+    "message": "That month is still to come."
+  },
+  "errPrice": {
+    "message": "Enter the price you paid, for example 899."
+  },
+  "onbReasonsTitle": {
+    "message": "What would make you replace it?"
+  },
+  "onbReasonsHelper": {
+    "message": "Pick any that apply. The need test checks these first when you are tempted."
+  },
+  "onbReasonsNote": {
+    "message": "Later you will see how this compares with what actually tempts you."
+  },
+  "reason_battery": {
+    "message": "Battery life"
+  },
+  "reason_slow": {
+    "message": "It feels slow"
+  },
+  "reason_camera": {
+    "message": "Camera"
+  },
+  "reason_screen": {
+    "message": "Screen"
+  },
+  "reason_storage": {
+    "message": "Storage"
+  },
+  "reason_updates": {
+    "message": "Updates ending"
+  },
+  "reason_damage": {
+    "message": "Damage"
+  },
+  "reason_other": {
+    "message": "Something else"
+  },
+  "onbSitesTitle": {
+    "message": "Where $app$ shows up",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbSitesText": {
+    "message": "$app$ only looks at pages on these sites, to see whether they're about phones. It never reads anything else, and never sends the pages you visit anywhere.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbSitesAllow": {
+    "message": "Allow these sites"
+  },
+  "onbSitesGranted": {
+    "message": "Allowed on these sites"
+  },
+  "onbSitesDeclined": {
+    "message": "Not allowed. You can allow them later from the $app$ icon in your toolbar.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "countsTitle": {
+    "message": "Help test what works"
+  },
+  "countsText": {
+    "message": "$app$ tries different wording in the bar to learn what helps. If you switch this on, it sends anonymous counts: which wording was shown and what you clicked. No device names, notes or web addresses. You can switch it off at any time in the popup.",
+    "description": "Opt-in copy from research/B4 Field study spec.md",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "countsCheckbox": {
+    "message": "Send anonymous counts"
+  },
+  "countsShort": {
+    "message": "Which wording was shown and what you clicked. No device names, notes or web addresses."
+  },
+  "onbDoneTitle": {
+    "message": "You're set"
+  },
+  "onbDoneGranted": {
+    "message": "$app$ shows up on phone pages of these sites. Everything else is behind the $app$ icon in your toolbar.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbDoneDeclined": {
+    "message": "$app$ won't show up on shop pages until you allow the sites. You can do that from the $app$ icon in your toolbar.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbDonePin": {
+    "message": "Pin the icon to your toolbar, so it's one click away."
+  },
+  "settingsTitle": {
+    "message": "Settings"
+  },
+  "popupSetupTitle": {
+    "message": "Finish setting up"
+  },
+  "popupSetupText": {
+    "message": "Tell $app$ which phone you're holding on to.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "popupSetupButton": {
+    "message": "Set up"
+  },
+  "popupSitesMissing": {
+    "message": "$app$ isn't allowed on the shop sites yet, so the bar can't show up.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "popupSitesAllow": {
+    "message": "Allow the sites"
+  },
+  "popupSince": {
+    "message": "since $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2022"
+      }
+    }
+  },
+  "popupPerMonth": {
+    "message": "per month, and falling"
+  },
+  "popupDaysHeld": {
+    "message": "$days$ days held",
+    "placeholders": {
+      "days": {
+        "content": "$1",
+        "example": "1,430"
+      }
+    }
+  },
+  "popupSecurityUntil": {
+    "message": "Security updates until $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2022"
+      }
+    }
+  },
+  "popupSecurityEnded": {
+    "message": "Security updates ended $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2022"
+      }
+    }
+  },
+  "lifespanLabel": {
+    "message": "Share of the supported lifespan used"
+  },
+  "popupUrgesOne": {
+    "message": "1 urge logged this month"
+  },
+  "popupUrgesMany": {
+    "message": "$count$ urges logged this month",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "4"
+      }
+    }
+  },
+  "popupPausedUntil": {
+    "message": "Paused until $when$",
+    "placeholders": {
+      "when": {
+        "content": "$1",
+        "example": "Tue 30 Sep, 18:00"
+      }
+    }
+  },
+  "popupPausedManual": {
+    "message": "Paused until you switch it back on"
+  },
+  "resume": {
+    "message": "Resume"
+  },
+  "feedback": {
+    "message": "Feedback"
+  },
+  "tempted": {
+    "message": "This page tempted me"
+  },
+  "temptedLogged": {
+    "message": "Logged. What tempted you?"
+  },
+  "temptedThanks": {
+    "message": "Thanks. Noted."
+  },
+  "urgeTag_camera": {
+    "message": "Camera"
+  },
+  "urgeTag_speed": {
+    "message": "Speed"
+  },
+  "urgeTag_battery": {
+    "message": "Battery"
+  },
+  "urgeTag_deal": {
+    "message": "A deal"
+  },
+  "urgeTag_boredom": {
+    "message": "Boredom"
+  },
+  "urgeTag_launch_hype": {
+    "message": "Launch hype"
+  },
+  "urgeTag_other": {
+    "message": "Something else"
+  },
+  "pauseTitle": {
+    "message": "Pause $app$",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "pauseText": {
+    "message": "No bar anywhere while paused. For when you've decided to upgrade, or are shopping for someone else."
+  },
+  "pause_day": {
+    "message": "1 day"
+  },
+  "pause_week": {
+    "message": "1 week"
+  },
+  "pause_manual": {
+    "message": "Until I switch it back on"
+  },
+  "sitesTitle": {
+    "message": "Where $app$ shows up",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "sitesNotAllowed": {
+    "message": "Not allowed yet."
+  },
+  "phoneTitle": {
+    "message": "Your phone"
+  },
+  "editPhone": {
+    "message": "Edit phone"
+  },
+  "editReasons": {
+    "message": "Edit reasons"
+  },
+  "closeTab": {
+    "message": "Close tab"
+  },
+  "logUrge": {
+    "message": "Log urge"
+  },
+  "cooldown": {
+    "message": "Cooldown"
+  },
+  "barHide": {
+    "message": "Hide on this site for 24 hours"
+  },
+  "tourTitle_toggle": {
+    "message": "Your phone, at a glance"
+  },
+  "tourText_toggle": {
+    "message": "A fact about the phone you have. Click it to check whether this page fixes what would make you replace it."
+  },
+  "tourTitle_closeTab": {
+    "message": "Close tab"
+  },
+  "tourText_closeTab": {
+    "message": "The easy way out: leave this page before you buy anything."
+  },
+  "tourTitle_logUrge": {
+    "message": "Log urge"
+  },
+  "tourText_logUrge": {
+    "message": "Tempted? One click notes it. $app$ keeps count, so you see what tempts you most.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "tourTitle_cooldown": {
+    "message": "Cooldown"
+  },
+  "tourText_cooldown": {
+    "message": "Still want it? Wait a few days first. $app$ asks again when the time is up.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "tourTitle_hide": {
+    "message": "Hide"
+  },
+  "tourText_hide": {
+    "message": "Hides the bar on this site for 24 hours. To pause it everywhere, click the $app$ icon in your toolbar.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "tourStep": {
+    "message": "$step$ of $total$",
+    "placeholders": {
+      "step": {
+        "content": "$1",
+        "example": "1"
+      },
+      "total": {
+        "content": "$2",
+        "example": "5"
+      }
+    }
+  },
+  "tourSkip": {
+    "message": "Skip"
+  },
+  "tourNext": {
+    "message": "Next"
+  },
+  "barOnThisPage": {
+    "message": "on this page"
+  },
+  "collapse": {
+    "message": "Collapse"
+  },
+  "cardHead_rule": {
+    "message": "your own rule"
+  },
+  "cardHead_urge": {
+    "message": "urge logged"
+  },
+  "cardHead_cooldown": {
+    "message": "cooldown"
+  },
+  "headlineOwnRuleOne": {
+    "message": "You said you'd replace it for $reasons$. Does this page fix that?",
+    "placeholders": {
+      "reasons": {
+        "content": "$1",
+        "example": "battery life"
+      }
+    }
+  },
+  "headlineOwnRuleTwo": {
+    "message": "You said you'd replace it for $reasons$. Does this page fix either?",
+    "placeholders": {
+      "reasons": {
+        "content": "$1",
+        "example": "battery life or updates ending"
+      }
+    }
+  },
+  "headlineOwnRuleMany": {
+    "message": "You said you'd replace it for $reasons$. Does this page fix any of them?",
+    "placeholders": {
+      "reasons": {
+        "content": "$1",
+        "example": "battery life, speed or the camera"
+      }
+    }
+  },
+  "headlineCost": {
+    "message": "$amount$ a month so far, and falling",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "€19.14"
+      }
+    }
+  },
+  "headlineSupport": {
+    "message": "Security updates until $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2027"
+      }
+    }
+  },
+  "headlineSupportEnded": {
+    "message": "Security updates ended $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2027"
+      }
+    }
+  },
+  "headlineTimeHeld": {
+    "message": "Kept for $time$",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "3 years 11 months"
+      }
+    }
+  },
+  "timeUnderMonth": {
+    "message": "less than a month"
+  },
+  "timeYearOne": {
+    "message": "1 year"
+  },
+  "timeYears": {
+    "message": "$count$ years",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "timeMonthOne": {
+    "message": "1 month"
+  },
+  "timeMonths": {
+    "message": "$count$ months",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "11"
+      }
+    }
+  },
+  "reasonPhrase_battery": {
+    "message": "battery life"
+  },
+  "reasonPhrase_slow": {
+    "message": "speed"
+  },
+  "reasonPhrase_camera": {
+    "message": "the camera"
+  },
+  "reasonPhrase_screen": {
+    "message": "the screen"
+  },
+  "reasonPhrase_storage": {
+    "message": "storage"
+  },
+  "reasonPhrase_updates": {
+    "message": "updates ending"
+  },
+  "reasonPhrase_damage": {
+    "message": "damage"
+  },
+  "reasonPhrase_other": {
+    "message": "something else"
+  },
+  "ruleQuestion": {
+    "message": "Does this fix $reasons$?",
+    "placeholders": {
+      "reasons": {
+        "content": "$1",
+        "example": "battery life or updates ending"
+      }
+    }
+  },
+  "ruleSomethingElse": {
+    "message": "Something else"
+  },
+  "ruleNoneTitle": {
+    "message": "No rule for this phone yet"
+  },
+  "ruleNoneText": {
+    "message": "Pick what would make you replace it, and this check shows up here next time."
+  },
+  "ruleSetReasons": {
+    "message": "Set my reasons"
+  },
+  "ruleAdvice_updatesEnded": {
+    "message": "Security updates have ended. That is a real reason to upgrade."
+  },
+  "ruleAdvice_batteryWorn": {
+    "message": "The battery is worn. A new battery fixes that for far less than a new phone."
+  },
+  "ruleAdvice_slow": {
+    "message": "A worn battery makes a phone feel slow. Check the battery before the phone."
+  },
+  "ruleAdvice_notYetOne": {
+    "message": "It hasn't tipped over yet."
+  },
+  "ruleAdvice_notYetMany": {
+    "message": "None of them has tipped over yet."
+  },
+  "ruleAdvice_noData": {
+    "message": "If this page doesn't fix it, the phone you have still does the job."
+  },
+  "tileUpdates": {
+    "message": "Security updates"
+  },
+  "tileEnded": {
+    "message": "Ended"
+  },
+  "tileDays": {
+    "message": "$days$d",
+    "placeholders": {
+      "days": {
+        "content": "$1",
+        "example": "377"
+      }
+    }
+  },
+  "tileUpdatesUntil": {
+    "message": "until $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2027"
+      }
+    }
+  },
+  "tileUpdatesSince": {
+    "message": "since $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2027"
+      }
+    }
+  },
+  "tileBattery_fine": {
+    "message": "battery health is fine"
+  },
+  "tileBattery_near": {
+    "message": "close to the 80% line"
+  },
+  "tileBattery_below": {
+    "message": "below the 80% line"
+  },
+  "cooldownItem": {
+    "message": "What do you want?"
+  },
+  "cooldownPrice": {
+    "message": "Price (EUR, optional)"
+  },
+  "cooldownDays": {
+    "message": "Days"
+  },
+  "cooldownWant": {
+    "message": "How much do you want it now?"
+  },
+  "ratingHint": {
+    "message": "1 is hardly, 10 is very much."
+  },
+  "cooldownStart": {
+    "message": "Start cooldown"
+  },
+  "cooldownStarted": {
+    "message": "Cooling down. Check again on $date$.",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "29 Oct"
+      }
+    }
+  },
+  "cooldownStartedHint": {
+    "message": "It's in the $app$ popup. The icon shows a badge when the day comes.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "errCooldownItem": {
+    "message": "Say what you want, for example the phone's name."
+  },
+  "errCooldownPrice": {
+    "message": "Enter a price, for example 899, or leave it empty."
+  },
+  "errCooldownWant": {
+    "message": "Pick a number from 1 to 10."
+  },
+  "errCooldownDays": {
+    "message": "Enter a number of days from 1 to 365."
+  },
+  "coolingDown": {
+    "message": "Cooling down"
+  },
+  "cooldownCheckAgain": {
+    "message": "Check again on $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "29 Oct"
+      }
+    }
+  },
+  "cooldownDue": {
+    "message": "Time to check"
+  },
+  "moneyNotSpent": {
+    "message": "$amount$ not spent so far",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "€1,099"
+      }
+    }
+  },
+  "cooldownStillWant": {
+    "message": "Still want $item$?",
+    "placeholders": {
+      "item": {
+        "content": "$1",
+        "example": "Pixel 11"
+      }
+    }
+  },
+  "cooldownNow": {
+    "message": "Now"
+  },
+  "cooldownThen": {
+    "message": "On $date$ you gave it",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "22 Oct"
+      }
+    }
+  },
+  "cooldownWhatNow": {
+    "message": "What will you do?"
+  },
+  "outcome_bought": {
+    "message": "Buying it"
+  },
+  "outcome_dropped": {
+    "message": "Dropping it"
+  },
+  "outcome_expired": {
+    "message": "Haven't decided"
+  },
+  "outcomeHint_bought": {
+    "message": "You're buying it, or already have."
+  },
+  "outcomeHint_dropped": {
+    "message": "You've decided not to buy it."
+  },
+  "outcomeHint_expired": {
+    "message": "The cooldown ends without a choice."
+  },
+  "outcomeSaves": {
+    "message": "$amount$ goes to money not spent.",
+    "placeholders": {
+      "amount": {
+        "content": "$1",
+        "example": "€1,099.00"
+      }
+    }
+  },
+  "yes": {
+    "message": "Yes"
+  },
+  "no": {
+    "message": "No"
+  },
+  "notNow": {
+    "message": "Not now"
+  },
+  "gotIt": {
+    "message": "Got it"
+  },
+  "eolFound": {
+    "message": "Security updates until $date$ ($model$ on endoflife.date)",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2027"
+      },
+      "model": {
+        "content": "$2",
+        "example": "Pixel 7 Pro"
+      }
+    }
+  },
+  "eolNoDateAppleShort": {
+    "message": "No end date announced"
+  },
+  "needTitle": {
+    "message": "Need test"
+  },
+  "needRun": {
+    "message": "Run the need test"
+  },
+  "needIntro": {
+    "message": "A few questions, then an honest answer: keep it, repair it, or upgrade."
+  },
+  "needNoReasons": {
+    "message": "No reasons set yet, so this checks the basics."
+  },
+  "needQ_apps": {
+    "message": "Do your banking, ID and work apps still run on it?"
+  },
+  "needQ_battery": {
+    "message": "Battery health"
+  },
+  "needBatteryHint": {
+    "message": "iPhone: Settings > Battery > Battery Health. Android: look under Settings > Battery; not every phone shows it."
+  },
+  "needBatteryUnknown": {
+    "message": "I don't know"
+  },
+  "needQ_screen": {
+    "message": "Is the screen cracked or failing?"
+  },
+  "needQ_damage": {
+    "message": "Is something broken that gets in the way?"
+  },
+  "needQ_camera": {
+    "message": "Does the camera still work as it should?"
+  },
+  "needQ_storage": {
+    "message": "Is the storage full?"
+  },
+  "needSeeResult": {
+    "message": "See the result"
+  },
+  "needResult_keep": {
+    "message": "Keep it."
+  },
+  "needResult_repair": {
+    "message": "Repair it."
+  },
+  "needResult_upgrade": {
+    "message": "Upgrade it."
+  },
+  "needPassed": {
+    "message": "$passed$ of $total$ checks say it still does the job.",
+    "placeholders": {
+      "passed": {
+        "content": "$1",
+        "example": "4"
+      },
+      "total": {
+        "content": "$2",
+        "example": "5"
+      }
+    }
+  },
+  "needStatus_ok": {
+    "message": "Fine"
+  },
+  "needStatus_warn": {
+    "message": "Near a limit"
+  },
+  "needStatus_bad": {
+    "message": "Problem"
+  },
+  "needStatus_unknown": {
+    "message": "Not known"
+  },
+  "needCheck_updates": {
+    "message": "Security updates"
+  },
+  "needCheck_apps": {
+    "message": "Banking, ID and work apps"
+  },
+  "needCheck_battery": {
+    "message": "Battery health"
+  },
+  "needCheck_slow": {
+    "message": "Feels slow"
+  },
+  "needCheck_screen": {
+    "message": "Screen"
+  },
+  "needCheck_damage": {
+    "message": "Damage"
+  },
+  "needCheck_camera": {
+    "message": "Camera"
+  },
+  "needCheck_storage": {
+    "message": "Storage"
+  },
+  "needUpdates_until": {
+    "message": "Until $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Oct 2027"
+      }
+    }
+  },
+  "needUpdates_ended": {
+    "message": "Ended in $date$",
+    "placeholders": {
+      "date": {
+        "content": "$1",
+        "example": "Feb 2026"
+      }
+    }
+  },
+  "needUpdates_unknown": {
+    "message": "No end date known"
+  },
+  "needNotChecked": {
+    "message": "Not checked"
+  },
+  "needBattery_fine": {
+    "message": "$pct$%, fine",
+    "placeholders": {
+      "pct": {
+        "content": "$1",
+        "example": "91"
+      }
+    }
+  },
+  "needBattery_near": {
+    "message": "$pct$%, close to the 80% line",
+    "placeholders": {
+      "pct": {
+        "content": "$1",
+        "example": "81"
+      }
+    }
+  },
+  "needBattery_below": {
+    "message": "$pct$%, below the 80% line",
+    "placeholders": {
+      "pct": {
+        "content": "$1",
+        "example": "76"
+      }
+    }
+  },
+  "needSlow_battery": {
+    "message": "Most likely the worn battery"
+  },
+  "needSlow_notBattery": {
+    "message": "The battery is fine. A restart and freeing up storage usually help"
+  },
+  "needSlow_checkBattery": {
+    "message": "Check the battery first: a worn battery makes a phone feel slow"
+  },
+  "needStorage_full": {
+    "message": "Full. Clearing it out costs nothing"
+  },
+  "needStorage_fine": {
+    "message": "Room left"
+  },
+  "need_apps_ok": {
+    "message": "Still run on it"
+  },
+  "need_apps_bad": {
+    "message": "No longer run on it"
+  },
+  "need_screen_ok": {
+    "message": "No damage"
+  },
+  "need_screen_bad": {
+    "message": "Cracked or failing"
+  },
+  "need_damage_ok": {
+    "message": "Nothing in the way"
+  },
+  "need_damage_bad": {
+    "message": "Something broken gets in the way"
+  },
+  "need_camera_ok": {
+    "message": "Works as it should"
+  },
+  "need_camera_bad": {
+    "message": "Doesn't work as it should"
+  },
+  "needAndroidStopped": {
+    "message": "New Android versions stopped in $android$. Security updates continue until $security$.",
+    "placeholders": {
+      "android": {
+        "content": "$1",
+        "example": "Feb 2026"
+      },
+      "security": {
+        "content": "$2",
+        "example": "Feb 2027"
+      }
+    }
+  },
+  "needAndroidUntil": {
+    "message": "New Android versions until $android$. Security updates until $security$.",
+    "placeholders": {
+      "android": {
+        "content": "$1",
+        "example": "Feb 2026"
+      },
+      "security": {
+        "content": "$2",
+        "example": "Feb 2027"
+      }
+    }
+  },
+  "needUpgradeUpdates": {
+    "message": "Security updates have ended, so new security flaws stay open. That's a real reason to upgrade."
+  },
+  "needUpgradeApps": {
+    "message": "The apps you rely on no longer run on it. That's a real reason to upgrade."
+  },
+  "needUpgradePause": {
+    "message": "Pause $app$ for a week while you shop",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "needPausedWeek": {
+    "message": "$app$ is paused for a week.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "needRepairBattery": {
+    "message": "The battery is the weak spot. A new one costs a fraction of a new phone and resets the clock."
+  },
+  "needRepairOther": {
+    "message": "A repair usually costs a fraction of a new phone. Get a quote before you decide."
+  },
+  "needRepairGuide": {
+    "message": "Repair guides on iFixit"
+  },
+  "needRepairCafe": {
+    "message": "Find a Repair Café"
+  },
+  "repairCafeUrl": {
+    "message": "https://www.repaircafe.org/en/visit/"
+  },
+  "needFeelNewTitle": {
+    "message": "Make it feel new"
+  },
+  "needFeelNew_case": {
+    "message": "A new case or screen protector"
+  },
+  "needFeelNew_wallpaper": {
+    "message": "A new wallpaper and a tidied home screen"
+  },
+  "needFeelNew_storage": {
+    "message": "Clear out storage"
+  },
+  "needFeelNew_review": {
+    "message": "Re-watch its launch review"
+  },
+  "needFootnote": {
+    "message": "This test says upgrade when security updates end or a real task is blocked. It never hides that answer."
+  },
+  "statsPrompt": {
+    "message": "Two weeks in. Would you share your stats? Counts only, and you see them before anything is copied."
+  },
+  "shareTitle": {
+    "message": "Share my stats"
+  },
+  "shareText": {
+    "message": "Counts only: no phone name, notes or page addresses. It does list the sites where you logged urges. Check it, copy it, and paste it where you were asked."
+  },
+  "shareCopy": {
+    "message": "Copy to clipboard"
+  },
+  "shareCopied": {
+    "message": "Copied."
+  },
+  "milestoneLabel": {
+    "message": "Milestone"
+  },
+  "milestoneYears2": {
+    "message": "2 years with your $phone$. Worth a battery check: a new battery resets the clock.",
+    "placeholders": {
+      "phone": {
+        "content": "$1",
+        "example": "Pixel 7 Pro"
+      }
+    }
+  },
+  "milestoneYears": {
+    "message": "$years$ years with your $phone$, now $cost$ a month.",
+    "placeholders": {
+      "years": {
+        "content": "$1",
+        "example": "3"
+      },
+      "phone": {
+        "content": "$2",
+        "example": "Pixel 7 Pro"
+      },
+      "cost": {
+        "content": "$3",
+        "example": "€24.97"
+      }
+    }
+  },
+  "milestoneUpdatesEnded": {
+    "message": "Security updates for your $phone$ ended on $date$.",
+    "placeholders": {
+      "phone": {
+        "content": "$1",
+        "example": "Pixel 6"
+      },
+      "date": {
+        "content": "$2",
+        "example": "1 Oct 2026"
+      }
+    }
+  },
+  "milestoneBatteryCheck": {
+    "message": "Check the battery"
+  },
+  "dataTitle": {
+    "message": "Your data"
+  },
+  "dataText": {
+    "message": "Everything stays in this browser. Download all of it as one JSON file."
+  },
+  "exportData": {
+    "message": "Export all data"
+  },
+  "onbPurchaseMonth": {
+    "message": "Month"
+  },
+  "onbPurchaseYear": {
+    "message": "Year"
+  }
+}

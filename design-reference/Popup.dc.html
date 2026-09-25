@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Extension popup</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:#1D1F1C;background:#F4F1EA}
+button,input,select{font:inherit}
+a{color:#3F6B4A}a:hover{color:#2C4D35}
+</style>
+</helmet>
+<div style="width: 380px; height: 560px; box-sizing: border-box; padding: 16px; background: #F4F1EA; display: flex; flex-direction: column; gap: 12px; font-family: 'IBM Plex Sans', system-ui, sans-serif; color: #1D1F1C;">
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><path d="M9.5 12.5l2 2 3.5-4"></path></svg>
+<div style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 18px;">Holdout</div>
+</div>
+<button type="button" aria-label="Settings" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; border-radius: 10px; color: #5A5D55; cursor: pointer;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg></button>
+</div>
+<div style="padding: 16px; background: #FBFAF6; border-radius: 14px; border: 1px solid #E2DDD1; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; align-items: baseline; justify-content: space-between;">
+<div style="font-weight: 600; font-size: 15px;">Pixel 7 Pro</div>
+<div style="font-size: 13px; color: #5A5D55;">since Oct 2022</div>
+</div>
+<div style="display: flex; align-items: baseline; gap: 8px;">
+<div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 500; font-size: 36px; line-height: 1; color: {{accent}};">€19.13</div>
+<div style="font-size: 14px; color: #3E413B;">per month, and falling</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div role="progressbar" aria-label="Share of supported lifespan used" aria-valuenow="79" aria-valuemin="0" aria-valuemax="100" style="height: 8px; background: #E6E1D5; border-radius: 4px; overflow: hidden;"><div style="width: 79%; height: 8px; background: {{accent}}; border-radius: 4px;"></div></div>
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #5A5D55;">
+<div>1,430 days held</div>
+<div>Updates until Oct 2027</div>
+</div>
+</div>
+<div style="font-size: 13px; color: #3E413B;">4 urges logged this month, 0 purchases</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="font-size: 13px; font-weight: 600;">Cooling down</div>
+<div style="padding: 10px 12px; background: #FBFAF6; border-radius: 12px; border: 1px solid #E2DDD1; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px;">
+<div style="font-weight: 500;">Pixel [latest model]</div>
+<div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #3E413B;">18 days left</div>
+</div>
+<div style="height: 4px; background: #E6E1D5; border-radius: 2px; overflow: hidden;"><div style="width: 40%; height: 4px; background: #8A8D84; border-radius: 2px;"></div></div>
+<div style="font-size: 12px; color: #5A5D55;">Wanted it 7/10 when you added it</div>
+</div>
+<div style="padding: 10px 12px; background: #FBFAF6; border-radius: 12px; border: 1px solid #E2DDD1; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; font-size: 14px;">
+<div style="font-weight: 500;">Wireless earbuds</div>
+<div style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #3E413B;">42 days left</div>
+</div>
+<div style="height: 4px; background: #E6E1D5; border-radius: 2px; overflow: hidden;"><div style="width: 30%; height: 4px; background: #8A8D84; border-radius: 2px;"></div></div>
+<div style="font-size: 12px; color: #5A5D55;">Wanted it 5/10 when you added it</div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+<button type="button" style="height: 44px; border: none; background: {{accent}}; color: #FFFFFF; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer;">This page tempted me</button>
+<a href="NeedTest.dc.html" style="height: 44px; display: flex; align-items: center; justify-content: center; border: 1.5px solid {{accent}}; color: {{accent}}; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none;">Run the need test</a>
+</div>
+<div style="display: flex; justify-content: center; gap: 20px; font-size: 13px;">
+<a href="#share">Share my stats</a>
+<a href="#feedback">Feedback</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#3F6B4A","options":["#3F6B4A","#2F5D7C","#7A3E2E","#1D1F1C"]},"$preview":{"width":380,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#3F6B4A' };
+  }
+}
+</script>
+</body>
+</html>

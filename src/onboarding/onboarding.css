@@ -1,0 +1,144 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.onb {
+  width: 100%;
+  max-width: 460px;
+  min-height: 560px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.onb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.onb-step {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.onb-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.onb-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.onb h1 {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.onb h1:focus {
+  outline: none;
+}
+
+.onb-helper {
+  color: var(--text-2);
+}
+
+.onb-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.onb-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.onb-footnote {
+  margin: 0;
+  font-size: 12px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.onb-note {
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.site-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-deep);
+}
+
+.site-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-weight: 600;
+}
+
+.site-list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.site-host {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.counts-box {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.counts-box h2 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.counts-box p {
+  font-size: 13px;
+  color: var(--text-2);
+}

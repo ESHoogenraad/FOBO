@@ -1,0 +1,18 @@
+[
+ ["https://tweakers.net/smartphones/vergelijken/", true],
+ ["https://tweakers.net/pricewatch/2254442/apple-iphone-17-pro-256gb-opslag-blauw.html", true],
+ ["https://tweakers.net/nieuws/252522/microsoft-kondigt-op-7-oktober-mogelijk-ook-kleinere-laptop-met-rtx-spark-aan.html", false],
+ ["https://tweakers.net/pricewatch/2323682/apple-iphone-17e-doorzichtig-hoesje-met-magsafe-transparant.html", false],
+ ["https://www.gsmarena.com/samsung_galaxy_s26_ultra_5g-14320.php", true],
+ ["https://www.gsmarena.com/apple_watch_ultra_4-14935.php", false],
+ ["https://www.gsmarena.com/google_pixel_11-review-3000.php", false],
+ ["https://www.coolblue.nl/product/969426/apple-iphone-17-512gb-zwart.html", true],
+ ["https://www.coolblue.nl/mobiele-telefoons", true],
+ ["https://www.coolblue.nl/product/831109/bosch-twk7203-temperaturecontrol7.html", false],
+ ["https://www.bol.com/nl/nl/p/apple-iphone-17-256gb-zwart/9300000240171936/", true],
+ ["https://www.bol.com/nl/nl/l/smartphones/4010/", true],
+ ["https://www.bol.com/nl/nl/p/ledlenser-p7r-zaklamp-oplaadbaar-2-000-lumen-330-m-ip68/9300000234717257/", false],
+ ["https://www.mediamarkt.nl/nl/product/_google-pixel-11-pro-fold-256-gb-olive-1908301.html", true],
+ ["https://www.mediamarkt.nl/nl/category/smartphones-283.html", true],
+ ["https://www.mediamarkt.nl/nl/product/_karcher-wv-1-plus-ruitenreiniger-wit-1869647.html", false]
+]
