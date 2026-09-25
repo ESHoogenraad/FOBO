@@ -5,5 +5,5 @@
   },
   "tags": ["shopping", "privacy"],
   "requires_payment": false,
-  "version": { "license": "REPLACE_WITH_LICENSE_SLUG" }
+  "version": { "license": "MIT" }
 }

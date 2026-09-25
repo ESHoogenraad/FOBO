@@ -2,6 +2,7 @@
   "name": "upgraditch",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Browser extension that shows up when you are tempted to replace a phone that still works",
   "type": "module",
   "scripts": {

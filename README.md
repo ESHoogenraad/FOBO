@@ -49,4 +49,4 @@ Installing opens the onboarding in a new tab.
 - [PRIVACY.md](PRIVACY.md): what stays in the browser and what leaves it.
 - `scripts/build.js`: the Vite build. Output is not minified, so the shipped code stays readable.
 
-The fonts are Plus Jakarta Sans and JetBrains Mono, under the SIL Open Font License (`src/fonts/`).
+The code is under the MIT License ([LICENSE](LICENSE)). The fonts are Plus Jakarta Sans and JetBrains Mono, under the SIL Open Font License (`src/fonts/`).
