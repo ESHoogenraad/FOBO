@@ -26,7 +26,7 @@ Upgraditch is a browser extension that shows up at the moment you are tempted to
 | Urge log | One tap, with an optional reason tag | A5: build, paired with the check. It won't carry retention |
 | Cooldown | A want gets a quiet end date ("Check again on 29 Oct"), 7 days by default. At the end: "Still want it?", then the rating given at the start | A4, A6: build with these changes. No countdown |
 | Milestones | 2, 3, 4 and 5 years, and when security updates end. The 2-year milestone carries the battery and repair check | A7: build (Should) |
-| Cost per month | Price paid divided by months owned | A3: one of four headlines tested in the field. Per-month framing is also how carriers sell phones |
+| Cost per month | Price paid divided by months owned | A3: one of five headlines tested in the field. Per-month framing is also how carriers sell phones |
 
 Cut after the research: streaks (an honest upgrade would break them), social features and share cards (the least wanted kind of tool among impulse buyers, A8), and a separate satisfaction check after a purchase (the cooldown end screen gives the same effect without one, A6).
 
@@ -118,7 +118,7 @@ The build spec, with requirement IDs and priorities, lives in [HANDOFF.md](HANDO
 **What ships**
 
 - Onboarding in three steps: one phone (name, purchase date, price paid); what would make you replace it (one-tap reasons); where Upgraditch shows up (one permission prompt for the default sites), with the opt-in "Help test what works"
-- A one-line bar on phone pages of the default sites: the phone, a headline picked at random from four, "Close tab", "Log urge", "Cooldown" and hide. Clicking it opens the own-rule check with the evidence
+- A one-line bar on phone pages of the default sites: the phone, a headline picked at random from five, "Close tab", "Log urge", "Cooldown" and hide. Clicking it opens the own-rule check with the evidence
 - A popup with cost per month, security updates until, cooldowns with their end dates, "This page tempted me", the need test, a pause switch, "Share my stats" and feedback
 - Need test with "Make it feel new" after a keep result, milestones and JSON export (Should)
 - Validation: uninstall survey, "Share my stats", a feedback link, opt-in anonymous counters with a random headline per showing, and onboarding funnel counts

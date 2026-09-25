@@ -6,7 +6,7 @@ import { costPerMonth, daysToEol, timeHeld } from './calc.js';
 import { formatEur, formatMonthYear, listOr, t } from './i18n.js';
 
 /** Every headline, in a fixed order. */
-export const HEADLINES = ['own_rule', 'cost', 'support', 'time_held'];
+export const HEADLINES = ['own_rule', 'cost', 'support', 'time_held', 'phone_voice'];
 
 export function eligibleHeadlines(device) {
   return HEADLINES.filter((id) => {
@@ -64,6 +64,9 @@ export function headlineText(id, device, today) {
         : t('headlineSupportEnded', formatMonthYear(device.securityEndDate));
     case 'time_held':
       return t('headlineTimeHeld', formatTimeHeld(device.purchaseDate, today));
+    // The same fact as time_held in the phone's own voice, so the pair isolates the voice.
+    case 'phone_voice':
+      return t('headlinePhoneVoice', formatTimeHeld(device.purchaseDate, today));
     default:
       throw new Error(`Unknown headline "${id}"`);
   }

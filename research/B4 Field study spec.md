@@ -64,6 +64,7 @@ This is the micro-randomised part (Klasnja et al. 2015): each showing, not each 
 | `cost` | "€19.14 a month so far, and falling" | Always |
 | `support` | "Security updates until Oct 2027" | The end of security updates is known (never automatically for iPhones: Apple announces no date) |
 | `time_held` | "Kept for 3 years 11 months" | Always |
+| `phone_voice` | "We've had 3 years 11 months together. I'm not done yet." (the same fact as `time_held`, in the phone's voice) | Always |
 
 - At each showing, pick uniformly at random among the *eligible* headlines with `crypto.getRandomValues`, and record the eligible list, so the analysis knows each headline's chance of being picked
 - The layout stays the same for every headline. Varying the headline is the only variation in Stage 1; with a few hundred showings, a second randomised factor would leave both unreadable
@@ -87,6 +88,7 @@ The cooldown's data model (want rating at the start and the end, adjustable leng
 
 1. **Funnel.** Installs (store dashboard) → opted in → onboarding finished → at least one permission granted → first bar (days after install) → first interaction. Rules: fewer than 6 in 10 who finish onboarding grant a permission, then the permission step is the bottleneck; fewer than half of installs see a bar within 7 days, then add a touchpoint that doesn't need a shop visit, or widen the trigger list
 2. **Headlines.** Per headline: showings, the share with `tabClosed`, and a 95% Wilson interval; the same for `cardOpened`. Also compute each user's rate and average across users, so one heavy user can't decide it. Drop a headline only when its rate is under half the best one and the intervals don't overlap. Expect no clear loser: in one sec's experiment the message itself made no difference
+   - `phone_voice` against `time_held`: both state how long the phone has been kept, so the difference between them is the effect of the phone's voice. Report it as its own comparison
 3. **Habituation.** `tabClosed` and `cardOpened` rates by week of use (1 to 4). For users with showings in both week 1 and week 4, compare their own rates. A steady fall means: vary more, show the bar less often
 4. **Page type.** Dismiss rate by `siteCategory`. This answers the open question from Track A about whether interrupting casual browsing annoys
 5. **Urges.** Urges per active user per week (active: at least one event that week)

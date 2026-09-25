@@ -220,7 +220,7 @@
     "message": "Sites toestaan"
   },
   "popupSince": {
-    "message": "sinds $date$",
+    "message": "bij je sinds $date$",
     "placeholders": {
       "date": {
         "content": "$1",
@@ -379,7 +379,7 @@
     "message": "Je telefoon in één oogopslag"
   },
   "tourText_toggle": {
-    "message": "Een feit over de telefoon die je hebt. Klik erop om te zien of deze pagina oplost waarvoor je hem zou vervangen."
+    "message": "Over je telefoon, soms in zijn eigen woorden. Klik erop om te zien of deze pagina oplost waarvoor je hem zou vervangen."
   },
   "tourTitle_closeTab": {
     "message": "Sluit tabblad"
@@ -513,6 +513,15 @@
   },
   "headlineTimeHeld": {
     "message": "Al $time$ in gebruik",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "3 years 11 months"
+      }
+    }
+  },
+  "headlinePhoneVoice": {
+    "message": "We zijn al $time$ samen. Ik ben nog niet klaar.",
     "placeholders": {
       "time": {
         "content": "$1",
@@ -1092,7 +1101,7 @@
     "message": "Mijlpaal"
   },
   "milestoneYears2": {
-    "message": "2 jaar met je $phone$. Tijd voor een accucheck: een nieuwe accu zet de klok terug.",
+    "message": "$phone$: “Twee jaar samen. Is mijn accu moe? Een nieuwe zet de klok terug.”",
     "placeholders": {
       "phone": {
         "content": "$1",
@@ -1101,7 +1110,7 @@
     }
   },
   "milestoneYears": {
-    "message": "$years$ jaar met je $phone$, nu $cost$ per maand.",
+    "message": "$phone$: “$years$ jaar samen, en ik kost je nog maar $cost$ per maand.”",
     "placeholders": {
       "years": {
         "content": "$1",
@@ -1118,7 +1127,7 @@
     }
   },
   "milestoneUpdatesEnded": {
-    "message": "De beveiligingsupdates voor je $phone$ zijn op $date$ gestopt.",
+    "message": "$phone$: “Mijn beveiligingsupdates zijn op $date$ gestopt. Laten we kijken of ik nog doe wat je nodig hebt.”",
     "placeholders": {
       "phone": {
         "content": "$1",

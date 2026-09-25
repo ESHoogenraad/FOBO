@@ -2,7 +2,7 @@
 // match exactly (an unknown event, an unknown field, a wrong type, a value out of range) is
 // rejected. tests/worker.test.js checks that this list agrees with the extension's EVENT_FIELDS.
 
-const HEADLINES = ['own_rule', 'cost', 'support', 'time_held'];
+const HEADLINES = ['own_rule', 'cost', 'support', 'time_held', 'phone_voice'];
 const SITE_CATEGORIES = ['price_comparison', 'specs', 'shop', 'forum'];
 const URGE_SOURCES = ['bar', 'card', 'popup'];
 const URGE_TAGS = ['camera', 'speed', 'battery', 'deal', 'boredom', 'launch_hype', 'other'];

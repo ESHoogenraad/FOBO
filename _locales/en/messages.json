@@ -225,7 +225,7 @@
     "message": "Allow the sites"
   },
   "popupSince": {
-    "message": "since $date$",
+    "message": "with you since $date$",
     "placeholders": {
       "date": {
         "content": "$1",
@@ -384,7 +384,7 @@
     "message": "Your phone, at a glance"
   },
   "tourText_toggle": {
-    "message": "A fact about the phone you have. Click it to check whether this page fixes what would make you replace it."
+    "message": "About your phone, sometimes in its own words. Click it to check whether this page fixes what would make you replace it."
   },
   "tourTitle_closeTab": {
     "message": "Close tab"
@@ -518,6 +518,15 @@
   },
   "headlineTimeHeld": {
     "message": "Kept for $time$",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "3 years 11 months"
+      }
+    }
+  },
+  "headlinePhoneVoice": {
+    "message": "We've had $time$ together. I'm not done yet.",
     "placeholders": {
       "time": {
         "content": "$1",
@@ -1097,7 +1106,7 @@
     "message": "Milestone"
   },
   "milestoneYears2": {
-    "message": "2 years with your $phone$. Worth a battery check: a new battery resets the clock.",
+    "message": "$phone$: “Two years together. If my battery's tired, a new one resets the clock.”",
     "placeholders": {
       "phone": {
         "content": "$1",
@@ -1106,7 +1115,7 @@
     }
   },
   "milestoneYears": {
-    "message": "$years$ years with your $phone$, now $cost$ a month.",
+    "message": "$phone$: “$years$ years together, and I'm down to $cost$ a month.”",
     "placeholders": {
       "years": {
         "content": "$1",
@@ -1123,7 +1132,7 @@
     }
   },
   "milestoneUpdatesEnded": {
-    "message": "Security updates for your $phone$ ended on $date$.",
+    "message": "$phone$: “My security updates ended on $date$. Let's see if I still do what you need.”",
     "placeholders": {
       "phone": {
         "content": "$1",

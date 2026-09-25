@@ -4,21 +4,21 @@ import { eligibleHeadlines, HEADLINES, pickHeadline } from '../src/lib/headlines
 const phone = { purchaseDate: '2022-10-20', purchasePrice: 899, maintenance: [], reasons: ['battery', 'updates'], securityEndDate: '2027-10-01' };
 
 describe('eligible headlines', () => {
-  it('offers all four when reasons and the security end date are known', () => {
+  it('offers all five when reasons and the security end date are known', () => {
     expect(eligibleHeadlines(phone)).toEqual(HEADLINES);
   });
 
   it('leaves out own_rule without reasons and support without an end date', () => {
-    expect(eligibleHeadlines({ ...phone, reasons: [] })).toEqual(['cost', 'support', 'time_held']);
-    expect(eligibleHeadlines({ ...phone, securityEndDate: undefined })).toEqual(['own_rule', 'cost', 'time_held']);
-    expect(eligibleHeadlines({ ...phone, reasons: [], securityEndDate: undefined })).toEqual(['cost', 'time_held']);
+    expect(eligibleHeadlines({ ...phone, reasons: [] })).toEqual(['cost', 'support', 'time_held', 'phone_voice']);
+    expect(eligibleHeadlines({ ...phone, securityEndDate: undefined })).toEqual(['own_rule', 'cost', 'time_held', 'phone_voice']);
+    expect(eligibleHeadlines({ ...phone, reasons: [], securityEndDate: undefined })).toEqual(['cost', 'time_held', 'phone_voice']);
   });
 });
 
 describe('the headline pick', () => {
   // HANDOFF section 12: over 10,000 simulated showings, each eligible headline lands within
   // 2 percentage points of its expected share, and ineligible headlines never appear.
-  it.each([[HEADLINES], [['cost', 'support', 'time_held']], [['cost', 'time_held']]])(
+  it.each([[HEADLINES], [['cost', 'support', 'time_held', 'phone_voice']], [['cost', 'time_held', 'phone_voice']]])(
     'spreads 10,000 showings evenly over %j',
     (eligible) => {
       const counts = Object.fromEntries(HEADLINES.map((id) => [id, 0]));
