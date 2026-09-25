@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildStats } from '../src/lib/stats.js';
+import { buildStats, urgePatterns } from '../src/lib/stats.js';
 
 const now = Date.parse('2026-09-19T12:00:00Z');
 const input = {
@@ -69,5 +69,36 @@ describe('Share my stats', () => {
     expect(stats.devices).toEqual([]);
     expect(stats.funnel).toEqual({ permissionGranted: false, firstBarDay: null });
     expect(stats.cooldowns.avgWantDrop).toBeNull();
+  });
+});
+
+describe('urgePatterns', () => {
+  it('ranks the tags and the site by count, ties alphabetically', () => {
+    const urges = [
+      { site: 'tweakers.net', tag: 'launch_hype' },
+      { site: 'bol.com', tag: 'camera' },
+      { site: 'tweakers.net', tag: 'camera' },
+      { site: 'tweakers.net', tag: 'deal' },
+      { site: 'bol.com' },
+      { site: null, tag: 'boredom' },
+      { site: 'coolblue.nl', tag: 'boredom' },
+      { site: 'coolblue.nl', tag: 'launch_hype' },
+    ];
+    expect(urgePatterns(urges)).toEqual({
+      tags: [
+        ['boredom', 2],
+        ['camera', 2],
+      ],
+      site: ['tweakers.net', 3],
+    });
+  });
+
+  it('counts only what was logged at least twice', () => {
+    expect(urgePatterns([{ site: 'bol.com', tag: 'camera' }, { site: 'tweakers.net', tag: 'deal' }])).toEqual({ tags: [], site: null });
+  });
+
+  it('is empty without urges, tags or sites', () => {
+    expect(urgePatterns([])).toEqual({ tags: [], site: null });
+    expect(urgePatterns([{ site: null }, { site: null }])).toEqual({ tags: [], site: null });
   });
 });

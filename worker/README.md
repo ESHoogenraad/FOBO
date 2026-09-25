@@ -8,7 +8,8 @@ What it does:
 - Checks each event against the schema in `src/validate.js`. An event with an unknown name, an unknown field, a wrong type or an out-of-range value is dropped and counted as rejected; the rest are stored.
 - Stores an event sent twice (same `eventId`) once, takes one install's events per batch, and at most 1000 events per install a day. Bodies over 256 KB are refused.
 - Answers CORS for extension origins: any `moz-extension://` origin (Firefox gives each install a random one) and `chrome-extension://` origins, which `ALLOWED_ORIGINS` can narrow to the store build.
-- Stores each event with the UTC day it arrived and nothing finer. It never reads IP addresses, and request logging is off (`wrangler.toml`).
+- Refuses more than 10 uploads a minute from one IP address (`429`), using Cloudflare's rate limiting binding (`RATE_LIMIT` in `wrangler.toml`). The address is only the limiter's key: it is never stored or written anywhere else. The extension keeps refused events and tries again an hour later.
+- Stores each event with the UTC day it arrived and nothing finer. It never stores IP addresses, and request logging is off (`wrangler.toml`).
 
 ## Deploy
 
@@ -27,11 +28,11 @@ Then set `COUNTS_ENDPOINT` in `src/config.js` to that URL plus `/events`, and re
 
 After the first Chrome Web Store upload, set `ALLOWED_ORIGINS` in `wrangler.toml` to `chrome-extension://<the store ID>` and deploy again.
 
-Cloudflare's edge still sees the IP address of every request, as with any website. The Worker itself never reads it, and nothing stores it.
+Cloudflare's edge still sees the IP address of every request, as with any website. The Worker reads it only to pass it to the rate limiter, and nothing stores it.
 
 ## Abuse
 
-The Origin check keeps browsers on other sites out, but any script can send a fake Origin header. The per-install daily limit stops one client ID from filling the table; it can't stop a script that makes up a new client ID for each request, because the Worker never looks at the IP address. Before the study starts, consider a Cloudflare rate limiting rule on `/events` (Security, WAF, Rate limiting rules): Cloudflare counts requests per IP at its edge, and the Worker still never sees or stores the address. In the analysis, drop client IDs without an `install` event or with impossible sequences.
+The Origin check keeps browsers on other sites out, but any script can send a fake Origin header. The per-install daily limit stops one client ID from filling the table. The rate limit per IP address slows down a script that makes up a new client ID for each request, but doesn't stop it: 10 uploads of up to 500 events a minute is still a lot, the limit is counted per Cloudflare location, and a script with many addresses gets around it. The WAF rate limiting rules in the dashboard need a domain of your own on Cloudflare; they don't cover `workers.dev`. In the analysis, drop client IDs without an `install` event or with impossible sequences.
 
 ## Schema changes
 

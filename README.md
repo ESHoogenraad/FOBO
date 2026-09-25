@@ -24,6 +24,13 @@ Load the build:
 - **Chrome, Brave, Edge:** open `chrome://extensions`, switch on Developer mode, choose "Load unpacked" and pick `dist/`.
 - **Firefox:** open `about:debugging#/runtime/this-firefox`, choose "Load Temporary Add-on" and pick `dist/manifest.json`. Or run `npm run start:firefox` if `firefox` is on your path.
 
+`npm run start:firefox` and `start:chrome` open a fresh browser with the extension loaded. They can't find Flatpak browsers, and branded Chrome ignores the extension anyway, so point them at the copies from `e2e/` (`npm run browsers` there):
+
+```sh
+WEB_EXT_FIREFOX=$(ls -d e2e/browsers/firefox/linux-*/firefox/firefox | tail -1) npm run start:firefox
+CHROME_PATH=$(ls -d ~/.cache/ms-playwright/chromium-*/chrome-linux64/chrome | tail -1) npm run start:chrome
+```
+
 Installing opens the onboarding in a new tab.
 
 ## Layout

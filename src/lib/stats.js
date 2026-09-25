@@ -20,6 +20,21 @@ function countBy(items, field) {
   return counts;
 }
 
+/** [value, count] pairs, most first; ties in alphabetical order, so the popup doesn't flicker. */
+function ranked(counts) {
+  return Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+
+/**
+ * What tempts the user most, over the whole urge log, for the popup:
+ * { tags: the two most-logged reason tags, site: the most-logged site }, as [value, count].
+ * A single urge is no pattern, so only values logged at least twice count.
+ */
+export function urgePatterns(urges) {
+  const top = (field) => ranked(countBy(urges, field)).filter(([, count]) => count >= 2);
+  return { tags: top('tag').slice(0, 2), site: top('site')[0] ?? null };
+}
+
 function barStats(events) {
   const shown = events.filter((e) => e.event === 'bar_shown');
   const outcomes = new Map(events.filter((e) => e.event === 'bar_outcome').map((e) => [e.showingId, e]));

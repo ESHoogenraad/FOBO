@@ -1,6 +1,6 @@
 # Store listings
 
-Text for the Chrome Web Store and Firefox Add-ons (addons.mozilla.org, AMO) listings, which go live on the same day (HANDOFF section 12). English is final draft; the Dutch is a rough draft to check before it goes live. Screenshots are in `store/screenshots/`.
+Text for the Chrome Web Store and Firefox Add-ons (addons.mozilla.org, AMO) listings, which go live on the same day (HANDOFF section 12). Stage 1 is English only (settled 25 Sep 2026); the Dutch drafts are in git history for a later stage. Screenshots are in `store/screenshots/`.
 
 ## Name
 
@@ -8,13 +8,9 @@ Upgraditch (working name until Checkpoint A; rename via `appName` in `_locales` 
 
 ## Short description (Chrome: max 132 characters; AMO summary: max 250)
 
-**EN:** Shows up when you are tempted to replace a phone that still works, and checks the page against your own reasons.
-
-**NL (draft):** Verschijnt als je in de verleiding komt een telefoon te vervangen die het nog doet, en legt de pagina naast je eigen redenen.
+Shows up when you are tempted to replace a phone that still works, and checks the page against your own reasons.
 
 ## Full description
-
-### EN
 
 Tempted by a new phone while yours still works? Upgraditch is an honest second opinion, not a blocker.
 
@@ -29,20 +25,6 @@ When you open a phone page on Tweakers, GSMArena, Coolblue, bol or MediaMarkt, a
 
 Private by design: no account, and your data stays in your browser. It looks only at pages on the sites you allow, and only at their address and title. It looks up the end of security updates on endoflife.date without sending your phone's name. Optional anonymous counts help test which wording in the bar works; they are off unless you switch them on. Open source.
 
-### NL (draft)
-
-Zin in een nieuwe telefoon terwijl de jouwe het nog doet? Upgraditch geeft een eerlijk tweede oordeel, geen blokkade.
-
-Op een telefoonpagina van Tweakers, GSMArena, Coolblue, bol of MediaMarkt verschijnt bovenaan een balk van één regel: je telefoon, één kort feit erover en een knop "Sluit tabblad". Klik op de balk en hij legt de pagina naast je eigen redenen om je telefoon te vervangen: accu, updates, camera enzovoort.
-
-- **Je eigen regel.** Vertel één keer wat voor jou een reden is om te vervangen. Kom je in de verleiding, dan vraagt hij het je terug.
-- **Nodig-test.** Een paar vragen, dan een antwoord: houden, repareren of vervangen. Hij zegt gewoon "vervangen" als de beveiligingsupdates gestopt zijn of je bank-app, DigiD of werk-apps niet meer werken, en verstopt dat antwoord nooit. "Hij is traag" wordt eerst tegen de accu gehouden.
-- **Afkoelen.** Iets gezien? Geef het een rustige einddatum, standaard 7 dagen: "Kijk nog eens op 29 okt". Geen aftelklok. Daarna vraagt hij of je het nog steeds wilt.
-- **Drang noteren.** Eén tik om te noteren dat een pagina je verleidde.
-- **Mijlpalen.** 2, 3, 4 en 5 jaar met je telefoon, en de dag dat de beveiligingsupdates stoppen.
-- **Pauzeren** voor een dag, een week of tot je hem weer aanzet.
-
-Privacy voorop: geen account, en je gegevens blijven in je browser. Hij kijkt alleen naar pagina's op de sites die je toestaat, en daarvan alleen naar het adres en de titel. Optionele anonieme tellingen helpen testen welke tekst in de balk werkt; ze staan uit tenzij je ze aanzet. Open source.
 
 ## Category
 
@@ -91,7 +73,6 @@ The shop pages in the screenshots are real third-party sites. Check the stores' 
 
 - The final name (Checkpoint A).
 - A license, for the repository and for AMO (`version.license` in `store/amo-metadata.json`).
-- Uninstall survey, feedback and counts endpoint URLs (`src/config.js`).
+- The uninstall survey URL (`src/config.js`).
 - Chrome Web Store developer account; AMO API key and secret (for `npm run sign:firefox`).
 - The 30-second recording for the Chrome listing is uploaded to YouTube and linked there.
-- Dutch screenshots, once the Dutch strings are final.

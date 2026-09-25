@@ -269,6 +269,24 @@
   "popupUrgesOne": {
     "message": "1 urge logged this month"
   },
+  "popupUrgeTags": {
+    "message": "Tempted most by: $tags$",
+    "placeholders": {
+      "tags": {
+        "content": "$1",
+        "example": "Camera (5), Launch hype (4)"
+      }
+    }
+  },
+  "popupUrgeSite": {
+    "message": "Mostly on $site$",
+    "placeholders": {
+      "site": {
+        "content": "$1",
+        "example": "tweakers.net (7)"
+      }
+    }
+  },
   "popupUrgesMany": {
     "message": "$count$ urges logged this month",
     "placeholders": {
@@ -396,7 +414,7 @@
     "message": "Log urge"
   },
   "tourText_logUrge": {
-    "message": "Tempted? One click notes it. $app$ keeps count, so you see what tempts you most.",
+    "message": "Tempted? One click notes it. Click the $app$ icon in your toolbar to see what tempts you most.",
     "placeholders": {
       "app": {
         "content": "$1",
@@ -429,7 +447,7 @@
     }
   },
   "tourStep": {
-    "message": "$step$ of $total$",
+    "message": "Quick tour · $step$ of $total$",
     "placeholders": {
       "step": {
         "content": "$1",
@@ -442,7 +460,7 @@
     }
   },
   "tourSkip": {
-    "message": "Skip"
+    "message": "Skip tour"
   },
   "tourNext": {
     "message": "Next"

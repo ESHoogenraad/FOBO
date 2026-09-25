@@ -47,7 +47,7 @@ Source documents in this folder:
 | F10 | Milestones at 2, 3, 4 and 5 years and when security updates end, as a badge on the toolbar icon and a line in the popup. The 2-year milestone carries the battery and repair check | Should |
 | F11 | Export all data as JSON | Should |
 | F13 | Pause: "Pause Upgraditch" for 1 day, 1 week, or until switched back on. While paused, no bar anywhere. For when the need test says upgrade, or someone is shopping for someone else | Must |
-| F14 | English and Dutch through `chrome.i18n`, following the browser language. Every UI string lives in `_locales` from the first commit | Must (setup), Should (Dutch strings) |
+| F14 | English through `chrome.i18n`. Every UI string lives in `_locales` from the first commit, so Dutch can follow in a later stage | Must |
 
 F12, a satisfaction check-in after a purchase, is removed from Stage 1. The cooldown end screen covers the same effect without a purchase (research A6).
 
@@ -248,13 +248,13 @@ Real buttons and links, `aria-expanded` on the bar button, visible focus rings, 
 
 ## 8. Screens and copy
 
-All copy goes through `_locales`. English is given here; the Dutch strings can borrow the wording people use on Tweakers (research plan, A10).
+All copy goes through `_locales`. Stage 1 ships English only; a later Dutch version can borrow the wording people use on Tweakers (research plan, A10).
 
 - **Onboarding step 1:** eyebrow "Before you buy", title "Which phone are you currently holding on to?", fields Phone / Purchase date / Price paid (EUR), footer "No account. Nothing leaves this browser unless you opt in."
 - **Onboarding step 2:** title "What would make you replace it?", helper "Pick any that apply. The need test checks these first when you are tempted." Options: Battery life, It feels slow, Camera, Screen, Storage, Updates ending, Damage, Something else. Note "Later you will see how this compares with what actually tempts you." Actions Continue / Skip for now.
 - **Onboarding step 3:** title "Where Upgraditch shows up", the five sites listed, text "Upgraditch only looks at pages on these sites, to see whether they're about phones. It never reads anything else, and never sends the pages you visit anywhere." Button "Allow these sites" triggers the single permission prompt. Below it, the "Help test what works" opt-in, with the copy from the B4 spec.
 - **Popup:** phone summary with cost per month "and falling", lifespan bar, "Security updates until Oct 2027", cooling-down list ("Check again on 29 Oct"), "This page tempted me", "Run the need test", "Pause Upgraditch", sites on/off, the counts toggle, links "Share my stats" and "Feedback".
-- **Need test:** the checks come from the user's reasons, plus one question for everyone: "Do your banking, ID and work apps still run on it?" (Dutch: name DigiD). "No" means upgrade. "Slow" leads to the battery check. If the user picked "Updates ending", say which updates: "New Android versions stopped in Feb 2026. Security updates continue until Feb 2027." Only the end of security updates counts toward upgrade.
+- **Need test:** the checks come from the user's reasons, plus one question for everyone: "Do your banking, ID and work apps still run on it?" (a Dutch version names DigiD). "No" means upgrade. "Slow" leads to the battery check. If the user picked "Updates ending", say which updates: "New Android versions stopped in Feb 2026. Security updates continue until Feb 2027." Only the end of security updates counts toward upgrade.
 - **Need test result:** "Keep it." / "Repair it." / "Upgrade it." with the checks listed. It must say upgrade when security updates have ended or the apps no longer run, and never hide that answer.
 - **Make it feel new** (after "Keep it."): "A new case or screen protector. A new wallpaper and a tidied home screen. Clear out storage. Re-watch its launch review", the last one a search link for "[phone name] review". Static copy, no tracking. This is what people on Reddit already do when the itch hits (research plan, A10); B2 question 7 shows whether interviewees do it too.
 - **Cooldown end** (badge when `endsOn` arrives, screen in the popup): first "Still want [item]? 1 to 10". Only after that, the start rating next to the new one: "On 22 Oct you gave it 8". Then the outcome, each with its own colour, icon and one-line hint: "Buying it" (`bought`, amber, "You're buying it, or already have."), "Dropping it" (`dropped`, the phone's colour, "You've decided not to buy it.", plus the amount it adds to money not spent), "Haven't decided" (`expired`, neutral, "The cooldown ends without a choice."). Showing the start rating after the new one is deliberate: people misremember their earlier ratings as matching how they feel now.
@@ -269,7 +269,7 @@ The authoritative spec is `research/B4 Field study spec.md`: events, fields, hea
 - Headlines: `own_rule` ("You said you'd replace it for battery or updates. Does this page fix either?", when reasons are set), `cost` ("€19.14 a month so far, and falling"), `support` ("Security updates until Oct 2027", when the end date is known), `time_held` ("Kept for 3 years 11 months"), `phone_voice` ("We've had 3 years 11 months together. I'm not done yet.": the same fact in the phone's voice). At each showing, pick uniformly at random among the eligible headlines with `crypto.getRandomValues`, and record the eligible list with the pick.
 - The layout is the same for every headline, and "Close tab" is the primary action on every variant. The headline is the only thing that varies in Stage 1.
 - Never send device names, notes, URLs or timestamps. `siteCategory` comes from the site table, never from the URL.
-- The Worker (`worker/`): accepts `POST` with a JSON array of events, validates the schema and rejects unknown fields, answers CORS for the extension origins, never reads or stores IP addresses, keeps request logging off, and stores rows with the day they arrived and nothing finer. Raw events are deleted after the Stage 1 analysis.
+- The Worker (`worker/`): accepts `POST` with a JSON array of events, validates the schema and rejects unknown fields, answers CORS for the extension origins, never stores IP addresses (it passes them only to Cloudflare's rate limiter, 10 uploads a minute per address), keeps request logging off, and stores rows with the day they arrived and nothing finer. Raw events are deleted after the Stage 1 analysis.
 
 ## 10. Share my stats (V2) schema
 
@@ -293,7 +293,7 @@ No device names, no free-text notes, no dates finer than days.
 
 1. **Weekend 1:** manifest for Chrome and Firefox, `_locales` setup, storage + migrations, calc + tests, onboarding (all three steps, including the permission request and the opt-in), popup basics, install flow, uninstall URL, local event log. Check each step in Chrome and in Firefox (`web-ext run`).
 2. **Weekend 2:** content script registration, `match.js` with the site table, the bar and card, headline randomisation, urge log, cooldown with its end screen, "This page tempted me", pause. Test in Chrome, Brave and Firefox. The five prototype sessions (research B3) happen after this weekend.
-3. **Weekend 3:** fixes from the prototype sessions, need test, EOL lookup, upload and Worker, share stats, feedback link, milestones, signing and the Firefox Add-ons listing, Dutch strings, store listing assets in English and Dutch (screenshots, 30-second recording).
+3. **Weekend 3:** fixes from the prototype sessions, need test, EOL lookup, upload and Worker, share stats, feedback link, milestones, signing and the Firefox Add-ons listing, store listing assets in English (screenshots, 30-second recording).
 
 If a weekend overruns, cut Should items before extending.
 
@@ -313,7 +313,7 @@ If a weekend overruns, cut Should items before extending.
 - "Share my stats" output matches schema version 2 and contains no names or notes.
 - Every check above also passes in Firefox desktop. On Firefox, switching the counts on shows Firefox's own data consent prompt.
 - The Firefox Add-ons listing goes live on the same day as the Chrome Web Store listing.
-- Both languages render with no missing message keys.
+- English renders with no missing message keys.
 
 ## 13. Open decisions (ask the owner)
 
@@ -324,3 +324,5 @@ If a weekend overruns, cut Should items before extending.
 - More than one device (Checkpoint B).
 
 Settled on 22 Sep 2026: cooldowns default to 7 days and are adjustable; "money not spent" adds up dropped cooldown items; the phone gets `--device-1`; milestones and cooldown ends use the toolbar badge, not notifications.
+
+Settled on 25 Sep 2026: Stage 1 ships in English only, for the Dutch audience too. The draft Dutch strings were removed and stay in git history (commit e7d220e, `_locales/nl/`).

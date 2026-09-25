@@ -3,8 +3,9 @@
 //
 // - POST a JSON array of events. Each event is checked against the schema; invalid ones are
 //   dropped and counted, never stored.
-// - Never reads or stores IP addresses: nothing here touches request.cf or any client header
-//   other than Origin and Content-Type. Request logging is off in wrangler.toml.
+// - Never stores IP addresses. The only client header read besides Origin and Content-Type is
+//   CF-Connecting-IP, passed as the key to Cloudflare's rate limiter (RATE_LIMIT in
+//   wrangler.toml) and nowhere else. Request logging is off in wrangler.toml.
 // - Stores each row with the day it arrived (UTC), and nothing finer.
 // - A batch comes from one install. Each install gets at most MAX_PER_CLIENT_DAY events a day,
 //   so one script can't fill the table under a single client ID. An event sent twice (same
@@ -87,6 +88,20 @@ function toRow(event, receivedDay) {
   return [receivedDay, schemaVersion, clientId, eventId, build, browser, dayIndex, name, JSON.stringify(fields)];
 }
 
+// A script can make up a new client ID for every request, so the daily limit per install can't
+// stop it; this limit per address can slow it down. The extension uploads at most once an hour
+// and keeps what a 429 refused for the next try. No address (local dev) or no binding: no limit.
+async function overRateLimit(request, env) {
+  const ip = request.headers.get('cf-connecting-ip');
+  if (!ip || !env.RATE_LIMIT) return false;
+  try {
+    const { success } = await env.RATE_LIMIT.limit({ key: ip });
+    return !success;
+  } catch {
+    return false;
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('origin');
@@ -94,6 +109,7 @@ export default {
     if (request.method === 'OPTIONS') return reply(204, null, origin);
     if (request.method !== 'POST' || new URL(request.url).pathname !== '/events') return reply(404, { error: 'not found' }, origin);
     if (!(request.headers.get('content-type') ?? '').startsWith('application/json')) return reply(415, { error: 'json' }, origin);
+    if (await overRateLimit(request, env)) return reply(429, { error: 'rate' }, origin);
 
     const events = await readEvents(request);
     if (!events) return reply(400, { error: 'body' }, origin);

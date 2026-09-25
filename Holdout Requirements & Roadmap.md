@@ -122,7 +122,7 @@ The build spec, with requirement IDs and priorities, lives in [HANDOFF.md](HANDO
 - A popup with cost per month, security updates until, cooldowns with their end dates, "This page tempted me", the need test, a pause switch, "Share my stats" and feedback
 - Need test with "Make it feel new" after a keep result, milestones and JSON export (Should)
 - Validation: uninstall survey, "Share my stats", a feedback link, opt-in anonymous counters with a random headline per showing, and onboarding funnel counts
-- English and Dutch, following the browser language
+- English only in Stage 1; the Dutch audience on these sites reads English. Every string is in `_locales`, so Dutch can follow
 - One codebase for Chrome, Brave, Edge and Firefox desktop. Firefox is built and tested from the first weekend and listed on Firefox Add-ons on the same day as the Chrome Web Store: the first channels are open-source and privacy communities, where Firefox is likely far more common than its 6.7% of Dutch desktop browsing
 
 **Where the bar shows.** The default sites are Tweakers Pricewatch, GSMArena, Coolblue, bol and MediaMarkt. The bar shows only on pages about phones, never across a whole domain: a phone bar on a kettle page teaches people to dismiss it. Whether to add gathering.tweakers.net, where launch threads and product discussions happen, is decided at Checkpoint A.
@@ -132,7 +132,7 @@ The build spec, with requirement IDs and priorities, lives in [HANDOFF.md](HANDO
 **Adoption requirements (same weight as features)**
 
 - M1: 15 switch interviews with the [B2 kit](research/B2%20Interview%20kit.md), alongside the build: at least 5 people who upgraded in the last 18 months and at least 5 who seriously considered it and didn't. The diary study (B1) and prototype sessions (B3) run alongside as well; the timeline is in the research plan
-- M2: A store listing in English and Dutch with a 30-second recording, ready before the first user is invited. Drafts are in the research plan (A10). Choose the name at Checkpoint A first
+- M2: A store listing in English with a 30-second recording, ready before the first user is invited. Drafts are in the research plan (A10). Choose the name at Checkpoint A first
 - M3: Posts in sequence, about a week apart, so each round of fixes lands before the next audience sees it. Each carries the recording and one question, and is framed as "I built this to stop myself, looking for people to break it", never as a launch. Ask a moderator or host first. Time the posts so the field window includes the run-up to Black Friday (27 Nov 2026)
   1. Groene Nerds (Telegram): lead with device lifespan, e-waste and the EU ecodesign rules
   2. Turing Station (Discord): lead with open source, local-only storage, opt-in counters and no broad permissions. Expect the manifest to be read, which is free code review
@@ -206,7 +206,7 @@ Cars and clothes could use the same mechanics (own-rule check, cooldown, cost pe
 | A separate satisfaction check after a purchase (F12) | Checkpoint B | B2 question 6 |
 | Keep the cooldown | Checkpoint C | B4 |
 
-Decided on 22 Sep 2026: cooldowns default to 7 days and the user can change that; "money not spent" adds up the prices of cooldown items the user dropped; no CO2 figure in Stage 1; English and Dutch from the start; the kill date is 31 January 2027.
+Decided on 22 Sep 2026: cooldowns default to 7 days and the user can change that; "money not spent" adds up the prices of cooldown items the user dropped; no CO2 figure in Stage 1; English and Dutch from the start (changed on 25 Sep 2026: English only in Stage 1); the kill date is 31 January 2027.
 
 ## Risks
 

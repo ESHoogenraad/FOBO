@@ -88,7 +88,7 @@ function NeedQuestions({ device, heading, onFinish, onSetReasons }) {
       )}
       {questions.map((id) =>
         id === 'battery' ? (
-          <div class="field" key={id}>
+          <div class="field need-q" key={id}>
             <label for="need-battery">{t('needQ_battery')}</label>
             <div class="battery-row">
               <input
@@ -114,7 +114,7 @@ function NeedQuestions({ device, heading, onFinish, onSetReasons }) {
             </p>
           </div>
         ) : (
-          <div class="field" key={id}>
+          <div class="field need-q" key={id}>
             <div class="field-label" id={`need-${id}`}>
               {t(`needQ_${id}`)}
             </div>
@@ -122,7 +122,7 @@ function NeedQuestions({ device, heading, onFinish, onSetReasons }) {
           </div>
         ),
       )}
-      <button type="submit" class="btn btn-primary btn-block" disabled={!complete}>
+      <button type="submit" class="btn btn-primary btn-lg btn-block need-submit" disabled={!complete}>
         {t('needSeeResult')}
       </button>
     </form>

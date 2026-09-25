@@ -1,4 +1,4 @@
-// Both languages render with no missing message keys (HANDOFF section 12).
+// English renders with no missing message keys (HANDOFF section 12). Stage 1 ships English only.
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -11,7 +11,6 @@ import { REASONS, URGE_TAGS } from '../src/lib/reasons.js';
 const root = join(import.meta.dirname, '..');
 const readJson = (path) => JSON.parse(readFileSync(join(root, path), 'utf8'));
 const en = readJson('_locales/en/messages.json');
-const nl = readJson('_locales/nl/messages.json');
 
 function sourceFiles(dir) {
   return readdirSync(join(root, dir), { recursive: true })
@@ -59,27 +58,23 @@ describe('_locales', () => {
     expect(missing).toEqual([]);
   });
 
-  it('has the same keys in Dutch as in English', () => {
-    expect(Object.keys(nl).sort()).toEqual(Object.keys(en).sort());
-  });
-
-  it('uses the same placeholders in both languages', () => {
+  it('defines every placeholder a message uses', () => {
     for (const key of Object.keys(en)) {
-      const placeholders = (messages) => (messages[key].message.match(/\$\w+\$/g) ?? []).sort();
-      expect(placeholders(nl), key).toEqual(placeholders(en));
-      for (const name of placeholders(en)) {
+      for (const name of en[key].message.match(/\$\w+\$/g) ?? []) {
         expect(en[key].placeholders?.[name.slice(1, -1)], `${key} ${name}`).toBeDefined();
       }
     }
   });
 
+  it('ships English only in Stage 1', () => {
+    expect(readdirSync(join(root, '_locales'))).toEqual(['en']);
+  });
+
   it('keeps the name in one place: no message spells it out except appName', () => {
     const name = en.appName.message;
-    for (const messages of [en, nl]) {
-      const offenders = Object.entries(messages)
-        .filter(([key, { message }]) => key !== 'appName' && message.includes(name))
-        .map(([key]) => key);
-      expect(offenders).toEqual([]);
-    }
+    const offenders = Object.entries(en)
+      .filter(([key, { message }]) => key !== 'appName' && message.includes(name))
+      .map(([key]) => key);
+    expect(offenders).toEqual([]);
   });
 });

@@ -178,7 +178,7 @@ describe('the Worker', () => {
     expect(rows).toHaveLength(0);
   });
 
-  it('never reads the IP address', async () => {
+  it('uses the IP address only as the rate limit key, and never stores it', async () => {
     const request = new Request('https://counts.example.workers.dev/events', {
       method: 'POST',
       headers: { origin: 'moz-extension://x', 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.7' },
@@ -190,8 +190,25 @@ describe('the Worker', () => {
       read.push(name.toLowerCase());
       return original(name);
     };
-    await worker.fetch(request, env);
-    expect(read.filter((name) => !['origin', 'content-type', 'content-length'].includes(name))).toEqual([]);
+    const keys = [];
+    const limited = { ...env, RATE_LIMIT: { limit: async ({ key }) => (keys.push(key), { success: true }) } };
+    expect((await worker.fetch(request, limited)).status).toBe(200);
+    expect(read.filter((name) => !['origin', 'content-type', 'content-length', 'cf-connecting-ip'].includes(name))).toEqual([]);
+    expect(keys).toEqual(['203.0.113.7']);
+    expect(rows).toHaveLength(1);
     expect(JSON.stringify(rows)).not.toContain('203.0.113.7');
+  });
+
+  it('refuses an upload over the rate limit and stores nothing', async () => {
+    const request = new Request('https://counts.example.workers.dev/events', {
+      method: 'POST',
+      headers: { origin: 'moz-extension://x', 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.7' },
+      body: JSON.stringify([shown]),
+    });
+    const limited = { ...env, RATE_LIMIT: { limit: async () => ({ success: false }) } };
+    const response = await worker.fetch(request, limited);
+    expect(response.status).toBe(429);
+    expect(response.headers.get('access-control-allow-origin')).toBe('moz-extension://x');
+    expect(rows).toHaveLength(0);
   });
 });

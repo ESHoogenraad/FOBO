@@ -49,6 +49,7 @@ import { BackIcon, CartIcon, CartOffIcon, HourglassIcon, SettingsIcon } from '..
 import { Logo } from '../ui/Logo.jsx';
 import { Rating } from '../ui/Rating.jsx';
 import { NeedTestView } from './NeedTest.jsx';
+import { urgePatterns } from '../lib/stats.js';
 import { exportData, ShareView } from './Share.jsx';
 import '../styles/pages.css';
 import './popup.css';
@@ -64,7 +65,7 @@ async function loadState() {
   ]);
   const month = todayIso().slice(0, 7);
   const urgesThisMonth = urges.filter((urge) => urge.at.slice(0, 7) === month).length;
-  return { device, settings, install, granted, urgesThisMonth, cooldowns };
+  return { device, settings, install, granted, urgesThisMonth, patterns: urgePatterns(urges), cooldowns };
 }
 
 function openOnboarding(step) {
@@ -124,7 +125,7 @@ function MainView({ state, setView }) {
       </header>
 
       {device ? (
-        <PhoneSummary device={device} urgesThisMonth={state.urgesThisMonth} />
+        <PhoneSummary device={device} urgesThisMonth={state.urgesThisMonth} patterns={state.patterns} />
       ) : (
         <section class="notice">
           <h2>{t('popupSetupTitle')}</h2>
@@ -196,6 +197,27 @@ function MainView({ state, setView }) {
   );
 }
 
+// The urge log, read back (F5): this month's count, then what tempts them most so far, which
+// the tour promises. Only tagged urges count toward the reasons.
+function UrgeSummary({ urgesThisMonth, patterns }) {
+  const { tags, site } = patterns;
+  if (!urgesThisMonth && !tags.length && !site) return null;
+  const counted = (label, count) => `${label} (${formatNumber(count)})`;
+  return (
+    <div class="phone-urges">
+      {urgesThisMonth > 0 && (
+        <div class="urge-pill">{urgesThisMonth === 1 ? t('popupUrgesOne') : t('popupUrgesMany', urgesThisMonth)}</div>
+      )}
+      {(tags.length > 0 || site) && (
+        <div class="urge-patterns">
+          {tags.length > 0 && <div>{t('popupUrgeTags', tags.map(([tag, count]) => counted(t(`urgeTag_${tag}`), count)).join(', '))}</div>}
+          {site && <div>{t('popupUrgeSite', counted(...site))}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ---- Milestones (F10): 2 to 5 years, and the end of security updates
 
 function Milestone({ device, milestone, settings, onNeedTest }) {
@@ -229,7 +251,7 @@ function pausedText(settings) {
     : t('popupPausedUntil', formatDateTime(settings.pausedUntil));
 }
 
-function PhoneSummary({ device, urgesThisMonth }) {
+function PhoneSummary({ device, urgesThisMonth, patterns }) {
   const today = todayIso();
   const used = lifespanUsed(device, today);
   const eolDays = daysToEol(device, today);
@@ -246,30 +268,30 @@ function PhoneSummary({ device, urgesThisMonth }) {
         <span class="num phone-cost-value">{formatEur(costPerMonth(device, today))}</span>
         <span>{t('popupPerMonth')}</span>
       </div>
-      {used !== null && (
-        <div
-          class="lifespan"
-          role="progressbar"
-          aria-label={t('lifespanLabel')}
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow={Math.round(used * 100)}
-        >
-          <div style={{ width: `${used * 100}%` }} />
+      <div class="phone-life">
+        {used !== null && (
+          <div
+            class="lifespan"
+            role="progressbar"
+            aria-label={t('lifespanLabel')}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow={Math.round(used * 100)}
+          >
+            <div style={{ width: `${used * 100}%` }} />
+          </div>
+        )}
+        <div class="phone-meta">
+          <span>{t('popupDaysHeld', formatNumber(daysOwned(device, today)))}</span>
+          {eolDays !== null &&
+            (eolDays > 0 ? (
+              <span>{t('popupSecurityUntil', formatMonthYear(device.securityEndDate))}</span>
+            ) : (
+              <span class="warn">{t('popupSecurityEnded', formatMonthYear(device.securityEndDate))}</span>
+            ))}
         </div>
-      )}
-      <div class="phone-meta">
-        <span>{t('popupDaysHeld', formatNumber(daysOwned(device, today)))}</span>
-        {eolDays !== null &&
-          (eolDays > 0 ? (
-            <span>{t('popupSecurityUntil', formatMonthYear(device.securityEndDate))}</span>
-          ) : (
-            <span class="warn">{t('popupSecurityEnded', formatMonthYear(device.securityEndDate))}</span>
-          ))}
       </div>
-      {urgesThisMonth > 0 && (
-        <div class="phone-urges">{urgesThisMonth === 1 ? t('popupUrgesOne') : t('popupUrgesMany', urgesThisMonth)}</div>
-      )}
+      <UrgeSummary urgesThisMonth={urgesThisMonth} patterns={patterns} />
     </section>
   );
 }

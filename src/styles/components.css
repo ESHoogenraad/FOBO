@@ -74,6 +74,14 @@
   font-weight: 700;
 }
 
+/* Disabled: neutral, since a faded teal still reads as a button to press. */
+.btn-primary:disabled {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
+  color: var(--muted);
+  opacity: 1;
+}
+
 .btn-primary:hover:not(:disabled) {
   background: color-mix(in srgb, var(--brand) 88%, white);
 }

@@ -24,7 +24,7 @@ web-ext: `start:firefox`, `start:chrome`, `package`, `sign:firefox` (after `pack
 - Never: accounts, remote code, analytics SDKs, other tracking, `<all_urls>` or `https://*/*` host permissions, minification.
 - Only endoflife.date lookups and opt-in counts leave the browser. Payloads carry no device names, notes, URLs or timestamps; `siteCategory` comes from the site table.
 - Bar speed and reliability come first (§6: render within 200 ms, overlay with no layout shift, no DOM watching).
-- Every UI string lives in `_locales/{en,nl}/messages.json`. The name appears only in `appName` and `APP_NAME` (`src/config.js`).
+- Every UI string lives in `_locales/en/messages.json` (Stage 1 is English only; Dutch drafts are in git history). The name appears only in `appName` and `APP_NAME` (`src/config.js`).
 
 ## Gotchas
 

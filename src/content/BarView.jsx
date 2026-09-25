@@ -208,18 +208,18 @@ function TourTip({ step, bar, target, onNext, onSkip }) {
       aria-labelledby="tour-title"
       style={{ top: `${place.top}px`, left: `${place.left}px`, width: `${place.width}px`, '--arrow': `${place.arrow}px` }}
     >
+      <p class="tour-step">{t('tourStep', step + 1, TOUR_STEPS.length)}</p>
       <p class="tour-title" id="tour-title">
         {t(`tourTitle_${id}`)}
       </p>
       <p class="tour-text">{t(`tourText_${id}`, APP_NAME)}</p>
       <div class="tour-actions">
-        <span class="tour-step">{t('tourStep', step + 1, TOUR_STEPS.length)}</span>
         {!last && (
           <button type="button" class="btn btn-ghost" onClick={onSkip}>
             {t('tourSkip')}
           </button>
         )}
-        <button type="button" class="btn btn-secondary" onClick={onNext}>
+        <button type="button" class="btn btn-primary" onClick={onNext}>
           {last ? t('gotIt') : t('tourNext')}
         </button>
       </div>

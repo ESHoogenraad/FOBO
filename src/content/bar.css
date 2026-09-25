@@ -229,10 +229,11 @@ p {
   gap: 6px;
 }
 
+/* "Quick tour · 1 of 5", above the title, so the tip reads as a tour at once. */
 .tour-step {
-  margin-right: auto;
   color: var(--muted);
   font-size: 12px;
+  font-weight: 600;
 }
 
 /* The part the tip is about. */
