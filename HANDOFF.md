@@ -6,7 +6,7 @@ Updated 22 Sep 2026 with the verdicts from the research plan's desk research (Tr
 
 ## 1. What we are building
 
-Upgraditch is a browser extension that shows up when someone is tempted to replace a phone that still works. On a phone page of a shop or spec site, a one-line bar appears at the top: the user's phone, one short headline, and a "Close tab" button. Clicking the bar opens a card that checks the page against the user's own reasons for replacing the phone.
+Upgraditch is a browser extension that shows up when someone is tempted to replace a phone that still works. On a phone page of a shop or spec site, a small bar appears in the bottom-left corner: the user's phone, one short headline, and a "Close tab" button. Clicking the bar opens a card that checks the page against the user's own reasons for replacing the phone.
 
 "Upgraditch" (upgrade + itch) is a working name, chosen on 23 Sep 2026 after "Holdout" turned out to be taken by a coupon extension; Checkpoint A confirms it. Keep the name in one place (`__MSG_appName__` and one constant) so a rename is a single change.
 
@@ -186,16 +186,16 @@ Reference markup: `design-reference/TokyoNight.dc.html`. The `.dc.html` files us
 
 ### Layout and behaviour
 
-4. One line, fixed at the top, laid over the page (no layout offset: pushing the page down breaks sites with sticky headers), inside a closed Shadow DOM. It never dims the page.
-5. From left to right: device colour dot, phone name (with an "on this page" tag when the page is about the user's own model), the headline (section 9), then "Close tab" (primary), "Log urge" and "Cooldown" as icon buttons (a note and an hourglass, named by `aria-label` and a tooltip), and a hide button (hides the bar on that site for 24 hours). Icons leave the headline room on half-width windows. Below 720 px wide, the bar takes two rows: phone and headline, then the buttons.
-6. The name and headline form one `<button aria-expanded>` that opens the own-rule card beneath the bar. Clicking again or Escape closes it.
+4. A panel fixed in the bottom-left corner, as wide as the card (440 px at most), laid over the page (no layout offset: pushing the page down breaks sites with sticky headers), inside a closed Shadow DOM. It never dims the page. Not at the top (settled 26 Sep 2026): there it covered the site's logo, search and cart, which never scroll out from under it.
+5. Two rows. First the device colour dot and phone name (with an "on this page" tag when the page is about the user's own model), with the headline (section 9) beneath them; it wraps rather than being cut off. Then "Close tab" (primary), "Log urge" and "Cooldown" as icon buttons (a note and an hourglass, named by `aria-label` and a tooltip), and a hide button (hides the bar on that site for 24 hours).
+6. The name and headline form one `<button aria-expanded>` that opens the own-rule card above the bar. Clicking again or Escape closes it.
 7. Card with reasons set: the headline "Does this fix [reason A] or [reason B]?", built from the phone's reasons. One status tile per reason that has data (battery 81%, security updates 377 days); reasons without data (camera, screen, damage) appear only in the question. If "slow" is a reason, the battery tile comes first and the advice mentions it ("A worn battery makes a phone feel slow"). Then one sentence of advice and the buttons "Close tab" (primary, calls `chrome.tabs.remove` via the service worker) and "Something else" (shows the reason tags and logs an urge).
 8. Card with no reasons: "No rule for this phone yet" and a "Set my reasons" button that opens onboarding step 2.
 9. Never ask the user to explain why they want to buy (research A1: writing reasons for a purchase raises desire). Reason tags are one tap and optional.
 10. "Log urge" logs with one tap, then offers the reason tags.
 11. "Cooldown" opens a small form in the card: item (prefilled from the page title), optional price, want rating, days (7 by default).
 12. The bar renders within 200 ms of DOMContentLoaded, never blocks clicks on the page, and does no work after rendering except the URL check in step 3.
-13. The first time the bar appears, a five-step tour points at the headline, "Close tab", "Log urge", "Cooldown" and hide, one tip at a time beneath the bar, with Next and Skip. Escape, Skip, finishing it, or using any part of the bar ends it for good (`settings.barTourDone`). It never takes focus from the page.
+13. The first time the bar appears, a five-step tour points at the headline, "Close tab", "Log urge", "Cooldown" and hide, one tip at a time above the bar, with Next and Skip. Escape, Skip, finishing it, or using any part of the bar ends it for good (`settings.barTourDone`). It never takes focus from the page.
 
 ## 7. Design tokens (Tokyo Night, dark)
 
@@ -215,6 +215,7 @@ Reference markup: `design-reference/TokyoNight.dc.html`. The `.dc.html` files us
   --on-brand: #16161E;
   --ok: #9ECE6A;           /* status fine, never used for buttons */
   --warn: #E0AF68;         /* status near a limit */
+  --cooldown: #7AA2F7;     /* the bar's Cooldown button */
 
   --device-1: #BB9AF7;     /* purple */
   --device-2: #7AA2F7;     /* blue */
@@ -239,6 +240,7 @@ Rules:
 - The phone uses `--device-1`. The other device colours stay in the tokens for later.
 - Open bar: device colour at 12% opacity as background, `--line-strong` border, name in the device colour.
 - Status tiles: status colour at 10% background, 35% border, number in the status colour.
+- Amber (`--warn`) also means "tempted": the urges in the popup and the bar's Log urge button. Blue (`--cooldown`) means "wait instead of buying": the bar's Cooldown button. Both buttons are tinted (16% background, 55% border, icon in the colour), so "Close tab" stays the only filled button (settled 26 Sep 2026). It shares its value with `--device-2`: pick another blue before a second device gets a colour.
 - Bundle fonts locally (both are OFL); never load from Google Fonts inside a host page.
 - The popup, onboarding and need test designs in `design-reference/` use an earlier warm light palette. Rebuild them with these tokens; keep their layout, copy and hierarchy. A light theme via `prefers-color-scheme` comes later.
 

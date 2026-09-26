@@ -15,6 +15,7 @@
   --on-brand: #16161E;
   --ok: #9ECE6A;           /* status fine, never used for buttons */
   --warn: #E0AF68;         /* status near a limit */
+  --cooldown: #7AA2F7;     /* the bar's Cooldown button: waiting instead of buying */
 
   --device-1: #BB9AF7;     /* purple: the phone */
   --device-2: #7AA2F7;     /* blue */

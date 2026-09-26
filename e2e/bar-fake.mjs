@@ -1,6 +1,7 @@
 // The bar on a stand-in shop page that this script serves itself: no live site, no network, the
-// same result every run. First the layout at three window sizes (the card right beneath the bar,
-// inside the window, and the page still clickable beside it), then the behaviour: a filter keeps
+// same result every run. First the layout at three window sizes (the bar in the bottom-left corner
+// with the page's header free, the card right above the bar, inside the window, and the page
+// still clickable beside it), then the behaviour: a filter keeps
 // the showing, a new path starts one, editing the phone keeps the recorded headline, an urge
 // takes a tag, and hide stores hiddenUntil. Screenshots go to e2e/out/fake-*.png.
 //
@@ -9,10 +10,11 @@
 import path from 'node:path';
 import { barScriptReady, launchChrome, log, makeTestBuild, out, SAMPLE_PHONE, sleep } from './lib.mjs';
 
-// A Coolblue phone category: the URL alone decides, so the title doesn't matter. The link sits
-// where the page must stay clickable beside the card.
+// A Coolblue phone category: the URL alone decides, so the title doesn't matter. The header
+// must stay clickable while the bar shows, and the link beside the card too.
 const PAGE = `<!doctype html><title>Smartphones | Coolblue</title>
 <body style="margin:0;font:16px sans-serif;background:#eee">
+<a id="header" href="#h" style="position:fixed;top:0;left:0;right:0;padding:10px;background:#036;color:#fff">site header</a>
 <a id="beside" href="#b" style="position:fixed;top:300px;right:20px;padding:10px;background:#fc0">page link</a>
 ${'<p>page text</p>'.repeat(60)}</body>`;
 const URL_CATEGORY = 'https://www.coolblue.nl/mobiele-telefoons';
@@ -49,20 +51,25 @@ try {
       const card = root.querySelector('.card');
       return {
         bar: box('.bar'),
+        headline: box('.bar-headline'),
+        chevron: box('.bar-toggle .chevron'),
+        cooldown: box('.bar-cooldown'),
+        hide: box('.bar-actions .icon-btn'),
         card: box('.card'),
         tour: box('.tour'),
         scrolls: card ? card.scrollHeight > card.clientHeight : null,
         beside: document.elementFromPoint(innerWidth - 40, 318)?.id,
+        header: document.elementFromPoint(40, 20)?.id,
         height: innerHeight,
       };
     });
   const shot = (name) => page.screenshot({ path: path.join(out, `fake-${name}.png`) });
 
-  // ---- The first-run tour, beneath the bar; Escape ends it for good.
+  // ---- The first-run tour, above the bar; Escape ends it for good.
   await open();
   await sleep(300);
   const tour = await geometry();
-  ok(tour.tour && Math.round(tour.tour.top) === Math.round(tour.bar.bottom) + 12, 'tour tip right beneath the bar');
+  ok(tour.tour && Math.round(tour.tour.bottom) === Math.round(tour.bar.top) - 12, 'tour tip right above the bar');
   await shot('tour');
   await page.keyboard.press('Escape');
 
@@ -71,15 +78,22 @@ try {
     const size = `${width}x${height}`;
     await page.setViewportSize({ width, height });
     await open();
+    const shown = await geometry();
+    ok(Math.round(shown.bar.bottom) === height - 8 && Math.round(shown.bar.left) === 8, `${size}: bar in the bottom-left corner (${Math.round(shown.bar.width)}x${Math.round(shown.bar.height)} px)`);
+    ok(shown.header === 'header', `${size}: page header clickable`);
+    // The headline wraps where the Cooldown button ends, and the chevron sits above the hide button.
+    const middle = (b) => b.left + b.width / 2;
+    ok(Math.abs(shown.headline.right - shown.cooldown.right) < 1, `${size}: headline ends with the Cooldown button (${(shown.headline.right - shown.cooldown.right).toFixed(1)} px)`);
+    ok(Math.abs(middle(shown.chevron) - middle(shown.hide)) < 1, `${size}: chevron above the hide button (${(middle(shown.chevron) - middle(shown.hide)).toFixed(1)} px)`);
     await bar.locator('.bar-toggle').click();
     const rule = await geometry();
-    ok(Math.round(rule.card.top) === Math.round(rule.bar.bottom) + 8, `${size}: card 8 px beneath the bar (bar ${Math.round(rule.bar.height)} px high)`);
+    ok(Math.round(rule.card.bottom) === Math.round(rule.bar.top) - 8, `${size}: card 8 px above the bar`);
     ok(rule.beside === 'beside', `${size}: page clickable beside the card`);
     await shot(`${size}-card`);
     await page.keyboard.press('Escape');
     await bar.getByRole('button', { name: 'Cooldown' }).click();
     const form = await geometry();
-    ok(form.card.bottom <= form.height - 8 + 0.5, `${size}: cooldown form inside the window${form.scrolls ? ', scrolling' : ''}`);
+    ok(form.card.top >= 8 - 0.5, `${size}: cooldown form inside the window${form.scrolls ? ', scrolling' : ''}`);
     await shot(`${size}-cooldown`);
   }
   await page.setViewportSize({ width: 1366, height: 800 });

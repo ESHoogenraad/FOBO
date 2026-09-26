@@ -1,9 +1,9 @@
 // Content script (HANDOFF section 6), registered only for the sites the user allowed.
 //
-// On a page about phones it shows the one-line bar, inside a closed Shadow DOM so the page's
-// styles and scripts can't reach it. It does nothing else: after rendering, the only work is
-// noticing when a site changes pages without reloading. It never reads the page beyond its
-// URL and title, and never sends anything anywhere.
+// On a page about phones it shows the bar in the bottom-left corner, inside a closed Shadow DOM
+// so the page's styles and scripts can't reach it. It does nothing else: after rendering, the
+// only work is noticing when a site changes pages without reloading. It never reads the page
+// beyond its URL and title, and never sends anything anywhere.
 //
 // Each time the bar appears is a "showing" (B4 spec): bar_shown records the headline picked,
 // bar_outcome what the user did with it, until the page changes or 30 minutes pass.
@@ -133,7 +133,7 @@ function mount() {
   style.textContent = css;
   const root = document.createElement('div');
   shadow.append(style, root);
-  // First in the page, so it is also first when tabbing, as it is first on screen.
+  // First in the page, so it is first when tabbing too, not behind every link on the page.
   (document.body ?? document.documentElement).prepend(element);
   return { element, root };
 }

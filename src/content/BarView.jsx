@@ -1,8 +1,8 @@
-// The bar and its card (HANDOFF section 6, items 4 to 12). One line at the top: the phone, the
-// headline, "Close tab" (primary), "Log urge" and "Cooldown" as icon buttons, and hide. The
-// phone and headline are one button that opens the card beneath: the own-rule check, the
-// urge's reason tags, or the cooldown form. The first time the bar appears, a short tour
-// points at each part.
+// The bar and its card (HANDOFF section 6, items 4 to 12). A panel in the bottom-left corner:
+// the phone and the headline, then "Close tab" (primary), "Log urge" and "Cooldown" as icon
+// buttons, and hide. The phone and headline are one button that opens the card above: the
+// own-rule check, the urge's reason tags, or the cooldown form. The first time the bar
+// appears, a short tour points at each part.
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { APP_NAME } from '../config.js';
@@ -11,7 +11,7 @@ import { DEFAULT_COOLDOWN_DAYS, MAX_COOLDOWN_DAYS } from '../lib/cooldowns.js';
 import { reasonsPhrase } from '../lib/headlines.js';
 import { formatDayMonth, formatMonthYear, formatNumber, t } from '../lib/i18n.js';
 import { ownRule } from '../lib/rule.js';
-import { CheckIcon, ChevronIcon, CloseIcon, HourglassIcon, NoteIcon } from '../ui/icons.jsx';
+import { ChevronIcon, CloseIcon, HourglassIcon, NoteIcon } from '../ui/icons.jsx';
 import { Rating } from '../ui/Rating.jsx';
 import { UrgeTags } from '../ui/UrgeTags.jsx';
 
@@ -90,9 +90,6 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, actions }
   return (
     <div class="root">
       <section class="bar" aria-label={APP_NAME} ref={bar}>
-        <span class="logo-badge" title={APP_NAME} aria-hidden="true">
-          <CheckIcon />
-        </span>
         <button
           ref={targets.toggle}
           type="button"
@@ -101,9 +98,11 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, actions }
           aria-controls="card"
           onClick={() => (panel === 'rule' ? close() : open('rule'))}
         >
-          <span class="device-dot" aria-hidden="true" />
-          <span class="bar-name">{device.name}</span>
-          {deviceMatched && <span class="tag">{t('barOnThisPage')}</span>}
+          <span class="bar-phone">
+            <span class="device-dot" aria-hidden="true" />
+            <span class="bar-name">{device.name}</span>
+            {deviceMatched && <span class="tag">{t('barOnThisPage')}</span>}
+          </span>
           <span class="bar-headline">{headlineText}</span>
           <ChevronIcon open={panel === 'rule'} />
         </button>
@@ -114,7 +113,7 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, actions }
           <button
             ref={targets.logUrge}
             type="button"
-            class={`btn btn-secondary btn-icon${touring('logUrge')}`}
+            class={`btn btn-secondary btn-icon btn-tint bar-urge${touring('logUrge')}`}
             aria-label={t('logUrge')}
             title={t('logUrge')}
             onClick={() => logUrge('bar')}
@@ -124,7 +123,7 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, actions }
           <button
             ref={targets.cooldown}
             type="button"
-            class={`btn btn-secondary btn-icon${touring('cooldown')}`}
+            class={`btn btn-secondary btn-icon btn-tint bar-cooldown${touring('cooldown')}`}
             aria-label={t('cooldown')}
             title={t('cooldown')}
             onClick={() => open('cooldown')}
@@ -176,7 +175,7 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, actions }
   );
 }
 
-// ---- The first-run tour: one tip at a time, beneath the bar, its arrow on the part it explains.
+// ---- The first-run tour: one tip at a time, above the bar, its arrow on the part it explains.
 // It never takes focus from the page; its buttons come right after the bar's when tabbing.
 
 function TourTip({ step, bar, target, onNext, onSkip }) {
@@ -184,7 +183,8 @@ function TourTip({ step, bar, target, onNext, onSkip }) {
   const id = TOUR_STEPS[step];
   const last = step === TOUR_STEPS.length - 1;
 
-  // Placed from the bar and the target's positions; again when the window is resized.
+  // Centred on the target but inside the window; again when the window is resized. The tip sits
+  // in the bar's column, so its left is measured from the bar.
   useLayoutEffect(() => {
     function measure() {
       const barBox = bar.current?.getBoundingClientRect();
@@ -193,7 +193,7 @@ function TourTip({ step, bar, target, onNext, onSkip }) {
       const width = Math.min(320, window.innerWidth - 16);
       const center = box.left + box.width / 2;
       const left = Math.min(Math.max(center - width / 2, 8), window.innerWidth - width - 8);
-      setPlace({ top: barBox.bottom + 12, left, width, arrow: center - left });
+      setPlace({ left: left - barBox.left, width, arrow: center - left });
     }
     measure();
     window.addEventListener('resize', measure);
@@ -206,7 +206,7 @@ function TourTip({ step, bar, target, onNext, onSkip }) {
       class="tour"
       aria-live="polite"
       aria-labelledby="tour-title"
-      style={{ top: `${place.top}px`, left: `${place.left}px`, width: `${place.width}px`, '--arrow': `${place.arrow}px` }}
+      style={{ left: `${place.left}px`, width: `${place.width}px`, '--arrow': `${place.arrow}px` }}
     >
       <p class="tour-step">{t('tourStep', step + 1, TOUR_STEPS.length)}</p>
       <p class="tour-title" id="tour-title">

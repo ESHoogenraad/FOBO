@@ -14,7 +14,7 @@ Shows up when you are tempted to replace a phone that still works, and checks th
 
 Tempted by a new phone while yours still works? Upgraditch is an honest second opinion, not a blocker.
 
-When you open a phone page on Tweakers, GSMArena, Coolblue, bol or MediaMarkt, a one-line bar appears at the top: your phone, one short fact about it, and a "Close tab" button. Click the bar and it checks the page against the reasons you gave for replacing your phone: battery, updates, camera and so on.
+When you open a phone page on Tweakers, GSMArena, Coolblue, bol or MediaMarkt, a small bar appears in the bottom-left corner, out of the way of the site's menu and search: your phone, one short fact about it, and a "Close tab" button. Click the bar and it checks the page against the reasons you gave for replacing your phone: battery, updates, camera and so on.
 
 - **Your own rule.** Tell it once what would make you replace your phone. When you're tempted, it asks you back.
 - **Need test.** A few questions, then an answer: keep it, repair it, or upgrade. It says "upgrade" plainly when security updates have ended or your banking, ID or work apps no longer run, and never hides that answer. "It feels slow" is checked against the battery first.

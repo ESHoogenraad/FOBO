@@ -151,7 +151,9 @@ export async function dismissSiteDialogs(page, { wait = 5000 } = {}) {
     if (!shown) return closed;
     let gone = false;
     for (let attempt = 0; attempt < 5 && !gone; attempt++) {
-      await button.click({ timeout: 5000 }).catch(() => {});
+      // Clicked on the element, not at a point: in windows up to about 1540 px wide the bar
+      // covers the middle of bol's "Alles accepteren", where a pointer click would land.
+      await button.evaluate((element) => element.click()).catch(() => {});
       gone = await button.waitFor({ state: 'hidden', timeout: 2000 }).then(() => true, () => false);
     }
     if (!gone) return closed;
