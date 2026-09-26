@@ -26,15 +26,30 @@ const { sync, local } = browser.storage;
 
 const SETTINGS_DEFAULTS = { pausedUntil: null, sitesOff: [], hiddenUntil: {}, milestonesSeen: [], barTourDone: false };
 
+const withDefaults = (settings) => ({ ...SETTINGS_DEFAULTS, ...settings });
+
 export async function getSettings() {
   const { settings } = await sync.get('settings');
-  return { ...SETTINGS_DEFAULTS, ...settings };
+  return withDefaults(settings);
 }
 
-export async function updateSettings(patch) {
-  const next = { ...(await getSettings()), ...patch };
-  await sync.set({ settings: next });
-  return next;
+// Settings are one object, read and written whole. Writes from this page or script run one at a
+// time, so two quick changes (two switches, the tour and a hide) never undo each other.
+let settingsWrites = Promise.resolve();
+
+/**
+ * Changes some settings and resolves to all of them. `change` is the fields to set, or a
+ * function from the current settings to those fields, for a change that depends on them.
+ */
+export function updateSettings(change) {
+  const write = settingsWrites.then(async () => {
+    const current = await getSettings();
+    const next = { ...current, ...(typeof change === 'function' ? change(current) : change) };
+    await sync.set({ settings: next });
+    return next;
+  });
+  settingsWrites = write.catch(() => {});
+  return write;
 }
 
 // ---- The phone (sync)
@@ -44,12 +59,31 @@ export async function getDevice() {
   return devices[0] ?? null;
 }
 
+/** [settings, the phone or null] in one storage read, for the bar's start and the badge. */
+export async function getSettingsAndDevice() {
+  const { settings, devices = [] } = await sync.get(['settings', 'devices']);
+  return [withDefaults(settings), devices[0] ?? null];
+}
+
 export async function saveDevice(device) {
   await sync.set({ devices: [device] });
 }
 
 export function newDevice(fields) {
   return { id: crypto.randomUUID(), category: 'phone', maintenance: [], reasons: [], ...fields };
+}
+
+/**
+ * The phone after editing it. A different purchase month means a new phone: it gets a new ID
+ * (so its milestones start afresh) and loses the old one's battery health and repairs, but keeps
+ * the reasons, which are the user's own rule. The same month is the same phone, corrected.
+ */
+export function editDevice(device, fields) {
+  if (!device) return newDevice(fields);
+  if (fields.purchaseDate.slice(0, 7) !== device.purchaseDate.slice(0, 7)) {
+    return newDevice({ ...fields, reasons: device.reasons });
+  }
+  return { ...device, ...fields };
 }
 
 // ---- This install (local)

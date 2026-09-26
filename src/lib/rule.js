@@ -3,10 +3,17 @@
 
 import { daysToEol } from './calc.js';
 
-// The line a replacement battery is usually recommended below.
-export const BATTERY_LINE = 80;
+// The line a replacement battery is usually recommended below, and the line under which it is near.
+const BATTERY_LINE = 80;
 const BATTERY_NEAR = 85;
-const UPDATES_NEAR_DAYS = 365;
+// The end of security updates counts as near within a year. Shared with the need test.
+export const UPDATES_NEAR_DAYS = 365;
+
+/** Battery health as 'fine' (85% and up), 'near' (80 to 84%) or 'below' (under 80%). Shared with the need test. */
+export function batteryNote(pct) {
+  if (pct >= BATTERY_NEAR) return 'fine';
+  return pct >= BATTERY_LINE ? 'near' : 'below';
+}
 
 /**
  * { reasons, tiles, advice } for a phone with reasons set; null without reasons.
@@ -22,12 +29,8 @@ export function ownRule(device, today) {
   const hasBattery = typeof device.batteryHealthPct === 'number';
   if (hasBattery && (reasons.includes('battery') || reasons.includes('slow'))) {
     const pct = device.batteryHealthPct;
-    tiles.push({
-      id: 'battery',
-      pct,
-      status: pct >= BATTERY_NEAR ? 'ok' : 'warn',
-      note: pct >= BATTERY_NEAR ? 'fine' : pct >= BATTERY_LINE ? 'near' : 'below',
-    });
+    const note = batteryNote(pct);
+    tiles.push({ id: 'battery', pct, status: note === 'fine' ? 'ok' : 'warn', note });
   }
   const eolDays = daysToEol(device, today);
   if (eolDays !== null && reasons.includes('updates')) {

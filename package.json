@@ -14,7 +14,7 @@
     "start:firefox": "web-ext run --source-dir dist",
     "start:chrome": "web-ext run --source-dir dist --target chromium",
     "package": "web-ext build --source-dir dist --overwrite-dest",
-    "package:source": "mkdir -p web-ext-artifacts && zip -qr web-ext-artifacts/source.zip . -x 'node_modules/*' 'worker/node_modules/*' 'e2e/node_modules/*' 'e2e/browsers/*' 'e2e/.build/*' 'e2e/out/*' 'dist/*' 'web-ext-artifacts/*' '.git/*' '.wrangler/*' 'worker/.wrangler/*'",
+    "package:source": "test -z \"$(git status --porcelain)\" || { echo 'package:source: commit first, the source zip is made from git (HEAD)' >&2; exit 1; }; mkdir -p web-ext-artifacts && git archive --format=zip -o web-ext-artifacts/source.zip HEAD",
     "sign:firefox": "web-ext sign --source-dir dist --channel listed --amo-metadata store/amo-metadata.json --upload-source-code web-ext-artifacts/source.zip"
   },
   "engines": {

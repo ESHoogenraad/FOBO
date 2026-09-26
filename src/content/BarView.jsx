@@ -8,17 +8,17 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { APP_NAME } from '../config.js';
 import { parsePrice, todayIso } from '../lib/calc.js';
 import { DEFAULT_COOLDOWN_DAYS, MAX_COOLDOWN_DAYS } from '../lib/cooldowns.js';
-import { headlineText, reasonsPhrase } from '../lib/headlines.js';
+import { reasonsPhrase } from '../lib/headlines.js';
 import { formatDayMonth, formatMonthYear, formatNumber, t } from '../lib/i18n.js';
-import { URGE_TAGS } from '../lib/reasons.js';
 import { ownRule } from '../lib/rule.js';
 import { CheckIcon, ChevronIcon, CloseIcon, HourglassIcon, NoteIcon } from '../ui/icons.jsx';
 import { Rating } from '../ui/Rating.jsx';
+import { UrgeTags } from '../ui/UrgeTags.jsx';
 
 /** The tour's steps, in order: each points at the part of the bar with the same name. */
 export const TOUR_STEPS = ['toggle', 'closeTab', 'logUrge', 'cooldown', 'hide'];
 
-export function Bar({ device, headline, deviceMatched, item, tour, actions }) {
+export function Bar({ device, headlineText, deviceMatched, item, tour, actions }) {
   const [panel, setPanel] = useState(null); // null | "rule" | "urge" | "cooldown"
   const [urge, setUrge] = useState(null);
   const [tourStep, setTourStep] = useState(tour ? 0 : null);
@@ -60,8 +60,8 @@ export function Bar({ device, headline, deviceMatched, item, tour, actions }) {
     }
   }
 
-  // Close and hide: the tour's settings write goes first, so hiding (which also writes the
-  // settings) can't overwrite it, or the other way round.
+  // Close and hide: the tour's settings write finishes first, because closing the tab would cut
+  // it off halfway.
   function act(action) {
     return async () => {
       await endTour();
@@ -104,7 +104,7 @@ export function Bar({ device, headline, deviceMatched, item, tour, actions }) {
           <span class="device-dot" aria-hidden="true" />
           <span class="bar-name">{device.name}</span>
           {deviceMatched && <span class="tag">{t('barOnThisPage')}</span>}
-          <span class="bar-headline">{headlineText(headline, device, today)}</span>
+          <span class="bar-headline">{headlineText}</span>
           <ChevronIcon open={panel === 'rule'} />
         </button>
         <div class="bar-actions">
@@ -248,7 +248,7 @@ function RulePanel({ device, today, actions, onSomethingElse }) {
       {rule.tiles.length > 0 && (
         <div class="tiles">
           {rule.tiles.map((tile) => (
-            <Tile tile={tile} />
+            <Tile key={tile.id} tile={tile} />
           ))}
         </div>
       )}
@@ -285,28 +285,12 @@ function Tile({ tile }) {
   );
 }
 
-// ---- After "Log urge" or "Something else": the optional reason tag. Never asks why they want to buy.
+// ---- After "Log urge" or "Something else": the optional reason tag.
 
 function UrgePanel({ urge, actions }) {
-  const [tag, setTag] = useState(null);
-
-  function pick(id) {
-    setTag(id);
-    if (urge) actions.tagUrge(urge, id);
-  }
-
   return (
     <div aria-live="polite" class="panel">
-      <p class="card-title">{tag ? t('temptedThanks') : t('temptedLogged')}</p>
-      {!tag && (
-        <div class="chips">
-          {URGE_TAGS.map((id) => (
-            <button type="button" class="chip" onClick={() => pick(id)}>
-              {t(`urgeTag_${id}`)}
-            </button>
-          ))}
-        </div>
-      )}
+      <UrgeTags titleClass="card-title" onPick={(tag) => urge && actions.tagUrge(urge, tag)} />
     </div>
   );
 }

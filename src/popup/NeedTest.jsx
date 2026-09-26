@@ -22,15 +22,23 @@ export function NeedTestView({ device, onBack, onPause, onSetReasons }) {
   const heading = useRef(null);
   useEffect(() => heading.current?.focus(), [outcome]);
 
+  // One result per test: a double click must not record two.
+  const finishing = useRef(false);
   async function finish(answers) {
-    const result = needResult(device, answers, todayIso());
-    // Battery health is a manual entry in Stage 1; keep it for the bar's card and the next test.
-    if (typeof answers.battery === 'number') {
-      const current = await getDevice();
-      if (current) await saveDevice({ ...current, batteryHealthPct: answers.battery });
+    if (finishing.current) return;
+    finishing.current = true;
+    try {
+      const result = needResult(device, answers, todayIso());
+      // Battery health is a manual entry in Stage 1; keep it for the bar's card and the next test.
+      if (typeof answers.battery === 'number') {
+        const current = await getDevice();
+        if (current) await saveDevice({ ...current, batteryHealthPct: answers.battery });
+      }
+      await recordEvent('need_test_result', { result: result.result });
+      setOutcome(result);
+    } finally {
+      finishing.current = false;
     }
-    await recordEvent('need_test_result', { result: result.result });
-    setOutcome(result);
   }
 
   return (

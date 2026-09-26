@@ -11,8 +11,8 @@ export const HEADLINES = ['own_rule', 'cost', 'support', 'time_held', 'phone_voi
 export function eligibleHeadlines(device) {
   return HEADLINES.filter((id) => {
     if (id === 'own_rule') return device.reasons?.length > 0;
-    // Only when the end of security updates is known. Apple announces no date, so for an
-    // iPhone this needs a date the user entered.
+    // Only when the end of security updates is known. Apple announces no date, so an iPhone
+    // gets it only once its support has ended (the background's daily refresh picks that up).
     if (id === 'support') return Boolean(device.securityEndDate);
     return true;
   });

@@ -10,7 +10,20 @@
   --font-num: "JetBrains Mono (bar)", ui-monospace, monospace;
 }
 
+/* The bar and the card beneath it, laid over the top of the page as one column, so the card
+   follows the bar's height (one row or two). The column itself takes no clicks: the page stays
+   usable beside the card. */
 .root {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  max-height: calc(100vh - 16px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  pointer-events: none;
   color-scheme: dark;
   color: var(--text);
   font-family: var(--font-ui);
@@ -18,6 +31,10 @@
   line-height: 1.5;
   text-align: left;
   -webkit-font-smoothing: antialiased;
+}
+
+.root > * {
+  pointer-events: auto;
 }
 
 *,
@@ -46,10 +63,8 @@ p {
 /* ---- The bar: one line, laid over the top of the page */
 
 .bar {
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  right: 8px;
+  align-self: stretch;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -88,16 +103,6 @@ p {
 
 .bar-toggle[aria-expanded="true"] .bar-name {
   color: var(--device-1);
-}
-
-.device-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  background: var(--device-1);
-  box-shadow: 0 0 10px var(--device-1);
 }
 
 .bar-name {
@@ -242,14 +247,11 @@ p {
   outline-offset: 2px;
 }
 
-/* ---- The card, beneath the bar */
+/* ---- The card, beneath the bar; it scrolls when the window is too short for it */
 
 .card {
-  position: fixed;
-  top: 78px;
-  left: 8px;
-  width: min(440px, calc(100vw - 16px));
-  max-height: calc(100vh - 94px);
+  width: min(440px, 100%);
+  min-height: 0;
   overflow: auto;
   padding: 16px 20px 20px;
   display: flex;
@@ -370,21 +372,4 @@ p {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-}
-
-/* The bar's second row pushes the card down. */
-@media (max-width: 719px) {
-  .card {
-    top: 128px;
-    max-height: calc(100vh - 144px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition: none !important;
-    animation: none !important;
-  }
 }

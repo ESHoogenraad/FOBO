@@ -28,11 +28,13 @@ Then set `COUNTS_ENDPOINT` in `src/config.js` to that URL plus `/events`, and re
 
 After the first Chrome Web Store upload, set `ALLOWED_ORIGINS` in `wrangler.toml` to `chrome-extension://<the store ID>` and deploy again.
 
+**Deploy the Worker before the extension** whenever a release changes the events (a new event, field or headline in `EVENT_FIELDS`). The Worker answers `200` for a batch even when it rejects some events, and the extension then marks the whole batch as sent: events the old Worker doesn't know are lost, not retried.
+
 Cloudflare's edge still sees the IP address of every request, as with any website. The Worker reads it only to pass it to the rate limiter, and nothing stores it.
 
 ## Abuse
 
-The Origin check keeps browsers on other sites out, but any script can send a fake Origin header. The per-install daily limit stops one client ID from filling the table. The rate limit per IP address slows down a script that makes up a new client ID for each request, but doesn't stop it: 10 uploads of up to 500 events a minute is still a lot, the limit is counted per Cloudflare location, and a script with many addresses gets around it. The WAF rate limiting rules in the dashboard need a domain of your own on Cloudflare; they don't cover `workers.dev`. In the analysis, drop client IDs without an `install` event or with impossible sequences.
+The Origin check keeps browsers on other sites out, but any script can send a fake Origin header. The per-install daily limit stops one client ID from filling the table; it is best-effort, since uploads running at the same moment under one ID can each pass it by a batch. The rate limit per IP address slows down a script that makes up a new client ID for each request, but doesn't stop it: 10 uploads of up to 500 events a minute is still a lot, the limit is counted per Cloudflare location, and a script with many addresses gets around it. The WAF rate limiting rules in the dashboard need a domain of your own on Cloudflare; they don't cover `workers.dev`. In the analysis, drop client IDs without an `install` event or with impossible sequences.
 
 ## Schema changes
 

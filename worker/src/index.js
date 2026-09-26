@@ -8,8 +8,9 @@
 //   wrangler.toml) and nowhere else. Request logging is off in wrangler.toml.
 // - Stores each row with the day it arrived (UTC), and nothing finer.
 // - A batch comes from one install. Each install gets at most MAX_PER_CLIENT_DAY events a day,
-//   so one script can't fill the table under a single client ID. An event sent twice (same
-//   eventId) is stored once.
+//   so one script can't fill the table under a single client ID. The limit is best-effort: the
+//   count and the insert are separate queries, so uploads running at the same moment under one
+//   ID can pass it by a batch each. An event sent twice (same eventId) is stored once.
 
 import { isValidEvent } from './validate.js';
 

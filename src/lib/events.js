@@ -28,6 +28,8 @@ export const EVENT_FIELDS = {
 };
 
 const KEY_PREFIX = 'ev:';
+/** Whether a local storage key holds an event record. */
+export const isEventKey = (key) => key.startsWith(KEY_PREFIX);
 // Events filled in shortly after they are recorded, held back from uploads until then:
 // the reason tag follows a logged urge within seconds.
 const HOLD_MS = { urge_logged: 10 * 60 * 1000 };
@@ -119,7 +121,7 @@ export async function updateEvent(key, fields, now = Date.now()) {
 async function getEventEntries() {
   const all = await browser.storage.local.get(null);
   return Object.keys(all)
-    .filter((key) => key.startsWith(KEY_PREFIX))
+    .filter(isEventKey)
     .sort()
     .map((key) => [key, all[key]]);
 }

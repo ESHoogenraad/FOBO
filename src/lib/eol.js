@@ -12,8 +12,11 @@
 import browser from 'webextension-polyfill';
 
 export const EOL_API = 'https://endoflife.date/api/v1/products/';
-const CACHE_KEY = 'eolCache';
+export const EOL_CACHE_KEY = 'eolCache';
 const CACHE_MS = 7 * 24 * 60 * 60 * 1000;
+// Onboarding waits for the lookup when the phone is saved, so a slow answer counts as offline:
+// the daily refresh fills the date in later.
+const TIMEOUT_MS = 5000;
 
 // Brand words in the phone name, and the endoflife.date product for each.
 const PRODUCTS = [
@@ -97,15 +100,19 @@ export function trimProduct(json) {
   };
 }
 
-async function getProduct(slug, { fetchImpl = globalThis.fetch, now = Date.now() } = {}) {
-  const { [CACHE_KEY]: cache = {} } = await browser.storage.local.get(CACHE_KEY);
+async function getProduct(slug, { fetchImpl = globalThis.fetch, now = Date.now(), timeoutMs = TIMEOUT_MS } = {}) {
+  const { [EOL_CACHE_KEY]: cache = {} } = await browser.storage.local.get(EOL_CACHE_KEY);
   const cached = cache[slug];
   if (cached && now - cached.fetchedAt < CACHE_MS) return cached;
   try {
-    const response = await fetchImpl(EOL_API + slug, { credentials: 'omit', referrerPolicy: 'no-referrer' });
+    const response = await fetchImpl(EOL_API + slug, {
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer',
+      signal: AbortSignal.timeout(timeoutMs),
+    });
     if (!response.ok) throw new Error(`endoflife.date answered ${response.status}`);
     const product = { ...trimProduct(await response.json()), fetchedAt: now };
-    await browser.storage.local.set({ [CACHE_KEY]: { ...cache, [slug]: product } });
+    await browser.storage.local.set({ [EOL_CACHE_KEY]: { ...cache, [slug]: product } });
     return product;
   } catch (error) {
     if (cached) return cached; // offline: an older answer beats none

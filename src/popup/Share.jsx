@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import browser from 'webextension-polyfill';
 import { APP_NAME } from '../config.js';
+import { EOL_CACHE_KEY } from '../lib/eol.js';
 import { t } from '../lib/i18n.js';
 import { collectStats } from '../lib/stats.js';
 import { updateInstall } from '../lib/storage.js';
@@ -59,7 +60,7 @@ export function ShareView({ onBack }) {
 /** Downloads everything Upgraditch stored in this browser as one JSON file (F11). */
 export async function exportData() {
   const [sync, local] = await Promise.all([browser.storage.sync.get(null), browser.storage.local.get(null)]);
-  delete local.eolCache; // a copy of endoflife.date, not the user's data
+  delete local[EOL_CACHE_KEY]; // a copy of endoflife.date, not the user's data
   const data = { exportedAt: new Date().toISOString(), version: browser.runtime.getManifest().version, sync, local };
   const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
   const link = document.createElement('a');

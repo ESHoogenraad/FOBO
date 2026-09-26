@@ -1,22 +1,30 @@
-/* Components shared by the extension's pages and the bar: numbers, logo badge, buttons, fields
-   and chips. Uses only classes, so it works both in a page and inside the bar's shadow root. */
+/* Components shared by the extension's pages and the bar: numbers, the device dot, logo badge,
+   buttons, fields and chips, and reduced motion. Uses only classes, so it works both in a page
+   and inside the bar's shadow root. */
 
 .num {
   font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
 }
 
-.muted {
-  color: var(--muted);
+/* The phone's colour dot (--device-1), next to its name. */
+.device-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: var(--device-1);
+  box-shadow: 0 0 10px var(--device-1);
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ---- Logo */
@@ -183,12 +191,6 @@
 .field-error {
   font-size: 12px;
   color: var(--warn);
-}
-
-/* color-scheme: dark (pages.css, and the meta tag in each page) already draws the calendar icon
-   and the browser's date picker dark. */
-.field input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
 }
 
 /* ---- Chips: one-tap multi-select. Selected is shown by a check mark, not by colour alone. */

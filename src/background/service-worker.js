@@ -10,7 +10,7 @@ import { detectBrowser } from '../lib/env.js';
 import { eolFields, lookupEol } from '../lib/eol.js';
 import { dataConsentChange, pruneEvents, recordEvent, saveCountsOptIn, uploadPending } from '../lib/events.js';
 import { SITES } from '../lib/match.js';
-import { createInstall, getCooldowns, getDevice, getSettings, migrate, saveDevice } from '../lib/storage.js';
+import { createInstall, getCooldowns, getDevice, getSettingsAndDevice, migrate, saveDevice } from '../lib/storage.js';
 
 const ALARMS = {
   upload: { periodInMinutes: 60 }, // V4: at most one batch an hour
@@ -36,22 +36,31 @@ const CONTENT_SCRIPT = {
   persistAcrossSessions: true,
 };
 
-/** Registers, updates or removes the content script to match the granted site permissions. */
-async function syncContentScript() {
-  const { origins = [] } = await browser.permissions.getAll();
-  const matches = SITES.map((site) => site.origin).filter((origin) => origins.includes(origin));
-  const [registered] = await browser.scripting.getRegisteredContentScripts({ ids: [CONTENT_SCRIPT.id] });
+// One sync at a time: startup and a permission change can overlap, and two registrations of
+// the same ID fail.
+let contentScriptSync = Promise.resolve();
 
-  if (!matches.length) {
-    if (registered) await browser.scripting.unregisterContentScripts({ ids: [CONTENT_SCRIPT.id] });
-  } else if (!registered) {
-    await browser.scripting.registerContentScripts([{ ...CONTENT_SCRIPT, matches }]);
-  } else if (
-    registered.runAt !== CONTENT_SCRIPT.runAt ||
-    [...registered.matches].sort().join() !== [...matches].sort().join()
-  ) {
-    await browser.scripting.updateContentScripts([{ ...CONTENT_SCRIPT, matches }]);
-  }
+/**
+ * Registers, updates or removes the content script to match the granted site permissions.
+ * A registration that exists is always rewritten in full, so a new version's script settings
+ * take effect even where the browser kept the old registration.
+ */
+function syncContentScript() {
+  const run = contentScriptSync.then(async () => {
+    const { origins = [] } = await browser.permissions.getAll();
+    const matches = SITES.map((site) => site.origin).filter((origin) => origins.includes(origin));
+    const [registered] = await browser.scripting.getRegisteredContentScripts({ ids: [CONTENT_SCRIPT.id] });
+
+    if (!matches.length) {
+      if (registered) await browser.scripting.unregisterContentScripts({ ids: [CONTENT_SCRIPT.id] });
+    } else if (registered) {
+      await browser.scripting.updateContentScripts([{ ...CONTENT_SCRIPT, matches }]);
+    } else {
+      await browser.scripting.registerContentScripts([{ ...CONTENT_SCRIPT, matches }]);
+    }
+  });
+  contentScriptSync = run.catch(() => {});
+  return run;
 }
 
 // ---- Toolbar badge: cooldowns whose end date has come, and a new milestone
@@ -59,7 +68,7 @@ async function syncContentScript() {
 
 async function updateBadge() {
   const today = todayIso();
-  const [cooldowns, device, settings] = await Promise.all([getCooldowns(), getDevice(), getSettings()]);
+  const [cooldowns, [settings, device]] = await Promise.all([getCooldowns(), getSettingsAndDevice()]);
   const milestone = device && currentMilestone(device, today, settings.milestonesSeen);
   const due = cooldowns.filter((cooldown) => isDue(cooldown, today)).length + (milestone ? 1 : 0);
   await browser.action.setBadgeText({ text: due ? String(due) : '' });
@@ -120,7 +129,9 @@ browser.permissions.onRemoved.addListener(async (permissions) => {
 });
 
 // ---- End of security updates (endoflife.date), refreshed daily from the 7-day cache.
-// Picks up new dates, and iPhones once Apple's support has ended.
+// Picks up new dates, and iPhones once Apple's support has ended. The lookup owns the three
+// fields eolFields sets and overwrites them, cleared ones included: if the user can ever enter a
+// date, mark where it came from and skip it here.
 
 async function refreshEol() {
   const device = await getDevice();

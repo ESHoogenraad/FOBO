@@ -155,6 +155,12 @@ describe('lookupEol', () => {
     expect(await lookupEol('Galaxy S22', { fetchImpl: offline, now })).toEqual({ status: 'offline' });
   });
 
+  it('gives up on a slow answer and says offline, so onboarding never waits long', async () => {
+    // Never answers, as a stalled server would; it only fails when the request is aborted.
+    const stalled = vi.fn((url, init) => new Promise((_, reject) => init?.signal?.addEventListener('abort', () => reject(init.signal.reason))));
+    expect(await lookupEol('Pixel 7', { fetchImpl: stalled, timeoutMs: 20 })).toEqual({ status: 'offline' });
+  });
+
   it('has no date for a supported iPhone, recognised or not', async () => {
     const fetchImpl = fakeFetch();
     expect(await lookupEol('iPhone 13 mini', { fetchImpl })).toEqual({ status: 'noDate', product: 'iphone', label: '13 Mini' });

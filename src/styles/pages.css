@@ -143,15 +143,6 @@ a:hover {
   font-weight: 600;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
 /* ---- A button that reads as a link, for small secondary actions */
 
 .link-btn {

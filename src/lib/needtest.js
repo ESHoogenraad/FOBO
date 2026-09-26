@@ -7,12 +7,9 @@
 // Pure: returns ids and numbers, the popup turns them into text.
 
 import { daysToEol } from './calc.js';
-import { BATTERY_LINE } from './rule.js';
+import { batteryNote, UPDATES_NEAR_DAYS } from './rule.js';
 
 export const NEED_RESULTS = ['keep', 'repair', 'upgrade'];
-
-const BATTERY_NEAR = 85;
-const UPDATES_NEAR_DAYS = 365;
 
 /**
  * The questions to ask, in order. Everyone gets the apps question; the others come from the
@@ -47,7 +44,8 @@ export function needResult(device, answers, today) {
   if (reasons.includes('slow')) checks.push(slowCheck(battery));
   if (reasons.includes('screen')) checks.push(brokenCheck('screen', answers.screen));
   if (reasons.includes('damage')) checks.push(brokenCheck('damage', answers.damage));
-  if (reasons.includes('camera')) checks.push(brokenCheck('camera', answers.camera === false));
+  // The camera question asks whether it still works, so "no" is the problem.
+  if (reasons.includes('camera')) checks.push(brokenCheck('camera', answers.camera == null ? null : !answers.camera));
   if (reasons.includes('storage')) checks.push(storageCheck(answers.storage));
 
   let result = 'keep';
@@ -77,15 +75,16 @@ function appsCheck(appsRun) {
 
 function batteryCheck(pct) {
   if (pct === null) return { id: 'battery', status: 'unknown' };
-  if (pct < BATTERY_LINE) return { id: 'battery', pct, status: 'bad', note: 'below', repair: true };
-  return { id: 'battery', pct, status: pct >= BATTERY_NEAR ? 'ok' : 'warn', note: pct >= BATTERY_NEAR ? 'fine' : 'near' };
+  const note = batteryNote(pct);
+  if (note === 'below') return { id: 'battery', pct, status: 'bad', note, repair: true };
+  return { id: 'battery', pct, status: note === 'fine' ? 'ok' : 'warn', note };
 }
 
 // A worn battery makes a phone feel slow. With a healthy battery, the phone itself rarely got
 // slower (research A9), so "slow" alone never leads to repair or upgrade.
 function slowCheck(pct) {
   if (pct === null) return { id: 'slow', status: 'unknown', note: 'checkBattery' };
-  if (pct < BATTERY_LINE) return { id: 'slow', status: 'warn', note: 'battery' };
+  if (batteryNote(pct) === 'below') return { id: 'slow', status: 'warn', note: 'battery' };
   return { id: 'slow', status: 'ok', note: 'notBattery' };
 }
 

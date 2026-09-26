@@ -74,6 +74,11 @@ describe('need test result', () => {
     expect(r.checks.find((c) => c.id === 'storage')).toMatchObject({ status: 'warn', note: 'full' });
   });
 
+  it('treats an unanswered question as unknown, the camera included', () => {
+    const r = result({ ...phone, reasons: ['camera', 'screen'] }, { apps: true });
+    expect(r.checks.filter((c) => c.id === 'camera' || c.id === 'screen').map((c) => c.status)).toEqual(['unknown', 'unknown']);
+  });
+
   it('leaves out of the count what it does not know', () => {
     const r = result({ ...phone, securityEndDate: undefined }, { apps: true, battery: null });
     expect(r.checks.map((c) => c.status)).toEqual(['unknown', 'ok', 'unknown']);

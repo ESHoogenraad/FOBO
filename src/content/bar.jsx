@@ -10,29 +10,33 @@
 
 import { render } from 'preact';
 import browser from 'webextension-polyfill';
-import { hideSite, isHidden, isPaused } from '../lib/calc.js';
+import { hideSite, isHidden, isPaused, todayIso } from '../lib/calc.js';
 import { newCooldown } from '../lib/cooldowns.js';
 import { recordEvent, updateEvent } from '../lib/events.js';
-import { eligibleHeadlines, pickHeadline } from '../lib/headlines.js';
+import { eligibleHeadlines, headlineText, pickHeadline } from '../lib/headlines.js';
 import { isOwnModel, matchPage, siteForHost, siteOf } from '../lib/match.js';
-import { addUrge, getDevice, getSettings, saveCooldown, updateSettings, updateUrge } from '../lib/storage.js';
+import { addUrge, getSettingsAndDevice, saveCooldown, updateSettings, updateUrge } from '../lib/storage.js';
 import { Bar } from './BarView.jsx';
 import css from './bar.css?inline';
 
 const SHOWING_MS = 30 * 60 * 1000;
 
 /**
- * The current showing, or null: { id, url, match, device, tour, headline, deviceMatched, host, outcomeKey }.
- * tour: show the first-run tour. outcomeKey is a promise of the bar_outcome event's key, set
- * right after the bar is drawn.
+ * The current showing, or null:
+ * { id, url, match, device, tour, headline, headlineText, deviceMatched, host, outcomeKey }.
+ * tour: show the first-run tour. headlineText is fixed when the showing starts, so the bar keeps
+ * saying what bar_shown recorded even if the phone is edited meanwhile. outcomeKey is a promise
+ * of the bar_outcome event's key, set right after the bar is drawn.
  */
 let showing = null;
 // Counts calls to update(), so an older call that is still reading storage gives way to a newer one.
 let generation = 0;
 
-const pageUrl = () => location.href.split('#')[0];
+// The page is its path: filters and sorting that only change the query string are the same
+// page, so they keep the showing (B4 spec: a showing ends when the page navigates away).
+const pageUrl = () => location.origin + location.pathname;
 
-const readStorage = () => Promise.all([getSettings(), getDevice()]);
+const readStorage = getSettingsAndDevice;
 
 function blocked(settings, device, siteId) {
   return !device || isPaused(settings) || settings.sitesOff.includes(siteId) || isHidden(settings, siteId);
@@ -62,20 +66,22 @@ async function update(stored) {
 
 function startShowing(url, match, device, settings) {
   const eligible = eligibleHeadlines(device);
+  const headline = pickHeadline(eligible);
   showing = {
     id: crypto.randomUUID(),
     url,
     match,
     device,
     tour: !settings.barTourDone,
-    headline: pickHeadline(eligible),
+    headline,
+    headlineText: headlineText(headline, device, todayIso()),
     deviceMatched: isOwnModel(device.name, match.item || document.title),
     host: mount(),
   };
   draw();
 
   // Recorded after the bar is on screen, so storage never delays it.
-  const { id: showingId, headline, deviceMatched } = showing;
+  const { id: showingId, deviceMatched } = showing;
   recordEvent('bar_shown', { showingId, siteCategory: match.site.siteCategory, headline, eligible, deviceMatched });
   showing.outcomeKey = recordEvent(
     'bar_outcome',
@@ -133,9 +139,9 @@ function mount() {
 }
 
 function draw() {
-  const { device, headline, deviceMatched, match, tour } = showing;
+  const { device, headlineText, deviceMatched, match, tour } = showing;
   render(
-    <Bar device={device} headline={headline} deviceMatched={deviceMatched} item={match.item} tour={tour} actions={actions} />,
+    <Bar device={device} headlineText={headlineText} deviceMatched={deviceMatched} item={match.item} tour={tour} actions={actions} />,
     showing.host.root,
   );
 }
@@ -162,8 +168,7 @@ const actions = {
     if (!site) return; // the showing ended between drawing and the click
     await flag('dismissed');
     endShowing();
-    const settings = await getSettings();
-    await updateSettings({ hiddenUntil: hideSite(settings.hiddenUntil, site.id) });
+    await updateSettings((settings) => ({ hiddenUntil: hideSite(settings.hiddenUntil, site.id) }));
   },
 
   /** Logs an urge with one tap; the reason tag can follow. */
@@ -203,17 +208,19 @@ const actions = {
 
 // Sites that change pages without reloading update the title a moment after the URL, and the
 // title decides on product pages. So after a URL change, wait for the title to change too, for
-// up to two seconds.
+// up to two seconds. A newer URL change replaces the wait for an older one.
 let lastUrl = pageUrl();
+let titleWait;
 function onNavigate() {
   if (pageUrl() === lastUrl) return;
   lastUrl = pageUrl();
   endShowing();
+  clearInterval(titleWait);
   const title = document.title;
   let checks = 0;
-  const wait = setInterval(() => {
+  titleWait = setInterval(() => {
     if (document.title !== title || ++checks >= 8) {
-      clearInterval(wait);
+      clearInterval(titleWait);
       update();
     }
   }, 250);

@@ -19,7 +19,8 @@ import {
   todayIso,
 } from '../lib/calc.js';
 import { endCooldown, isDue, isOpen, OUTCOMES } from '../lib/cooldowns.js';
-import { recordEvent, setCountsOptIn, updateEvent } from '../lib/events.js';
+import { EOL_CACHE_KEY } from '../lib/eol.js';
+import { isEventKey, recordEvent, updateEvent } from '../lib/events.js';
 import { currentMilestone, milestoneKey } from '../lib/milestones.js';
 import {
   formatDateTime,
@@ -32,13 +33,12 @@ import {
   t,
 } from '../lib/i18n.js';
 import { DEFAULT_ORIGINS, DEFAULT_SITES, siteOf } from '../lib/match.js';
-import { URGE_TAGS } from '../lib/reasons.js';
+import { urgePatterns } from '../lib/stats.js';
 import {
   addUrge,
   getCooldowns,
-  getDevice,
   getInstall,
-  getSettings,
+  getSettingsAndDevice,
   getUrges,
   saveCooldown,
   updateInstall,
@@ -48,16 +48,16 @@ import {
 import { BackIcon, CartIcon, CartOffIcon, HourglassIcon, SettingsIcon } from '../ui/icons.jsx';
 import { Logo } from '../ui/Logo.jsx';
 import { Rating } from '../ui/Rating.jsx';
+import { UrgeTags } from '../ui/UrgeTags.jsx';
+import { useCountsSwitch } from '../ui/useCountsSwitch.js';
 import { NeedTestView } from './NeedTest.jsx';
-import { urgePatterns } from '../lib/stats.js';
 import { exportData, ShareView } from './Share.jsx';
 import '../styles/pages.css';
 import './popup.css';
 
 async function loadState() {
-  const [device, settings, install, granted, urges, cooldowns] = await Promise.all([
-    getDevice(),
-    getSettings(),
+  const [[settings, device], install, granted, urges, cooldowns] = await Promise.all([
+    getSettingsAndDevice(),
     getInstall(),
     browser.permissions.contains({ origins: DEFAULT_ORIGINS }),
     getUrges(),
@@ -86,11 +86,21 @@ function App() {
   const [view, setView] = useState('main');
 
   useEffect(() => {
-    const reload = () => loadState().then(setState);
+    // Only the newest read is shown: reads that overlap can finish in any order.
+    let latest = 0;
+    const reload = () => {
+      const run = ++latest;
+      loadState().then((next) => run === latest && setState(next));
+    };
+    // Also picks up changes made elsewhere, like Firefox's data consent granted after the popup
+    // asked. Event records (written by the bar in every tab) and the endoflife.date cache change
+    // nothing shown here.
+    const onChanged = (changes) => {
+      if (Object.keys(changes).some((key) => !isEventKey(key) && key !== EOL_CACHE_KEY)) reload();
+    };
     reload();
-    // Also picks up changes made elsewhere, like Firefox's data consent granted after the popup asked.
-    browser.storage.onChanged.addListener(reload);
-    return () => browser.storage.onChanged.removeListener(reload);
+    browser.storage.onChanged.addListener(onChanged);
+    return () => browser.storage.onChanged.removeListener(onChanged);
   }, []);
 
   if (!state) return null;
@@ -155,7 +165,7 @@ function MainView({ state, setView }) {
       )}
 
       {milestone && (
-        <Milestone device={device} milestone={milestone} settings={settings} onNeedTest={() => setView('needTest')} />
+        <Milestone device={device} milestone={milestone} onNeedTest={() => setView('needTest')} />
       )}
 
       {askStats && (
@@ -220,8 +230,8 @@ function UrgeSummary({ urgesThisMonth, patterns }) {
 
 // ---- Milestones (F10): 2 to 5 years, and the end of security updates
 
-function Milestone({ device, milestone, settings, onNeedTest }) {
-  const dismiss = () => updateSettings({ milestonesSeen: [...settings.milestonesSeen, milestoneKey(device, milestone)] });
+function Milestone({ device, milestone, onNeedTest }) {
+  const dismiss = () => updateSettings((settings) => ({ milestonesSeen: [...settings.milestonesSeen, milestoneKey(device, milestone)] }));
   let text;
   if (milestone.id === 'updatesEnded') text = t('milestoneUpdatesEnded', device.name, formatDate(milestone.date));
   else if (milestone.years === 2) text = t('milestoneYears2', device.name);
@@ -416,7 +426,6 @@ function CooldownEndView({ cooldown, onDone }) {
 // browser; it feeds the default site list at Checkpoint A and is never sent anywhere.
 function Tempted() {
   const [logged, setLogged] = useState(null);
-  const [tag, setTag] = useState(null);
 
   const logging = useRef(false);
   async function logUrge() {
@@ -429,7 +438,6 @@ function Tempted() {
   }
 
   async function pickTag(id) {
-    setTag(id);
     await updateUrge(logged.urgeId, { tag: id });
     if (logged.eventKey) await updateEvent(logged.eventKey, { reasonTag: id });
   }
@@ -443,16 +451,7 @@ function Tempted() {
   }
   return (
     <section class="tempted" aria-live="polite">
-      <p>{tag ? t('temptedThanks') : t('temptedLogged')}</p>
-      {!tag && (
-        <div class="chips">
-          {URGE_TAGS.map((id) => (
-            <button type="button" class="chip" onClick={() => pickTag(id)}>
-              {t(`urgeTag_${id}`)}
-            </button>
-          ))}
-        </div>
-      )}
+      <UrgeTags onPick={pickTag} />
     </section>
   );
 }
@@ -461,20 +460,13 @@ function Tempted() {
 
 function SettingsView({ state, onBack }) {
   const { device, settings, install, granted } = state;
-  const [counts, setCounts] = useState(install.countsOptIn);
-
-  useEffect(() => setCounts(install.countsOptIn), [install.countsOptIn]);
-
-  function toggleCounts(event) {
-    const on = event.currentTarget.checked;
-    const result = setCountsOptIn(on); // first: Firefox shows its own consent prompt
-    setCounts(on);
-    result.then(setCounts, () => setCounts(false));
-  }
+  const [counts, toggleCounts] = useCountsSwitch(install?.countsOptIn ?? false);
 
   function toggleSite(id, on) {
-    const sitesOff = on ? settings.sitesOff.filter((s) => s !== id) : [...settings.sitesOff, id];
-    updateSettings({ sitesOff });
+    updateSettings((current) => {
+      const others = current.sitesOff.filter((s) => s !== id);
+      return { sitesOff: on ? others : [...others, id] };
+    });
   }
 
   return (

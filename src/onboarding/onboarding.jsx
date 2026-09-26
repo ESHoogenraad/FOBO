@@ -11,13 +11,14 @@ import { APP_NAME } from '../config.js';
 import { parsePrice, purchaseDateFor, todayIso } from '../lib/calc.js';
 import { eolFields } from '../lib/eol.js';
 import { detectBrowser } from '../lib/env.js';
-import { recordEvent, setCountsOptIn } from '../lib/events.js';
+import { recordEvent } from '../lib/events.js';
 import { formatMonthYear, locale, localizePage, t } from '../lib/i18n.js';
 import { DEFAULT_ORIGINS, DEFAULT_SITES } from '../lib/match.js';
 import { REASONS } from '../lib/reasons.js';
-import { createInstall, getDevice, getInstall, newDevice, saveDevice, updateInstall } from '../lib/storage.js';
+import { createInstall, editDevice, getDevice, getInstall, saveDevice, updateInstall } from '../lib/storage.js';
 import { CheckIcon } from '../ui/icons.jsx';
 import { Logo } from '../ui/Logo.jsx';
+import { useCountsSwitch } from '../ui/useCountsSwitch.js';
 import '../styles/pages.css';
 import './onboarding.css';
 
@@ -41,7 +42,7 @@ function App({ single, initialDevice, initialInstall, initiallyGranted }) {
   const [granted, setGranted] = useState(initiallyGranted);
 
   async function savePhone(fields) {
-    const next = device ? { ...device, ...fields } : newDevice(fields);
+    const next = editDevice(device, fields);
     await saveDevice(next);
     setDevice(next);
     if (single) await closeThisTab();
@@ -161,10 +162,14 @@ function PhoneStep({ device, single, onSave }) {
       return;
     }
     setSaving(true);
-    // From the cache by now, so this is quick. Offline, the daily refresh fills the date in later.
-    const found = await lookupEol(result.values.name);
-    await onSave({ ...result.values, ...eolFields(found) });
-    setSaving(false);
+    try {
+      // Usually from the cache by now. Offline or slow (eol.js gives up after 5 seconds), the
+      // daily refresh fills the date in later.
+      const found = await lookupEol(result.values.name);
+      await onSave({ ...result.values, ...eolFields(found) });
+    } finally {
+      setSaving(false);
+    }
   }
 
   // A field's error goes as soon as the field changes; the rest wait for the next submit.
@@ -310,7 +315,7 @@ function ReasonsStep({ device, single, onSave }) {
 
 function SitesStep({ single, granted, onGranted, countsOptIn, onFinish }) {
   const [declined, setDeclined] = useState(false);
-  const [counts, setCounts] = useState(countsOptIn);
+  const [counts, toggleCounts] = useCountsSwitch(countsOptIn);
   const heading = useStepFocus();
 
   function allowSites() {
@@ -330,13 +335,6 @@ function SitesStep({ single, granted, onGranted, countsOptIn, onFinish }) {
         // Allowing them on their own (from the popup) stays here after a decline.
         if (ok || !single) await onFinish();
       });
-  }
-
-  function toggleCounts(event) {
-    const on = event.currentTarget.checked;
-    const result = setCountsOptIn(on); // first: Firefox shows its own consent prompt
-    setCounts(on);
-    result.then(setCounts, () => setCounts(false));
   }
 
   return (

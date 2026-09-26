@@ -16,7 +16,7 @@ npm test               # one file or name: npx vitest run tests/calc.test.js -t 
 npm run lint:firefox   # lints dist/, so build first
 ```
 
-web-ext: `start:firefox`, `start:chrome`, `package`, `sign:firefox` (after `package:source`). The counts endpoint lives in `worker/` with its own `package.json` (wrangler); its tests run with the rest (`tests/worker.test.js`). Load `dist/` unpacked, or `dist/manifest.json` in Firefox `about:debugging`.
+web-ext: `start:firefox`, `start:chrome`, `package`, `sign:firefox` (after `package:source`, which zips git `HEAD` and refuses uncommitted changes, so `research/data/` never leaves the machine). The counts endpoint lives in `worker/` with its own `package.json` (wrangler); its tests run with the rest (`tests/worker.test.js`). Load `dist/` unpacked, or `dist/manifest.json` in Firefox `about:debugging`.
 
 ## Rules
 
