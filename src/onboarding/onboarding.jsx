@@ -155,9 +155,11 @@ function useEolLookup(name) {
   return result;
 }
 
-// Also says when there's no date, so a Xiaomi or an iPhone doesn't look like a lookup that broke.
-function eolHint(eol) {
+// Also says when there's no date, so a Xiaomi or an iPhone doesn't look like a lookup that broke,
+// but only once the name is left: halfway through a name ("Sams") there's no date either.
+function eolHint(eol, nameLeft) {
   if (eol.status === 'found') return t('eolFound', formatMonthYear(eol.securityEndDate), eol.label);
+  if (!nameLeft) return null;
   return eol.product === 'iphone' ? t('eolNoDateApple') : t('eolNotFound');
 }
 
@@ -174,6 +176,7 @@ function PhoneStep({ device, single, onSave }) {
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const eol = useEolLookup(name);
+  const [nameLeft, setNameLeft] = useState(false);
   const form = useRef(null);
   const nameInput = useRef(null);
   const thisYear = Number(todayIso().slice(0, 4));
@@ -237,10 +240,12 @@ function PhoneStep({ device, single, onSave }) {
             placeholder={t('onbPhoneNamePlaceholder')}
             value={name}
             onInput={edit('name', setName)}
+            onFocus={() => setNameLeft(false)}
+            onBlur={() => setNameLeft(true)}
           />
           {error('phone-name', 'name')}
           <div class="field-hint eol-found" aria-live="polite">
-            {eol && eolHint(eol)}
+            {eol && eolHint(eol, nameLeft)}
           </div>
         </div>
         <fieldset class="field field-group">

@@ -170,10 +170,17 @@ function pageIsDark() {
   }
 }
 
-// Computed colours come as rgb(), oklch() (bol) or color(srgb …) (MediaMarkt); a 1-pixel
-// canvas turns any of them into sRGB numbers.
+// Computed colours come as rgb(), oklch() (bol) or color(srgb …) (MediaMarkt). rgb() is read
+// directly; for the rest a 1-pixel canvas gives sRGB numbers. The canvas is the fallback because
+// fingerprinting protection (Firefox's resistFingerprinting, Brave) can alter what it reads back.
+const RGB = /^rgba?\(([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+)(%?))?\)$/;
 let paint;
 function toRgba(color) {
+  const rgb = RGB.exec(color);
+  if (rgb) {
+    const alpha = rgb[4] === undefined ? 1 : rgb[4] / (rgb[5] ? 100 : 1);
+    return [Number(rgb[1]), Number(rgb[2]), Number(rgb[3]), alpha * 255];
+  }
   paint ??= new OffscreenCanvas(1, 1).getContext('2d', { willReadFrequently: true });
   paint.clearRect(0, 0, 1, 1);
   paint.fillStyle = 'transparent';

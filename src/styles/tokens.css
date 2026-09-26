@@ -37,7 +37,8 @@
 
 /* The bar's light version, for pages with a dark background, so the bar stands out rather than
    blending in (bar.jsx, pageIsDark). Same roles as above; the hues are darker so that text keeps
-   4.5:1 on white and on its own 10-16% tints. --brand stays: the logo and primary actions. */
+   4.5:1 on white and on its own 10-16% tints. --text-2 and --muted sit a step darker than their
+   contrast needs, because dark text on white looks thinner than light text on dark. --brand stays: the logo and primary actions. */
 .theme-light {
   --bg: #F4F5F9;
   --bg-deep: #FFFFFF;
@@ -46,8 +47,8 @@
   --line: #E3E5EE;
   --line-strong: #C9CEDC;
   --text: #343B58;
-  --text-2: #4C5578;
-  --muted: #5A6283;
+  --text-2: #3D4566;
+  --muted: #4C5578;
 
   --ok: #3A7219;
   --warn: #8A5A00;
