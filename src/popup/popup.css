@@ -380,8 +380,13 @@ body {
   gap: 8px;
 }
 
-.pop-links .link-btn {
+/* The link and the link-styled button share one box, so their text lines up. */
+.pop-links .link-btn,
+.pop-links a {
+  display: inline-flex;
+  align-items: center;
   align-self: center;
+  min-height: 44px;
 }
 
 /* ---- Need test */

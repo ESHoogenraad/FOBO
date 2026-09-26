@@ -1112,13 +1112,16 @@
     "message": "Share my stats"
   },
   "shareText": {
-    "message": "Counts only: no phone name, notes or page addresses. It does list the sites where you logged urges. Check it, copy it, and paste it where you were asked."
+    "message": "Counts only: no phone name, notes or page addresses. It does list the sites where you logged urges. Check it, copy it, and paste it into the feedback form."
   },
   "shareCopy": {
     "message": "Copy to clipboard"
   },
   "shareCopied": {
     "message": "Copied."
+  },
+  "shareOpenForm": {
+    "message": "Open the feedback form"
   },
   "milestoneLabel": {
     "message": "Milestone"

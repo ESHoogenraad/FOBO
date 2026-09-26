@@ -26,6 +26,10 @@ Only pages on the sites you allow in the setup: Tweakers, GSMArena, Coolblue, bo
 
 "Share my stats" shows you a summary of counts and copies it to your clipboard. Nothing is sent: you decide where to paste it.
 
+## Feedback form
+
+"Feedback" in the popup, the "Open the feedback form" button under "Share my stats", and the page that opens when you uninstall Upgraditch all lead to one form on [Tally](https://tally.so), in a normal browser tab. Nothing is sent unless you fill it in and submit it, and every question is optional. The form learns only which of those three places you came from, and whatever you type or paste into it. Tally's own [privacy policy](https://tally.so/help/privacy-policy) covers the page itself.
+
 ## Links
 
 The need test can show links to iFixit, Repair Café and a YouTube search for your phone's review. They open only when you click them, like any link.

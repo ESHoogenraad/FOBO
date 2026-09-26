@@ -72,6 +72,5 @@ The shop pages in the screenshots are real third-party sites. Check the stores' 
 ## Still needed from the owner
 
 - The final name (Checkpoint A).
-- The uninstall survey URL (`src/config.js`).
 - Chrome Web Store developer account; AMO API key and secret (for `npm run sign:firefox`).
 - The 30-second recording for the Chrome listing is uploaded to YouTube and linked there.

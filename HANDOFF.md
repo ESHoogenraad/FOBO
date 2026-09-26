@@ -55,7 +55,7 @@ F12, a satisfaction check-in after a purchase, is removed from Stage 1. The cool
 
 | ID | Requirement | Priority |
 | --- | --- | --- |
-| V1 | `chrome.runtime.setUninstallURL()` to a one-question form (URL is a config constant, placeholder for now) | Must |
+| V1 | `chrome.runtime.setUninstallURL()` to a one-question form (URL is a config constant) | Must |
 | V2 | "Share my stats" copies a JSON summary to the clipboard (schema in section 10); prompt at day 14 | Must |
 | V3 | Always-visible feedback link in the popup (config constant) | Must |
 | V4 | Opt-in anonymous counts: offered in onboarding step 3, switchable in the popup, off by default. Events recorded locally, sent in batches at most once an hour, only while opted in. If the endpoint constant is empty, nothing is sent | Must |
@@ -322,9 +322,10 @@ If a weekend overruns, cut Should items before extending.
 - The final name (Checkpoint A).
 - Whether gathering.tweakers.net joins the default sites (Checkpoint A).
 - Final headline wording (Checkpoint A, after the prototype sessions).
-- Uninstall survey URL, feedback URL and the counts endpoint URL.
 - More than one device (Checkpoint B).
 
 Settled on 22 Sep 2026: cooldowns default to 7 days and are adjustable; "money not spent" adds up dropped cooldown items; the phone gets `--device-1`; milestones and cooldown ends use the toolbar badge, not notifications.
 
 Settled on 25 Sep 2026: Stage 1 ships in English only, for the Dutch audience too. The draft Dutch strings were removed and stay in git history (commit e7d220e, `_locales/nl/`).
+
+Settled on 26 Sep 2026: the counts endpoint is `upgraditch-counts` on workers.dev. Feedback (V3), the uninstall survey (V1) and "Share my stats" (V2) all open one Tally form, with `?from=popup`, `uninstall` or `share`. A web page opens in the user's own browser; a `mailto:` link opened the system's mail handler, which could be another browser.

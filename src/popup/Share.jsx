@@ -1,9 +1,10 @@
 // "Share my stats" (V2): shows the summary first, so the user sees exactly what they share,
-// then copies it to the clipboard. Nothing is sent from here.
+// then copies it to the clipboard. Nothing is sent from here: the user pastes it into the
+// feedback form themselves.
 
 import { useEffect, useRef, useState } from 'preact/hooks';
 import browser from 'webextension-polyfill';
-import { APP_NAME } from '../config.js';
+import { APP_NAME, SHARE_FORM_URL } from '../config.js';
 import { EOL_CACHE_KEY } from '../lib/eol.js';
 import { t } from '../lib/i18n.js';
 import { collectStats } from '../lib/stats.js';
@@ -53,6 +54,11 @@ export function ShareView({ onBack }) {
       <p class="share-status" aria-live="polite">
         {copied ? t('shareCopied') : ''}
       </p>
+      {SHARE_FORM_URL && (
+        <a class="btn btn-secondary btn-block" href={SHARE_FORM_URL} target="_blank" rel="noopener noreferrer">
+          {t('shareOpenForm')}
+        </a>
+      )}
     </main>
   );
 }
