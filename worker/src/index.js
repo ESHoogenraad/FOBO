@@ -11,13 +11,18 @@
 //   so one script can't fill the table under a single client ID. The limit is best-effort: the
 //   count and the insert are separate queries, so uploads running at the same moment under one
 //   ID can pass it by a batch each. An event sent twice (same eventId) is stored once.
+// - All installs together get at most MAX_EVENTS_PER_DAY events a day (wrangler.toml), so a
+//   script making up client IDs can't run past D1's daily write limit, which covers the whole
+//   Cloudflare account. Over it, uploads get 429 and the extension keeps them for the next day.
 
 import { isValidEvent } from './validate.js';
 
 const MAX_BYTES = 256 * 1024;
-const MAX_EVENTS = 500;
+// An hourly batch from real use is a few events; one after a day offline, a few dozen.
+const MAX_EVENTS = 100;
 // A heavy day of real use is a few dozen showings (two events each) and some urges.
 const MAX_PER_CLIENT_DAY = 1000;
+const DEFAULT_MAX_PER_DAY = 10_000;
 
 // Chrome's extension ID is fixed per store listing; Firefox gives each install a random one.
 // ALLOWED_ORIGINS (comma-separated, optional) narrows Chrome to the listed IDs.
@@ -122,6 +127,11 @@ export default {
     let stored = 0;
     if (valid.length) {
       const receivedDay = new Date().toISOString().slice(0, 10);
+      // Kept as one counter per day, so the check reads one row rather than counting the table.
+      const day = await env.DB.prepare('SELECT n FROM daily WHERE day = ?').bind(receivedDay).first();
+      const maxPerDay = Number(env.MAX_EVENTS_PER_DAY) || DEFAULT_MAX_PER_DAY;
+      if ((day?.n ?? 0) + valid.length > maxPerDay) return reply(429, { error: 'day' }, origin);
+
       const today = await env.DB.prepare('SELECT COUNT(*) AS n FROM events WHERE client_id = ? AND received_day = ?')
         .bind(valid[0].clientId, receivedDay)
         .first();
@@ -132,6 +142,11 @@ export default {
         );
         const results = await env.DB.batch(allowed.map((event) => insert.bind(...toRow(event, receivedDay))));
         stored = results.reduce((sum, result) => sum + (result.meta?.changes ?? 0), 0);
+      }
+      if (stored) {
+        await env.DB.prepare('INSERT INTO daily (day, n) VALUES (?, ?) ON CONFLICT (day) DO UPDATE SET n = n + excluded.n')
+          .bind(receivedDay, stored)
+          .run();
       }
     }
     // Rejected: invalid, over the day's limit, or already stored.

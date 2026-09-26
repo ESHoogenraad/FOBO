@@ -16,3 +16,9 @@ CREATE TABLE IF NOT EXISTS events (
 
 CREATE INDEX IF NOT EXISTS events_by_event ON events (event);
 CREATE INDEX IF NOT EXISTS events_by_client_day ON events (client_id, received_day);
+
+-- Events stored per UTC day, over all installs: the Worker's daily cap reads this one row.
+CREATE TABLE IF NOT EXISTS daily (
+  day TEXT PRIMARY KEY,
+  n INTEGER NOT NULL
+);

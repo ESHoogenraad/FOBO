@@ -20,9 +20,12 @@ database_id = "67340c21-53d6-4ae0-8e1a-f9d7e2434eed"
 [[ratelimits]]
 name = "RATE_LIMIT"
 namespace_id = "1001"
-simple = { limit = 10, period = 60 }
+simple = { limit = 2, period = 60 }
 
 [vars]
 # Optional: the Chrome Web Store build's origin, e.g. "chrome-extension://abcdefghijklmnopabcdefghijklmnop".
 # Empty allows any Chrome extension origin. Firefox origins are random per install and always allowed.
 ALLOWED_ORIGINS = ""
+# Events stored per UTC day over all installs. Each event writes a few D1 rows (the table and
+# its indexes), so keep this well under the plan's daily row-write limit.
+MAX_EVENTS_PER_DAY = "10000"

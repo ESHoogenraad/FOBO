@@ -34,7 +34,7 @@ export const isEventKey = (key) => key.startsWith(KEY_PREFIX);
 // the reason tag follows a logged urge within seconds.
 const HOLD_MS = { urge_logged: 10 * 60 * 1000 };
 const KEEP_DAYS = 90;
-const MAX_BATCH = 500;
+const MAX_BATCH = 100; // the endpoint's limit
 
 // Firefox's own data consent (HANDOFF section 4), on top of the opt-in switch.
 const DATA_COLLECTION = ['technicalAndInteraction'];

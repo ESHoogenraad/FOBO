@@ -85,18 +85,23 @@ export function matchRelease(name, releases) {
   return loose.length && dates.size === 1 ? loose[0] : null;
 }
 
-/** Keeps only what the lookup needs from the API response. */
+// The dates end up in the synced phone and in date formatting, which throws on anything else.
+const isoDate = (value) => (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null);
+
+/** Keeps only what the lookup needs from the API response, and only values of the right type. */
 export function trimProduct(json) {
   const result = json?.result;
   if (!Array.isArray(result?.releases)) throw new Error('Unexpected endoflife.date response');
   return {
     hasAndroidDates: Boolean(result.labels?.eoas),
-    releases: result.releases.map(({ label, eolFrom, eoasFrom, isEol }) => ({
-      label,
-      eolFrom: eolFrom ?? null,
-      eoasFrom: eoasFrom ?? null,
-      isEol: Boolean(isEol),
-    })),
+    releases: result.releases
+      .filter((release) => typeof release?.label === 'string')
+      .map(({ label, eolFrom, eoasFrom, isEol }) => ({
+        label: label.slice(0, 100),
+        eolFrom: isoDate(eolFrom),
+        eoasFrom: isoDate(eoasFrom),
+        isEol: Boolean(isEol),
+      })),
   };
 }
 

@@ -77,7 +77,7 @@ The cooldown's data model (want rating at the start and the end, adjustable leng
 ## Endpoint
 
 - `POST` a JSON array of events. Validate the schema and reject unknown fields
-- Don't store IP addresses, and keep request logging off. The only use of the address is as the key of Cloudflare's rate limiter (10 uploads a minute per address), so a script can't fill the table by making up client IDs
+- Don't store IP addresses, and keep request logging off. The only use of the address is as the key of Cloudflare's rate limiter (2 uploads a minute per address), so a script can't fill the table by making up client IDs
 - Store rows with the day they arrived; nothing finer
 - Store an event sent twice (same `eventId`) once. Accept one install's events per batch, and at most 1000 a day per install, so one script can't fill the table under a single client ID
 - After the Stage 1 analysis, delete raw events and keep only the totals (research plan, Data and consent)

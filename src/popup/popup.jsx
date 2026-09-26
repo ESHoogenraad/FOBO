@@ -423,7 +423,8 @@ function CooldownEndView({ cooldown, onDone }) {
 }
 
 // "This page tempted me" (F8): logs the current site through activeTab. The site stays in this
-// browser; it feeds the default site list at Checkpoint A and is never sent anywhere.
+// browser and is never uploaded; it feeds the default site list at Checkpoint A through "Share my
+// stats", which shows it to the user before they copy it.
 // Before setup, "Set up" is the one primary action, so this steps back to secondary.
 function Tempted({ primary }) {
   const [logged, setLogged] = useState(null);

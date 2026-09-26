@@ -62,14 +62,21 @@ describe('the schema', () => {
 
 // Rows as bound: [receivedDay, schemaVersion, clientId, eventId, build, browser, dayIndex, event, fields]
 let rows;
+// The daily table: day -> events stored that day.
+let daily;
 const env = {
   ALLOWED_ORIGINS: '',
   DB: {
-    prepare: () => ({
+    prepare: (sql) => ({
       bind: (...values) => ({
         values,
-        // SELECT COUNT(*) ... WHERE client_id = ? AND received_day = ?
-        first: async () => ({ n: rows.filter((row) => row[2] === values[0] && row[0] === values[1]).length }),
+        first: async () =>
+          sql.startsWith('SELECT n FROM daily')
+            ? (daily.has(values[0]) ? { n: daily.get(values[0]) } : null)
+            : // SELECT COUNT(*) ... WHERE client_id = ? AND received_day = ?
+              { n: rows.filter((row) => row[2] === values[0] && row[0] === values[1]).length },
+        // INSERT INTO daily ... ON CONFLICT (day) DO UPDATE SET n = n + excluded.n
+        run: async () => daily.set(values[0], (daily.get(values[0]) ?? 0) + values[1]),
       }),
     }),
     // INSERT OR IGNORE, with event_id UNIQUE
@@ -99,6 +106,7 @@ function post(body, { origin = 'moz-extension://5a1c3d2e', method = 'POST', path
 
 beforeEach(() => {
   rows = [];
+  daily = new Map();
 });
 
 describe('the Worker', () => {
@@ -148,6 +156,31 @@ describe('the Worker', () => {
     expect(await (await post([other])).json()).toEqual({ stored: 1, rejected: 0 });
   });
 
+  it('counts what it stores per day, and refuses uploads once the day is full', async () => {
+    await post([shown]);
+    await post([shown]); // a repeat stores nothing, and adds nothing
+    expect(daily.get(today())).toBe(1);
+
+    daily.set(today(), 9_999);
+    const next = { ...shown, eventId: crypto.randomUUID() };
+    const full = await post([next, { ...next, eventId: crypto.randomUUID() }]);
+    // 429, so the extension keeps the events for a later upload rather than marking them sent.
+    expect(full.status).toBe(429);
+    expect(full.headers.get('access-control-allow-origin')).toBe('moz-extension://5a1c3d2e');
+    expect(await (await post([next])).json()).toEqual({ stored: 1, rejected: 0 });
+    expect(daily.get(today())).toBe(10_000);
+  });
+
+  it('takes the daily cap from MAX_EVENTS_PER_DAY', async () => {
+    env.MAX_EVENTS_PER_DAY = '1';
+    try {
+      expect((await post([shown])).status).toBe(200);
+      expect((await post([{ ...shown, eventId: crypto.randomUUID() }])).status).toBe(429);
+    } finally {
+      delete env.MAX_EVENTS_PER_DAY;
+    }
+  });
+
   it('answers CORS for extension origins only', async () => {
     const preflight = await post(null, { method: 'OPTIONS', origin: 'chrome-extension://abcdefghijklmnop' });
     expect(preflight.status).toBe(204);
@@ -167,10 +200,10 @@ describe('the Worker', () => {
     }
   });
 
-  it('refuses bodies that are not a JSON array of at most 500 events', async () => {
+  it('refuses bodies that are not a JSON array of at most 100 events', async () => {
     expect((await post('not json')).status).toBe(400);
     expect((await post({ event: 'install' })).status).toBe(400);
-    expect((await post(Array(501).fill(shown))).status).toBe(400);
+    expect((await post(Array(101).fill(shown))).status).toBe(400);
     // Over 256 KB, also when no content-length says so up front.
     expect((await post(`[${' '.repeat(300 * 1024)}]`)).status).toBe(400);
     expect((await post([shown], { type: 'text/plain' })).status).toBe(415);

@@ -168,6 +168,22 @@ describe('lookupEol', () => {
     expect((await lookupEol('iPhone XS', { fetchImpl })).securityEndDate).toBe('2026-04-22');
   });
 
+  it('drops values of the wrong type, so a bad answer never reaches the phone or the date formatting', async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        result: {
+          releases: [
+            { label: 'Pixel 7', eolFrom: 20271001, eoasFrom: 'soon', isEol: false },
+            { label: 42, eolFrom: '2030-01-01' },
+            null,
+          ],
+        },
+      }),
+    }));
+    expect(await lookupEol('Pixel 7', { fetchImpl })).toEqual({ status: 'noDate', product: 'pixel', label: 'Pixel 7' });
+  });
+
   it('says when it does not know the brand or the model', async () => {
     const fetchImpl = fakeFetch();
     expect(await lookupEol('Xiaomi 13', { fetchImpl })).toEqual({ status: 'unknownBrand' });
