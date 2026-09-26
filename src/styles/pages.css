@@ -189,6 +189,11 @@ a:hover {
   min-height: 18px;
 }
 
+/* An error line already sits there; the empty reserved line would double the gap. */
+.onb .field-error + .eol-found:empty {
+  display: none;
+}
+
 /* ---- Notices (popup; the need test in onboarding too) */
 
 .notice {

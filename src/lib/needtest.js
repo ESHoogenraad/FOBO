@@ -28,7 +28,8 @@ export function needQuestions(device) {
 }
 
 /**
- * The result for a phone and the answers given: { result, checks, passed, known }.
+ * The result for a phone and the answers given: { result, checks, passed, near, known }.
+ * `near` counts the passed checks that are near a limit (status 'warn').
  * answers: { apps: boolean, battery: number | null, screen, damage, camera, storage: boolean }
  *   apps: true when the apps still run; camera: true when the camera still works;
  *   screen, damage, storage: true when there is a problem.
@@ -53,8 +54,9 @@ export function needResult(device, answers, today) {
   else if (checks.some((check) => check.repair)) result = 'repair';
 
   const known = checks.filter((check) => check.status !== 'unknown');
-  const passed = known.filter((check) => check.status === 'ok' || check.status === 'warn').length;
-  return { result, checks, passed, known: known.length };
+  const near = known.filter((check) => check.status === 'warn').length;
+  const passed = known.filter((check) => check.status === 'ok').length + near;
+  return { result, checks, passed, near, known: known.length };
 }
 
 function updatesCheck(device, today) {

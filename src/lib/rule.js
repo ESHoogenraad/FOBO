@@ -54,6 +54,6 @@ function advice(reasons, tiles) {
   if (battery?.note === 'below') return 'batteryWorn';
   if (reasons.includes('slow')) return 'slow';
   if (tiles.length === 1) return 'notYetOne';
-  if (tiles.length > 1) return 'notYetMany';
+  if (tiles.length > 1) return 'notYetMany'; // at most two: battery and updates
   return 'noData';
 }

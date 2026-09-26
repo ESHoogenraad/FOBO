@@ -185,7 +185,7 @@ function MainView({ state, setView }) {
       <Cooldowns cooldowns={state.cooldowns} onEnd={(cooldownId) => setView({ cooldownId })} />
 
       <div class="pop-actions">
-        <Tempted />
+        <Tempted primary={Boolean(device)} />
         {device && (
           <button type="button" class="btn btn-secondary btn-block" onClick={() => setView('needTest')}>
             {t('needRun')}
@@ -424,7 +424,8 @@ function CooldownEndView({ cooldown, onDone }) {
 
 // "This page tempted me" (F8): logs the current site through activeTab. The site stays in this
 // browser; it feeds the default site list at Checkpoint A and is never sent anywhere.
-function Tempted() {
+// Before setup, "Set up" is the one primary action, so this steps back to secondary.
+function Tempted({ primary }) {
   const [logged, setLogged] = useState(null);
 
   const logging = useRef(false);
@@ -444,7 +445,7 @@ function Tempted() {
 
   if (!logged) {
     return (
-      <button type="button" class="btn btn-primary btn-lg btn-block" onClick={logUrge}>
+      <button type="button" class={`btn ${primary ? 'btn-primary btn-lg' : 'btn-secondary'} btn-block`} onClick={logUrge}>
         {t('tempted')}
       </button>
     );

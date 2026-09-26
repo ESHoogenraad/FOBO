@@ -135,7 +135,7 @@ function validatePhone({ name, month, year, price }) {
 const lookupEol = (name) =>
   browser.runtime.sendMessage({ type: 'eolLookup', name }).catch(() => ({ status: 'offline' }));
 
-/** The lookup for the name as typed; null while typing, or when nothing was found. */
+/** The lookup for the name as typed; null while typing, or when the lookup failed. */
 function useEolLookup(name) {
   const [result, setResult] = useState(null);
   useEffect(() => {
@@ -145,7 +145,7 @@ function useEolLookup(name) {
     if (trimmed.length < 2) return undefined;
     let current = true;
     const timer = setTimeout(() => {
-      lookupEol(trimmed).then((found) => current && setResult(found.status === 'found' ? found : null));
+      lookupEol(trimmed).then((found) => current && setResult(found.status === 'offline' ? null : found));
     }, 400);
     return () => {
       current = false;
@@ -153,6 +153,12 @@ function useEolLookup(name) {
     };
   }, [name]);
   return result;
+}
+
+// Also says when there's no date, so a Xiaomi or an iPhone doesn't look like a lookup that broke.
+function eolHint(eol) {
+  if (eol.status === 'found') return t('eolFound', formatMonthYear(eol.securityEndDate), eol.label);
+  return eol.product === 'iphone' ? t('eolNoDateApple') : t('eolNotFound');
 }
 
 function monthNames() {
@@ -234,7 +240,7 @@ function PhoneStep({ device, single, onSave }) {
           />
           {error('phone-name', 'name')}
           <div class="field-hint eol-found" aria-live="polite">
-            {eol && t('eolFound', formatMonthYear(eol.securityEndDate), eol.label)}
+            {eol && eolHint(eol)}
           </div>
         </div>
         <fieldset class="field field-group">

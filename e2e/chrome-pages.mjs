@@ -77,7 +77,7 @@ try {
 
   log('need test, apps blocked:', await needTest(['No'], null));
   await shot(page, 'need-upgrade');
-  await page.getByRole('button', { name: /Pause .* for a week/ }).click();
+  await page.getByRole('button', { name: /Pause for a week/ }).click();
   await page.waitForSelector('.need-done');
   log('paused until:', (await sw.evaluate(() => chrome.storage.sync.get('settings'))).settings.pausedUntil);
   await sw.evaluate(async () => {
@@ -125,7 +125,7 @@ try {
   await shot(page, 'share');
   await page.getByRole('button', { name: 'Copy to clipboard' }).click();
   await sleep(300);
-  log('copy status:', await page.locator('.share-status').innerText());
+  log('copy status:', await page.locator('.share-json ~ .btn-primary').innerText());
   await page.goto(popup);
   await page.waitForSelector('.phone-card');
   log('stats prompt after sharing:', await page.getByText('Two weeks in').count());

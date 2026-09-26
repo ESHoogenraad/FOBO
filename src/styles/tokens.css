@@ -34,3 +34,33 @@
   --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-num: "JetBrains Mono", ui-monospace, monospace;
 }
+
+/* The bar's light version, for pages with a dark background, so the bar stands out rather than
+   blending in (bar.jsx, pageIsDark). Same roles as above; the hues are darker so that text keeps
+   4.5:1 on white and on its own 10-16% tints. --brand stays: the logo and primary actions. */
+.theme-light {
+  --bg: #F4F5F9;
+  --bg-deep: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-2: #F0F2F7;
+  --line: #E3E5EE;
+  --line-strong: #C9CEDC;
+  --text: #343B58;
+  --text-2: #4C5578;
+  --muted: #5A6283;
+
+  --ok: #3A7219;
+  --warn: #8A5A00;
+  --cooldown: #2D63D0;
+
+  --device-1: #7340C9;
+  --device-2: #2D63D0;
+  --device-3: #A34A00;
+  --device-4: #006C8F;
+
+  --link: #2D63D0;
+  --link-hover: #1F4FB0;
+
+  --shadow-bar: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.45);
+}

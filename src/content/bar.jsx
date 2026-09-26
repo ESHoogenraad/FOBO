@@ -77,6 +77,7 @@ function startShowing(url, match, device, settings) {
     headline,
     headlineText: headlineText(headline, device, todayIso()),
     deviceMatched: isOwnModel(device.name, match.item || document.title),
+    light: pageIsDark(), // before mount(), so the bar itself isn't what it finds
     host: mount(),
   };
   showing.host.keeper = keepAttached(showing.host.element);
@@ -141,6 +142,51 @@ function mount() {
   return { element, root };
 }
 
+// ---- Light or dark
+
+// The bar is dark (HANDOFF section 7), and light on a dark page, so it stands out either way.
+// What counts is what lies under the bar's corner as it appears: <html> and <body> are
+// transparent on most shops, and the colour comes from a wrapper. Read once per showing; nothing
+// watches the page for it. Page backgrounds sit near 0.02 (dark) or 0.9 (light).
+const DARK_BELOW = 0.3; // relative luminance
+
+function pageIsDark() {
+  try {
+    const layers = document.elementsFromPoint(Math.min(220, innerWidth / 2), innerHeight - 60);
+    for (const layer of [...layers, document.body, document.documentElement]) {
+      if (!layer) continue;
+      const style = getComputedStyle(layer);
+      // See-through layers, such as the dimmed overlay behind a cookie dialog, don't count.
+      if (Number(style.opacity) < 0.9) continue;
+      const [r, g, b, a] = toRgba(style.backgroundColor);
+      if (a < 230) continue;
+      return luminance(r, g, b) < DARK_BELOW;
+    }
+    // Nothing painted: the browser's canvas, dark only when the page asks for a dark scheme.
+    const scheme = getComputedStyle(document.documentElement).colorScheme;
+    return scheme === 'dark' || (scheme.includes('dark') && matchMedia('(prefers-color-scheme: dark)').matches);
+  } catch {
+    return false; // the dark bar, as always
+  }
+}
+
+// Computed colours come as rgb(), oklch() (bol) or color(srgb …) (MediaMarkt); a 1-pixel
+// canvas turns any of them into sRGB numbers.
+let paint;
+function toRgba(color) {
+  paint ??= new OffscreenCanvas(1, 1).getContext('2d', { willReadFrequently: true });
+  paint.clearRect(0, 0, 1, 1);
+  paint.fillStyle = 'transparent';
+  paint.fillStyle = color; // ignored when it can't be parsed, leaving transparent
+  paint.fillRect(0, 0, 1, 1);
+  return paint.getImageData(0, 0, 1, 1).data;
+}
+
+function luminance(...rgb) {
+  const [r, g, b] = rgb.map((c) => ((c /= 255) <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
 // Some pages re-render the whole document after loading and remove every node they didn't make,
 // the bar too: Coolblue's Next.js pages clear <body> a second or two in. Watching only the direct
 // children of <html> and <body>, not the page below them, is enough to notice and put it back.
@@ -160,9 +206,17 @@ function keepAttached(element) {
 }
 
 function draw() {
-  const { device, headlineText, deviceMatched, match, tour } = showing;
+  const { device, headlineText, deviceMatched, match, tour, light } = showing;
   render(
-    <Bar device={device} headlineText={headlineText} deviceMatched={deviceMatched} item={match.item} tour={tour} actions={actions} />,
+    <Bar
+      device={device}
+      headlineText={headlineText}
+      deviceMatched={deviceMatched}
+      item={match.item}
+      tour={tour}
+      light={light}
+      actions={actions}
+    />,
     showing.host.root,
   );
 }

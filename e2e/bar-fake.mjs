@@ -1,7 +1,7 @@
 // The bar on a stand-in shop page that this script serves itself: no live site, no network, the
 // same result every run. First the layout at three window sizes (the bar in the bottom-left corner
 // with the page's header free, the card right above the bar, inside the window, and the page
-// still clickable beside it), then the behaviour: a filter keeps
+// still clickable beside it), the light bar on a dark page, then the behaviour: a filter keeps
 // the showing, a new path starts one, editing the phone keeps the recorded headline, the bar
 // comes back when the page clears <body>, an urge takes a tag, and hide stores hiddenUntil. Screenshots go to e2e/out/fake-*.png.
 //
@@ -19,6 +19,14 @@ const PAGE = `<!doctype html><title>Smartphones | Coolblue</title>
 ${'<p>page text</p>'.repeat(60)}</body>`;
 const URL_CATEGORY = 'https://www.coolblue.nl/mobiele-telefoons';
 
+// For the light bar: a dark page painted by a wrapper in oklch() while <body> stays transparent
+// (as on most shops), and a light page dimmed by a cookie dialog's overlay, which doesn't count.
+const DARK_PAGE = `<!doctype html><title>Smartphones | Coolblue</title>
+<body style="margin:0;font:16px sans-serif;color:#ddd">
+<div style="min-height:200vh;background:oklch(0.22 0.02 260)">${'<p>page text</p>'.repeat(60)}</div></body>`;
+const DIMMED_PAGE = PAGE.replace('</body>', '<div style="position:fixed;inset:0;background:rgba(0,0,0,0.6)"></div></body>');
+const PAGES = { dark: DARK_PAGE, dimmed: DIMMED_PAGE };
+
 let bad = 0;
 const ok = (cond, what) => {
   if (!cond) bad++;
@@ -32,7 +40,10 @@ const errors = [];
 try {
   await sw.evaluate((phone) => chrome.storage.sync.set({ devices: [phone], settings: { barTourDone: false } }), SAMPLE_PHONE);
   await barScriptReady(sw);
-  await ctx.route('https://www.coolblue.nl/**', (route) => route.fulfill({ contentType: 'text/html', body: PAGE }));
+  await ctx.route('https://www.coolblue.nl/**', (route) => {
+    const variant = new URL(route.request().url()).searchParams.get('page');
+    route.fulfill({ contentType: 'text/html', body: PAGES[variant] ?? PAGE });
+  });
 
   const page = await ctx.newPage();
   page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
@@ -43,6 +54,7 @@ try {
     await page.goto(url);
     await page.waitForSelector('phone-check-bar', { state: 'attached' });
   };
+  const light = () => page.evaluate(() => document.querySelector('phone-check-bar').shadowRoot.querySelector('.root').classList.contains('theme-light'));
   const text = (selector) => page.evaluate((s) => document.querySelector('phone-check-bar')?.shadowRoot.querySelector(s)?.textContent ?? null, selector);
   const geometry = () =>
     page.evaluate(() => {
@@ -97,6 +109,20 @@ try {
     await shot(`${size}-cooldown`);
   }
   await page.setViewportSize({ width: 1366, height: 800 });
+
+  // ---- Light or dark: the bar stands out from the page under it.
+  await open();
+  ok(!(await light()), 'dark bar on a light page');
+  await open(`${URL_CATEGORY}?page=dimmed`);
+  ok(!(await light()), 'dark bar on a light page under a dimmed overlay');
+  await open(`${URL_CATEGORY}?page=dark`);
+  ok(await light(), 'light bar on a dark page');
+  await bar.locator('.bar-toggle').click();
+  await shot('dark-page-card');
+  await page.keyboard.press('Escape');
+  await bar.getByRole('button', { name: 'Cooldown' }).click();
+  await shot('dark-page-cooldown');
+  await page.keyboard.press('Escape');
 
   // ---- Behaviour. Reload until the support headline shows: it is the one that needs the end
   // date, which the phone edit below takes away.

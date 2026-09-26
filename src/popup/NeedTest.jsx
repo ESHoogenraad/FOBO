@@ -156,7 +156,7 @@ const RESULT_ICONS = { keep: CheckIcon, repair: WrenchIcon, upgrade: ArrowUpIcon
 const STATUS_ICONS = { ok: CheckIcon, warn: AlertIcon, bad: CrossIcon, unknown: QuestionIcon };
 
 function NeedResult({ device, outcome, heading, onDone, onPause, doneLabel }) {
-  const { result, checks, passed, known } = outcome;
+  const { result, checks, passed, near, known } = outcome;
   const Icon = RESULT_ICONS[result];
   return (
     <section class="need">
@@ -168,7 +168,8 @@ function NeedResult({ device, outcome, heading, onDone, onPause, doneLabel }) {
           <h2 ref={heading} tabIndex={-1} class="need-verdict">
             {t(`needResult_${result}`)}
           </h2>
-          <p class="need-summary">{t('needPassed', passed, known)}</p>
+          {/* Names the "near a limit" rows, or their "!" would look like failed checks */}
+          <p class="need-summary">{near ? t('needPassedNear', passed, known, near) : t('needPassed', passed, known)}</p>
         </div>
       </div>
 
@@ -183,7 +184,7 @@ function NeedResult({ device, outcome, heading, onDone, onPause, doneLabel }) {
               <div>
                 <div class="need-check-title">{t(`needCheck_${check.id}`)}</div>
                 <div class="need-check-detail">{checkDetail(check, device)}</div>
-                {check.androidEndDate && <div class="need-check-detail">{androidNote(check)}</div>}
+                {check.androidEndDate && !check.ended && <div class="need-check-detail">{androidNote(check)}</div>}
               </div>
             </li>
           );
@@ -222,11 +223,11 @@ function checkDetail(check, device) {
   }
 }
 
-// New Android versions often stop long before security updates do (research A10).
+// New Android versions often stop long before security updates do (research A10). The row
+// already gives the security date; once that has passed, the difference no longer matters.
 function androidNote(check) {
   const android = formatMonthYear(check.androidEndDate);
-  const security = formatMonthYear(check.date);
-  return check.androidEndDate <= todayIso() ? t('needAndroidStopped', android, security) : t('needAndroidUntil', android, security);
+  return check.androidEndDate <= todayIso() ? t('needAndroidStopped', android) : t('needAndroidUntil', android);
 }
 
 function UpgradeAdvice({ checks, onPause }) {
@@ -250,7 +251,7 @@ function UpgradeAdvice({ checks, onPause }) {
             setPaused(true);
           }}
         >
-          {t('needUpgradePause', APP_NAME)}
+          {t('needUpgradePause')}
         </button>
       )}
     </div>

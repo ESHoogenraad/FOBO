@@ -48,10 +48,12 @@ export function ShareView({ onBack }) {
           {text}
         </pre>
       )}
+      {/* The button says it was copied, so no status line holds a gap open below it; the
+          hidden line announces it to screen readers. */}
       <button type="button" class="btn btn-primary btn-block" disabled={!text} onClick={copy}>
-        {t('shareCopy')}
+        {copied ? t('shareCopied') : t('shareCopy')}
       </button>
-      <p class="share-status" aria-live="polite">
+      <p class="visually-hidden" aria-live="polite">
         {copied ? t('shareCopied') : ''}
       </p>
       {SHARE_FORM_URL && (

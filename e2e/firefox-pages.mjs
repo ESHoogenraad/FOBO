@@ -94,7 +94,7 @@ try {
   log('share:', (await $('.share-json').getText()).replace(/\s+/g, ' ').slice(0, 160), '…');
   await button('Copy to clipboard').click();
   await driver.sleep(300);
-  log('copy status:', await $('.share-status').getText());
+  log('copy status:', await $('.share-json ~ .btn-primary').getText());
   await $('.pop-header .icon-btn').click(); // back
   await driver.sleep(300);
 

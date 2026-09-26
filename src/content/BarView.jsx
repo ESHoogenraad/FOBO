@@ -18,7 +18,7 @@ import { UrgeTags } from '../ui/UrgeTags.jsx';
 /** The tour's steps, in order: each points at the part of the bar with the same name. */
 export const TOUR_STEPS = ['toggle', 'closeTab', 'logUrge', 'cooldown', 'hide'];
 
-export function Bar({ device, headlineText, deviceMatched, item, tour, actions }) {
+export function Bar({ device, headlineText, deviceMatched, item, tour, light, actions }) {
   const [panel, setPanel] = useState(null); // null | "rule" | "urge" | "cooldown"
   const [urge, setUrge] = useState(null);
   const [tourStep, setTourStep] = useState(tour ? 0 : null);
@@ -88,7 +88,7 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, actions }
   const touring = (id) => (tourStep !== null && TOUR_STEPS[tourStep] === id ? ' tour-target' : '');
 
   return (
-    <div class="root">
+    <div class={light ? 'root theme-light' : 'root'}>
       <section class="bar" aria-label={APP_NAME} ref={bar}>
         <button
           ref={targets.toggle}

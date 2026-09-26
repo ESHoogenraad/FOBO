@@ -688,7 +688,7 @@
     "message": "It hasn't tipped over yet."
   },
   "ruleAdvice_notYetMany": {
-    "message": "None of them has tipped over yet."
+    "message": "Neither has tipped over yet."
   },
   "ruleAdvice_noData": {
     "message": "If this page doesn't fix it, the phone you have still does the job."
@@ -883,6 +883,12 @@
       }
     }
   },
+  "eolNoDateApple": {
+    "message": "Apple doesn't announce an end date for security updates."
+  },
+  "eolNotFound": {
+    "message": "No security update date known for this phone."
+  },
   "eolNoDateAppleShort": {
     "message": "No end date announced"
   },
@@ -933,6 +939,23 @@
   },
   "needResult_upgrade": {
     "message": "Upgrade it."
+  },
+  "needPassedNear": {
+    "message": "$passed$ of $total$ checks say it still does the job, $near$ of them near a limit.",
+    "placeholders": {
+      "passed": {
+        "content": "$1",
+        "example": "3"
+      },
+      "total": {
+        "content": "$2",
+        "example": "4"
+      },
+      "near": {
+        "content": "$3",
+        "example": "2"
+      }
+    }
   },
   "needPassed": {
     "message": "$passed$ of $total$ checks say it still does the job.",
@@ -1074,28 +1097,20 @@
     "message": "Doesn't work as it should"
   },
   "needAndroidStopped": {
-    "message": "New Android versions stopped in $android$. Security updates continue until $security$.",
+    "message": "New Android versions stopped in $android$. Security updates still come.",
     "placeholders": {
       "android": {
         "content": "$1",
         "example": "Feb 2026"
-      },
-      "security": {
-        "content": "$2",
-        "example": "Feb 2027"
       }
     }
   },
   "needAndroidUntil": {
-    "message": "New Android versions until $android$. Security updates until $security$.",
+    "message": "New Android versions until $android$. Security updates last longer.",
     "placeholders": {
       "android": {
         "content": "$1",
         "example": "Feb 2026"
-      },
-      "security": {
-        "content": "$2",
-        "example": "Feb 2027"
       }
     }
   },
@@ -1106,13 +1121,7 @@
     "message": "The apps you rely on no longer run on it. That's a real reason to upgrade."
   },
   "needUpgradePause": {
-    "message": "Pause $app$ for a week while you shop",
-    "placeholders": {
-      "app": {
-        "content": "$1",
-        "example": "Upgraditch"
-      }
-    }
+    "message": "Pause for a week while you shop"
   },
   "needPausedWeek": {
     "message": "$app$ is paused for a week.",

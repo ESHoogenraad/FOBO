@@ -29,7 +29,8 @@ describe('need test result', () => {
       ['apps', 'ok'],
       ['battery', 'warn'],
     ]);
-    expect([r.passed, r.known]).toEqual([3, 3]);
+    // The battery near the 80% line still passes, and is counted as near a limit.
+    expect([r.passed, r.near, r.known]).toEqual([3, 1, 3]);
   });
 
   it('says upgrade once security updates have ended, whatever else is fine', () => {

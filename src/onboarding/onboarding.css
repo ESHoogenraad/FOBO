@@ -73,11 +73,27 @@ body {
   gap: 16px;
 }
 
+/* Stays in view on a window too short for the step (step 3 on a laptop), with the step
+   scrolling under it. The negative margins stretch its background over the card's padding,
+   so nothing shows beside or below it; when the step fits, it sits where it always did. */
 .onb-actions {
-  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  margin: auto -24px -24px;
+  padding: 0 24px 24px;
+  background: var(--surface);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.onb-actions::before {
+  content: "";
+  position: absolute;
+  inset: -20px 0 100%;
+  background: linear-gradient(transparent, var(--surface));
+  pointer-events: none;
 }
 
 .onb-footnote {
@@ -143,6 +159,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+/* Text in line with the site names in the list above it */
+.counts-box {
+  padding: 16px 14px;
 }
 
 .counts-box h2 {

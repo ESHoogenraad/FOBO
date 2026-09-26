@@ -167,7 +167,19 @@
   font-size: 15px;
 }
 
+/* Drawn by us: Chrome's own select insets its text 4px more than the inputs above it, Firefox's
+   doesn't. The arrow is two half-filled squares, so it takes the colour token. */
 .field select {
+  appearance: none;
+  padding-right: 32px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
   cursor: pointer;
 }
 
