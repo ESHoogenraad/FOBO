@@ -39,7 +39,9 @@ try {
         consented.add(host);
         if ((await dismissSiteDialogs(page)) || page.url() !== url) await page.goto(url, { waitUntil: 'load', timeout: 45000 });
       }
-      await page.waitForTimeout(700);
+      // Long enough for pages that re-render after loading (Coolblue's clear <body> after a
+      // second or two) to have done so: the bar must still be there afterwards.
+      await page.waitForTimeout(3000);
       const r = await page.evaluate(() => {
         const nav = performance.getEntriesByType('navigation')[0];
         return { bar: Boolean(document.querySelector('phone-check-bar')), dcl: nav?.domContentLoadedEventStart, at: window.__barAt };

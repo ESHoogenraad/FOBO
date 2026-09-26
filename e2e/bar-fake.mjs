@@ -2,8 +2,8 @@
 // same result every run. First the layout at three window sizes (the bar in the bottom-left corner
 // with the page's header free, the card right above the bar, inside the window, and the page
 // still clickable beside it), then the behaviour: a filter keeps
-// the showing, a new path starts one, editing the phone keeps the recorded headline, an urge
-// takes a tag, and hide stores hiddenUntil. Screenshots go to e2e/out/fake-*.png.
+// the showing, a new path starts one, editing the phone keeps the recorded headline, the bar
+// comes back when the page clears <body>, an urge takes a tag, and hide stores hiddenUntil. Screenshots go to e2e/out/fake-*.png.
 //
 //   node bar-fake.mjs
 
@@ -139,6 +139,13 @@ try {
   await sleep(300);
   const urges = await sw.evaluate(async () => Object.entries(await chrome.storage.local.get(null)).filter(([key]) => key.startsWith('urge:')).map(([, value]) => value));
   ok(urges.length === 1 && urges[0].tag === 'camera' && (await text('.card .card-title')) !== logged, `urge logged and tagged (${urges[0]?.tag})`);
+
+  // A page that re-renders itself after loading (Coolblue's Next.js pages clear <body>): the bar
+  // comes back, with the same showing.
+  await page.evaluate(() => document.body.replaceChildren(...[...document.body.children].filter((e) => e.localName !== 'phone-check-bar')));
+  await page.evaluate(() => document.documentElement.replaceChild(document.createElement('body'), document.body));
+  await sleep(300);
+  ok((await text('.bar-headline')) !== null && (await shownCount()) === shown + 1, 'the bar comes back after the page clears or replaces <body>');
 
   // Hide: the bar goes, and the site is hidden without undoing the tour's setting.
   await bar.getByRole('button', { name: /hide/i }).click();

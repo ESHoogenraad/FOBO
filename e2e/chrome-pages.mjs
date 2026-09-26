@@ -41,7 +41,7 @@ try {
   await shot(onb, 'onboarding');
   await onb.getByRole('button', { name: 'Continue' }).click();
   await onb.waitForSelector('#reasons-title');
-  for (const reason of ['Battery life', 'It feels slow', 'Updates ending']) await onb.getByRole('button', { name: reason }).click();
+  for (const reason of ['Battery life', 'Speed', 'Updates ending']) await onb.getByRole('button', { name: reason }).click();
   await onb.getByRole('button', { name: 'Continue' }).click();
   await onb.waitForSelector('.counts-box');
   if (endpoint) await onb.locator('.counts-box input').check();

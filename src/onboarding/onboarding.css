@@ -88,12 +88,22 @@ body {
 }
 
 .onb-note {
+  display: flex;
+  flex-direction: column;
   padding: 12px 14px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   font-size: 13px;
   color: var(--text-2);
+}
+
+.onb-note p {
+  margin: 0;
+}
+
+.onb-note .link-btn {
+  min-height: 32px;
 }
 
 .site-list {
@@ -126,24 +136,33 @@ body {
 
 .counts-box,
 .pin-box {
-  padding: 16px;
+  margin-top: 8px;
+  padding: 20px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
-.counts-box h2,
-.pin-box h2 {
+.counts-box h2 {
   font-size: 15px;
   font-weight: 700;
 }
 
-.counts-box p,
+.pin-box h2 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.counts-box p {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+/* The main thing on the last step, so body-size text rather than fine print */
 .pin-box p,
 .pin-steps {
-  font-size: 13px;
   color: var(--text-2);
 }
 
@@ -152,7 +171,7 @@ body {
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 /* The need test in step 2: a back button beside the title, as in the popup. */

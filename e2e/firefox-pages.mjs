@@ -61,7 +61,7 @@ try {
   await driver.wait(until.elementLocated(By.css('.chip')), 5000);
   const chips = await driver.findElements(By.css('.chip'));
   await chips[0].click(); // Battery life
-  await chips[1].click(); // It feels slow
+  await chips[1].click(); // Speed
   await $('.onb-actions .btn-primary').click();
   await driver.wait(until.elementLocated(By.css('.counts-box')), 5000);
   if (endpoint) {

@@ -95,13 +95,13 @@
     "message": "Later you will see how this compares with what actually tempts you."
   },
   "onbReasonsNeedTest": {
-    "message": "Run the need test first"
+    "message": "Want to know more? Run the need test"
   },
   "reason_battery": {
     "message": "Battery life"
   },
   "reason_slow": {
-    "message": "It feels slow"
+    "message": "Speed"
   },
   "reason_camera": {
     "message": "Camera"

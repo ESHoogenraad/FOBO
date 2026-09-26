@@ -319,20 +319,22 @@ function ReasonsStep({ device, single, onSave }) {
           );
         })}
       </div>
-      <div class="onb-note">{t('onbReasonsNote')}</div>
+      <div class="onb-note">
+        <p>{t('onbReasonsNote')}</p>
+        {!single && (
+          <button type="button" class="link-btn" onClick={() => onSave(inOrder(), 'needTest')}>
+            {t('onbReasonsNeedTest')}
+          </button>
+        )}
+      </div>
       <div class="onb-actions">
         <button type="button" class="btn btn-primary btn-lg btn-block" onClick={() => onSave(inOrder())}>
           {single ? t('save') : t('continue')}
         </button>
         {!single && (
-          <>
-            <button type="button" class="btn btn-secondary btn-block" onClick={() => onSave(inOrder(), 'needTest')}>
-              {t('onbReasonsNeedTest')}
-            </button>
-            <button type="button" class="btn btn-ghost btn-block" onClick={() => onSave(null)}>
-              {t('skipForNow')}
-            </button>
-          </>
+          <button type="button" class="btn btn-ghost btn-block" onClick={() => onSave(null)}>
+            {t('skipForNow')}
+          </button>
         )}
       </div>
     </div>

@@ -2,8 +2,9 @@
 //
 // On a page about phones it shows the bar in the bottom-left corner, inside a closed Shadow DOM
 // so the page's styles and scripts can't reach it. It does nothing else: after rendering, the
-// only work is noticing when a site changes pages without reloading. It never reads the page
-// beyond its URL and title, and never sends anything anywhere.
+// only work is noticing when a site changes pages without reloading, and putting the bar back
+// when a page re-renders itself and takes it along. It never reads the page beyond its URL and
+// title, and never sends anything anywhere.
 //
 // Each time the bar appears is a "showing" (B4 spec): bar_shown records the headline picked,
 // bar_outcome what the user did with it, until the page changes or 30 minutes pass.
@@ -78,6 +79,7 @@ function startShowing(url, match, device, settings) {
     deviceMatched: isOwnModel(device.name, match.item || document.title),
     host: mount(),
   };
+  showing.host.keeper = keepAttached(showing.host.element);
   draw();
 
   // Recorded after the bar is on screen, so storage never delays it.
@@ -92,6 +94,7 @@ function startShowing(url, match, device, settings) {
 
 function endShowing() {
   if (!showing) return;
+  showing.host.keeper.disconnect();
   render(null, showing.host.root);
   showing.host.element.remove();
   showing = null;
@@ -136,6 +139,24 @@ function mount() {
   // First in the page, so it is first when tabbing too, not behind every link on the page.
   (document.body ?? document.documentElement).prepend(element);
   return { element, root };
+}
+
+// Some pages re-render the whole document after loading and remove every node they didn't make,
+// the bar too: Coolblue's Next.js pages clear <body> a second or two in. Watching only the direct
+// children of <html> and <body>, not the page below them, is enough to notice and put it back.
+// The cap stops a tug of war with a page that keeps removing it.
+const REATTACH_MAX = 5;
+function keepAttached(element) {
+  let reattached = 0;
+  const observer = new MutationObserver(() => {
+    if (element.isConnected) return;
+    if (++reattached > REATTACH_MAX) return observer.disconnect();
+    (document.body ?? document.documentElement).prepend(element);
+    if (document.body) observer.observe(document.body, { childList: true }); // the body may be new
+  });
+  observer.observe(document.documentElement, { childList: true });
+  if (document.body) observer.observe(document.body, { childList: true });
+  return observer;
 }
 
 function draw() {
