@@ -124,7 +124,8 @@ body {
   color: var(--muted);
 }
 
-.counts-box {
+.counts-box,
+.pin-box {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -133,12 +134,31 @@ body {
   gap: 8px;
 }
 
-.counts-box h2 {
+.counts-box h2,
+.pin-box h2 {
   font-size: 15px;
   font-weight: 700;
 }
 
-.counts-box p {
+.counts-box p,
+.pin-box p,
+.pin-steps {
   font-size: 13px;
   color: var(--text-2);
+}
+
+.pin-steps {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* The need test in step 2: a back button beside the title, as in the popup. */
+.onb-title-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: -10px;
 }

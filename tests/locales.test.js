@@ -38,6 +38,8 @@ function usedKeys() {
   ['fine', 'near', 'below'].forEach((id) => keys.add(`tileBattery_${id}`));
   // Onboarding field errors, set by id.
   ['errPhoneName', 'errPurchaseDate', 'errPurchaseDateFuture', 'errPrice'].forEach((key) => keys.add(key));
+  // The pin steps on the last onboarding screen, per browser.
+  ['chrome', 'edge', 'firefox'].forEach((id) => keys.add(`onbPinStep2_${id}`));
   // The need test (popup/NeedTest.jsx).
   NEED_RESULTS.forEach((id) => keys.add(`needResult_${id}`));
   ['apps', 'screen', 'damage', 'camera', 'storage'].forEach((id) => keys.add(`needQ_${id}`));

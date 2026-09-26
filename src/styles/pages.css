@@ -188,3 +188,16 @@ a:hover {
 .onb .eol-found {
   min-height: 18px;
 }
+
+/* ---- Notices (popup; the need test in onboarding too) */
+
+.notice {
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text-2);
+}

@@ -8,15 +8,24 @@ import { render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import browser from 'webextension-polyfill';
 import { APP_NAME } from '../config.js';
-import { parsePrice, purchaseDateFor, todayIso } from '../lib/calc.js';
+import { parsePrice, pausedUntilFor, purchaseDateFor, todayIso } from '../lib/calc.js';
 import { eolFields } from '../lib/eol.js';
 import { detectBrowser } from '../lib/env.js';
 import { recordEvent } from '../lib/events.js';
 import { formatMonthYear, locale, localizePage, t } from '../lib/i18n.js';
 import { DEFAULT_ORIGINS, DEFAULT_SITES } from '../lib/match.js';
 import { REASONS } from '../lib/reasons.js';
-import { createInstall, editDevice, getDevice, getInstall, saveDevice, updateInstall } from '../lib/storage.js';
-import { CheckIcon } from '../ui/icons.jsx';
+import {
+  createInstall,
+  editDevice,
+  getDevice,
+  getInstall,
+  saveDevice,
+  updateInstall,
+  updateSettings,
+} from '../lib/storage.js';
+import { NeedTest } from '../popup/NeedTest.jsx';
+import { BackIcon, CheckIcon } from '../ui/icons.jsx';
 import { Logo } from '../ui/Logo.jsx';
 import { useCountsSwitch } from '../ui/useCountsSwitch.js';
 import '../styles/pages.css';
@@ -49,14 +58,15 @@ function App({ single, initialDevice, initialInstall, initiallyGranted }) {
     else setStep('reasons');
   }
 
-  async function saveReasons(reasons) {
+  // `then` is the step after: the sites, or the need test first (full flow only).
+  async function saveReasons(reasons, then = 'sites') {
     if (reasons) {
       const next = { ...device, reasons };
       await saveDevice(next);
       setDevice(next);
     }
     if (single) await closeThisTab();
-    else setStep('sites');
+    else setStep(then);
   }
 
   async function finish() {
@@ -69,7 +79,16 @@ function App({ single, initialDevice, initialInstall, initiallyGranted }) {
     setStep('done');
   }
 
-  const stepNumber = single || step === 'done' ? null : STEPS.indexOf(step) + 1;
+  // The need test saves the battery health to the stored phone; read it back, so saving the
+  // reasons again (after Back) doesn't write the old copy over it.
+  async function leaveNeedTest(to) {
+    setDevice(await getDevice());
+    setStep(to);
+  }
+
+  // The need test is an optional part of step 2.
+  const counted = step === 'needTest' ? 'reasons' : step;
+  const stepNumber = single || step === 'done' ? null : STEPS.indexOf(counted) + 1;
 
   return (
     <main class="onb">
@@ -79,6 +98,9 @@ function App({ single, initialDevice, initialInstall, initiallyGranted }) {
       </header>
       {step === 'phone' && <PhoneStep device={device} single={single} onSave={savePhone} />}
       {step === 'reasons' && <ReasonsStep device={device} single={single} onSave={saveReasons} />}
+      {step === 'needTest' && (
+        <NeedTestStep device={device} onBack={() => leaveNeedTest('reasons')} onDone={() => leaveNeedTest('sites')} />
+      )}
       {step === 'sites' && (
         <SitesStep
           single={single}
@@ -88,7 +110,7 @@ function App({ single, initialDevice, initialInstall, initiallyGranted }) {
           onFinish={finish}
         />
       )}
-      {step === 'done' && <DoneStep granted={granted} />}
+      {step === 'done' && <DoneStep granted={granted} browserName={initialInstall.browser} />}
     </main>
   );
 }
@@ -276,6 +298,7 @@ function ReasonsStep({ device, single, onSave }) {
   const heading = useStepFocus();
 
   const toggle = (id) => setPicked((current) => (current.includes(id) ? current.filter((r) => r !== id) : [...current, id]));
+  const inOrder = () => REASONS.filter((r) => picked.includes(r));
 
   return (
     <div class="onb-body">
@@ -298,15 +321,41 @@ function ReasonsStep({ device, single, onSave }) {
       </div>
       <div class="onb-note">{t('onbReasonsNote')}</div>
       <div class="onb-actions">
-        <button type="button" class="btn btn-primary btn-lg btn-block" onClick={() => onSave(REASONS.filter((r) => picked.includes(r)))}>
+        <button type="button" class="btn btn-primary btn-lg btn-block" onClick={() => onSave(inOrder())}>
           {single ? t('save') : t('continue')}
         </button>
         {!single && (
-          <button type="button" class="btn btn-ghost btn-block" onClick={() => onSave(null)}>
-            {t('skipForNow')}
-          </button>
+          <>
+            <button type="button" class="btn btn-secondary btn-block" onClick={() => onSave(inOrder(), 'needTest')}>
+              {t('onbReasonsNeedTest')}
+            </button>
+            <button type="button" class="btn btn-ghost btn-block" onClick={() => onSave(null)}>
+              {t('skipForNow')}
+            </button>
+          </>
         )}
       </div>
+    </div>
+  );
+}
+
+// ---- Step 2, optional: the need test (popup/NeedTest.jsx), with the reasons just picked
+
+async function pause(option) {
+  await updateSettings({ pausedUntil: pausedUntilFor(option) });
+  await recordEvent('paused', { on: true });
+}
+
+function NeedTestStep({ device, onBack, onDone }) {
+  return (
+    <div class="onb-body">
+      <div class="onb-title-row">
+        <button type="button" class="icon-btn" aria-label={t('back')} onClick={onBack}>
+          <BackIcon />
+        </button>
+        <h1>{t('needTitle')}</h1>
+      </div>
+      <NeedTest device={device} onDone={onDone} onPause={pause} onSetReasons={onBack} doneLabel={t('continue')} />
     </div>
   );
 }
@@ -382,7 +431,7 @@ function SitesStep({ single, granted, onGranted, countsOptIn, onFinish }) {
 
 // ---- Done
 
-function DoneStep({ granted }) {
+function DoneStep({ granted, browserName }) {
   const heading = useStepFocus();
   return (
     <div class="onb-body">
@@ -391,13 +440,55 @@ function DoneStep({ granted }) {
           {t('onbDoneTitle')}
         </h1>
         <p class="onb-helper">{granted ? t('onbDoneGranted', APP_NAME) : t('onbDoneDeclined', APP_NAME)}</p>
-        <p class="onb-helper">{t('onbDonePin')}</p>
       </div>
+      <PinSteps browserName={browserName} />
       <div class="onb-actions">
         <button type="button" class="btn btn-primary btn-lg btn-block" onClick={closeThisTab}>
           {t('close')}
         </button>
       </div>
+    </div>
+  );
+}
+
+// Pinning is manual in every browser, and the second step differs: Edge shows an eye, Firefox a
+// gear menu, Chrome and Brave a pin. Where the browser reports whether the icon is on the
+// toolbar, the steps give way to a check once it is.
+const pinBrowser = (name) => (name === 'edge' || name === 'firefox' ? name : 'chrome');
+
+function usePinned() {
+  const [pinned, setPinned] = useState(false);
+  useEffect(() => {
+    const action = browser.action;
+    if (typeof action?.getUserSettings !== 'function') return undefined;
+    action.getUserSettings().then((settings) => setPinned(Boolean(settings?.isOnToolbar)), () => {});
+    const changed = action.onUserSettingsChanged;
+    const update = (change) => 'isOnToolbar' in change && setPinned(change.isOnToolbar);
+    changed?.addListener(update);
+    return () => changed?.removeListener(update);
+  }, []);
+  return pinned;
+}
+
+function PinSteps({ browserName }) {
+  const pinned = usePinned();
+  return (
+    <div aria-live="polite">
+      {pinned ? (
+        <div class="status-ok">
+          <CheckIcon />
+          {t('onbPinned', APP_NAME)}
+        </div>
+      ) : (
+        <section class="pin-box" aria-labelledby="pin-title">
+          <h2 id="pin-title">{t('onbPinTitle', APP_NAME)}</h2>
+          <p>{t('onbDonePin')}</p>
+          <ol class="pin-steps">
+            <li>{t('onbPinStep1')}</li>
+            <li>{t(`onbPinStep2_${pinBrowser(browserName)}`, APP_NAME)}</li>
+          </ol>
+        </section>
+      )}
     </div>
   );
 }

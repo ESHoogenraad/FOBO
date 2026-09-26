@@ -1,5 +1,6 @@
 // The need test screen (F9, HANDOFF section 8): a few questions from the phone's reasons, then
-// keep, repair or upgrade with the checks listed. The logic is in lib/needtest.js.
+// keep, repair or upgrade with the checks listed. The logic is in lib/needtest.js. The popup shows
+// it as its own view (NeedTestView); onboarding offers it after the reasons (NeedTest).
 
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { APP_NAME } from '../config.js';
@@ -11,6 +12,9 @@ import { needQuestions, needResult } from '../lib/needtest.js';
 import { getDevice, saveDevice } from '../lib/storage.js';
 import { AlertIcon, ArrowUpIcon, BackIcon, CheckIcon, CrossIcon, QuestionIcon, WrenchIcon } from '../ui/icons.jsx';
 import { Choice } from '../ui/Rating.jsx';
+// After the shared page styles, which these override.
+import '../styles/pages.css';
+import './needtest.css';
 
 const YES_NO = [
   { value: true, label: t('yes') },
@@ -18,6 +22,21 @@ const YES_NO = [
 ];
 
 export function NeedTestView({ device, onBack, onPause, onSetReasons }) {
+  return (
+    <main class="pop">
+      <header class="pop-header pop-header-back">
+        <button type="button" class="icon-btn" aria-label={t('back')} onClick={onBack}>
+          <BackIcon />
+        </button>
+        <h1>{t('needTitle')}</h1>
+      </header>
+      <NeedTest device={device} onDone={onBack} onPause={onPause} onSetReasons={onSetReasons} />
+    </main>
+  );
+}
+
+/** The questions, then the result; `doneLabel` names the button that leaves the result. */
+export function NeedTest({ device, onDone, onPause, onSetReasons, doneLabel = t('done') }) {
   const [outcome, setOutcome] = useState(null);
   const heading = useRef(null);
   useEffect(() => heading.current?.focus(), [outcome]);
@@ -42,20 +61,14 @@ export function NeedTestView({ device, onBack, onPause, onSetReasons }) {
   }
 
   return (
-    <main class="pop">
-      <header class="pop-header pop-header-back">
-        <button type="button" class="icon-btn" aria-label={t('back')} onClick={onBack}>
-          <BackIcon />
-        </button>
-        <h1>{t('needTitle')}</h1>
-      </header>
+    <>
       {outcome ? (
-        <NeedResult device={device} outcome={outcome} heading={heading} onDone={onBack} onPause={onPause} />
+        <NeedResult device={device} outcome={outcome} heading={heading} onDone={onDone} onPause={onPause} doneLabel={doneLabel} />
       ) : (
         <NeedQuestions device={device} heading={heading} onFinish={finish} onSetReasons={onSetReasons} />
       )}
       <p class="need-footnote">{t('needFootnote')}</p>
-    </main>
+    </>
   );
 }
 
@@ -142,7 +155,7 @@ function NeedQuestions({ device, heading, onFinish, onSetReasons }) {
 const RESULT_ICONS = { keep: CheckIcon, repair: WrenchIcon, upgrade: ArrowUpIcon };
 const STATUS_ICONS = { ok: CheckIcon, warn: AlertIcon, bad: CrossIcon, unknown: QuestionIcon };
 
-function NeedResult({ device, outcome, heading, onDone, onPause }) {
+function NeedResult({ device, outcome, heading, onDone, onPause, doneLabel }) {
   const { result, checks, passed, known } = outcome;
   const Icon = RESULT_ICONS[result];
   return (
@@ -182,7 +195,7 @@ function NeedResult({ device, outcome, heading, onDone, onPause }) {
       {result === 'keep' && <FeelNew device={device} />}
 
       <button type="button" class="btn btn-secondary btn-block" onClick={onDone}>
-        {t('done')}
+        {doneLabel}
       </button>
     </section>
   );

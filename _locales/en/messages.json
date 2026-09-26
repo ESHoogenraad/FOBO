@@ -94,6 +94,9 @@
   "onbReasonsNote": {
     "message": "Later you will see how this compares with what actually tempts you."
   },
+  "onbReasonsNeedTest": {
+    "message": "Run the need test first"
+  },
   "reason_battery": {
     "message": "Battery life"
   },
@@ -192,7 +195,55 @@
     }
   },
   "onbDonePin": {
-    "message": "Pin the icon to your toolbar, so it's one click away."
+    "message": "Then the need test, your cooling-down list and pause are one click away."
+  },
+  "onbPinTitle": {
+    "message": "Pin $app$ to your toolbar",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbPinStep1": {
+    "message": "Click the puzzle piece (Extensions) at the top right of your browser."
+  },
+  "onbPinStep2_chrome": {
+    "message": "Click the pin next to $app$.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbPinStep2_edge": {
+    "message": "Click the eye next to $app$ (Show in toolbar).",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbPinStep2_firefox": {
+    "message": "Click the gear next to $app$ and choose Pin to Toolbar.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "onbPinned": {
+    "message": "$app$ is pinned to your toolbar.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
   },
   "settingsTitle": {
     "message": "Settings"
