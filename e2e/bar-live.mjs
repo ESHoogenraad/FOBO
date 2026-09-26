@@ -8,13 +8,14 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { acceptConsent, here, launchChrome, log, makeTestBuild, out, SAMPLE_PHONE } from './lib.mjs';
+import { barScriptReady, dismissSiteDialogs, here, launchChrome, log, makeTestBuild, out, SAMPLE_PHONE } from './lib.mjs';
 
 const ext = makeTestBuild('bar-live', { grantSites: true, openShadow: true });
 const { ctx, sw } = await launchChrome(ext, { liveSites: true, viewport: { width: 1366, height: 860 } });
 
 try {
   await sw.evaluate((phone) => chrome.storage.sync.set({ devices: [phone], settings: { barTourDone: true } }), SAMPLE_PHONE);
+  await barScriptReady(sw);
   await ctx.addInitScript(() => {
     new MutationObserver((_, observer) => {
       if (document.querySelector('phone-check-bar')) {
@@ -36,7 +37,7 @@ try {
       const host = new URL(url).host;
       if (!consented.has(host)) {
         consented.add(host);
-        if ((await acceptConsent(page)) || page.url() !== url) await page.goto(url, { waitUntil: 'load', timeout: 45000 });
+        if ((await dismissSiteDialogs(page)) || page.url() !== url) await page.goto(url, { waitUntil: 'load', timeout: 45000 });
       }
       await page.waitForTimeout(700);
       const r = await page.evaluate(() => {
@@ -58,6 +59,9 @@ try {
   if (process.env.INTERACT) {
     const page = await ctx.newPage();
     await page.goto('https://www.bol.com/nl/nl/p/apple-iphone-17-256gb-zwart/9300000240171936/', { waitUntil: 'load' });
+    // bol can ask again on a new tab; while its dialog is open, the bar's buttons are hidden
+    // from role queries (see README, "Traps with the bar").
+    await dismissSiteDialogs(page);
     await page.waitForTimeout(1000);
     const bar = page.locator('phone-check-bar');
     await bar.locator('.bar-toggle').click();

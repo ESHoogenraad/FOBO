@@ -45,7 +45,7 @@ export function firefoxPath() {
  *   grantSites    the default sites as host_permissions, so the bar works without the prompt
  *                 (headless Chrome never shows it)
  *   openShadow    the bar's shadow root open, so a script can click inside it
- *   endpoint      the counts endpoint (the build inlines COUNTS_ENDPOINT as `endpoint = ""`)
+ *   endpoint      the counts endpoint, in place of COUNTS_ENDPOINT (src/config.js)
  *   fastUpload    the upload alarm every 6 seconds instead of every hour
  *   closeToPopup  onboarding's Close button opens the popup page: Firefox refuses to navigate
  *                 to extension pages or run scripts in them, so this is the way in
@@ -72,10 +72,11 @@ export function makeTestBuild(name, { grantSites, openShadow, endpoint, fastUplo
   }
   if (openShadow) patch('content/bar.js', 'mode: "closed"', 'mode: "open"');
   if (endpoint) {
-    const chunk = fs.readdirSync(path.join(dir, 'chunks')).find((file) =>
-      fs.readFileSync(path.join(dir, 'chunks', file), 'utf8').includes('endpoint = ""'),
-    );
-    patch(`chunks/${chunk}`, 'endpoint = ""', `endpoint = ${JSON.stringify(endpoint)}`);
+    const declared = /var COUNTS_ENDPOINT = "[^"]*";/;
+    const chunk = fs.readdirSync(path.join(dir, 'chunks')).find((file) => declared.test(fs.readFileSync(path.join(dir, 'chunks', file), 'utf8')));
+    if (!chunk) throw new Error('Test build: COUNTS_ENDPOINT not found in chunks/');
+    const [from] = fs.readFileSync(path.join(dir, 'chunks', chunk), 'utf8').match(declared);
+    patch(`chunks/${chunk}`, from, `var COUNTS_ENDPOINT = ${JSON.stringify(endpoint)};`);
   }
   if (fastUpload) patch('background/service-worker.js', 'upload: { periodInMinutes: 60 }', 'upload: { periodInMinutes: 0.1 }');
   if (closeToPopup) {
@@ -114,17 +115,49 @@ export async function launchChrome(ext, { headless = !process.env.HEADED, liveSi
   return { ctx, sw, id: new URL(sw.url()).host };
 }
 
-/** Clicks a site's cookie consent button, if one shows. bol's is "Alles accepteren". */
-export async function acceptConsent(page) {
-  for (const name of ['Alles accepteren', 'Akkoord', 'Accepteren', 'Accept', 'Agree']) {
-    const button = page.getByRole('button', { name, exact: true }).first();
-    if (await button.isVisible().catch(() => false)) {
-      await button.click().catch(() => {});
-      await page.waitForTimeout(1500);
-      return true;
-    }
+/**
+ * Waits until the background has registered the bar's content script. In a fresh profile it
+ * does so in onInstalled, a moment after launch; a page opened before that never gets the bar.
+ */
+export async function barScriptReady(sw) {
+  for (let i = 0; i < 50; i++) {
+    if ((await sw.evaluate(() => chrome.scripting.getRegisteredContentScripts())).length) return;
+    await sleep(100);
   }
-  return false;
+  throw new Error("The bar's content script was never registered: are the sites granted (grantSites)?");
+}
+
+const CONSENT_BUTTON = /^(Alles accepteren|Akkoord|Accepteren|Accept|Agree)$/;
+
+/**
+ * Closes a shop's cookie consent dialog ("Alles accepteren" on bol) and bol's country and
+ * language chooser, which it shows on a later tab ("Doorgaan" keeps Nederland). Resolves to
+ * whether it closed one.
+ *
+ * bol draws its dialogs a moment after the load event and ignores a click made before its
+ * scripts have started, so this waits up to `wait` ms for one and clicks until it closes. While
+ * one is open, bol hides everything else from assistive technology, the bar included, so role
+ * queries inside the bar find nothing.
+ */
+export async function dismissSiteDialogs(page, { wait = 5000 } = {}) {
+  const button = page
+    .getByRole('button', { name: CONSENT_BUTTON })
+    .or(page.getByRole('dialog').getByRole('button', { name: 'Doorgaan', exact: true }))
+    .first();
+  let closed = false;
+  // One dialog can follow another.
+  for (let dialog = 0; dialog < 3; dialog++) {
+    const shown = await button.waitFor({ state: 'visible', timeout: dialog ? 1500 : wait }).then(() => true, () => false);
+    if (!shown) return closed;
+    let gone = false;
+    for (let attempt = 0; attempt < 5 && !gone; attempt++) {
+      await button.click({ timeout: 5000 }).catch(() => {});
+      gone = await button.waitFor({ state: 'hidden', timeout: 2000 }).then(() => true, () => false);
+    }
+    if (!gone) return closed;
+    closed = true;
+  }
+  return closed;
 }
 
 /** The phone most checks use: the HANDOFF sample device. */

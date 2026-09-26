@@ -20,6 +20,7 @@ Branded Chrome ignores `--load-extension`, so the scripts use Chrome for Testing
 | --- | --- |
 | `node chrome-pages.mjs` | Onboarding (lookup, month and year, errors), the need test (repair, upgrade, keep), milestone and badge, the day-14 prompt, Share my stats, export, and that the popup makes no outside requests |
 | `node firefox-pages.mjs` | The real flow in Firefox, including the site prompt and the data consent; `LIVE=1` adds the bar on the pages in `bar-pages.json` |
+| `node bar-fake.mjs` | The bar on a stand-in shop page the script serves itself, so no live site or network: the layout at three window sizes, the tour, filters and new pages, a phone edited during a showing, urge tags and hide. Exits with 1 on any `BAD` line. Run it after any change to the bar |
 | `node bar-live.mjs` | The bar on the pages in `bar-pages.json` in Chrome: shown on phone pages only, and how many ms after DOMContentLoaded; `INTERACT=1` also drives the card on a bol page |
 | `node store-shots.mjs` | Rewrites the store screenshots in `store/screenshots/` |
 
@@ -35,7 +36,7 @@ cd worker && npm run db:schema:local && npm run dev
 
 - **grantSites:** the default sites become `host_permissions`, because headless Chrome never shows the permission prompt.
 - **openShadow:** the bar's shadow root is open, so scripts can click inside it.
-- **endpoint:** sets the counts URL. The build inlines `COUNTS_ENDPOINT` as `endpoint = ""`.
+- **endpoint:** replaces `COUNTS_ENDPOINT` (from `src/config.js`) with another counts URL, such as a local `wrangler dev`.
 - **fastUpload:** uploads every 6 seconds instead of every hour.
 - **closeToPopup:** onboarding's Close button opens the popup page.
 
@@ -50,3 +51,10 @@ The shipped `dist/` is never changed.
   - The page load strategy is `eager`, because some shop pages never finish loading.
 - **Shops in headless Chrome:** they serve a bot page to the headless user agent. Live-site checks therefore use a normal user agent and `--disable-blink-features=AutomationControlled`. Ads sometimes redirect the tab, so `bar-live.mjs` opens a fresh tab per page.
 - **Rating and yes/no buttons** are invisible radio inputs over their labels. Select them with `getByRole('radio', { name }).check()`.
+
+## Traps with the bar
+
+- **The bar's host element is 0×0** on purpose, so Playwright calls it hidden. Wait for it with `waitForSelector('phone-check-bar', { state: 'attached' })`.
+- **In a fresh profile** the background registers the bar's content script in `onInstalled`, a moment after launch. Call `barScriptReady(sw)` before opening a shop page, or that page never gets the bar.
+- **bol's dialogs:** its cookie dialog ignores a click made before the page's scripts have started, and on a later tab it also asks for country and language. `dismissSiteDialogs()` waits for either and clicks until it closes. While one is open, bol hides every other element from assistive technology, the bar included, so role queries inside the bar find nothing.
+- **Stand-in pages:** `ctx.route()` can serve your own HTML on a real shop URL, and the bar's content script still runs there. That is how `bar-fake.mjs` works without the live sites.

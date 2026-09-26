@@ -6,7 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { acceptConsent, launchChrome, log, makeTestBuild, root, SAMPLE_PHONE } from './lib.mjs';
+import { barScriptReady, dismissSiteDialogs, launchChrome, log, makeTestBuild, root, SAMPLE_PHONE } from './lib.mjs';
 
 const dest = path.join(root, 'store/screenshots');
 fs.mkdirSync(dest, { recursive: true });
@@ -33,12 +33,13 @@ try {
       'cooldown:a': { id: 'a', item: 'Pixel 11 Pro', price: 1099, startedAt: day(-2).toISOString(), days: 7, endsOn: day(5).toISOString().slice(0, 10), wantRating: 8 },
     });
   }, SAMPLE_PHONE);
+  await barScriptReady(sw);
 
   // The bar and the card. Reload until the headline is the own-rule one, which shows best what it does.
   const page = await ctx.newPage();
   const url = 'https://tweakers.net/pricewatch/2254442/apple-iphone-17-pro-256gb-opslag-blauw.html';
   await page.goto(url, { waitUntil: 'load', timeout: 45000 });
-  await acceptConsent(page);
+  await dismissSiteDialogs(page);
   for (let i = 0; i < 12; i++) {
     await page.goto(url, { waitUntil: 'load', timeout: 45000 });
     await page.waitForTimeout(1200);

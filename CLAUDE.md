@@ -42,7 +42,7 @@ web-ext: `start:firefox`, `start:chrome`, `package`, `sign:firefox` (after `pack
 
 ## Browser testing
 
-- Scripts in `e2e/` (own `package.json`; see `e2e/README.md`): `chrome-pages.mjs`, `firefox-pages.mjs`, `bar-live.mjs`, `store-shots.mjs`. They run on patched copies of `dist/` made by `makeTestBuild()` in `e2e/lib.mjs`; extend that rather than patching by hand.
+- Scripts in `e2e/` (own `package.json`; see `e2e/README.md`, including its "Traps with the bar"): `bar-fake.mjs` (offline, run after any bar change), `chrome-pages.mjs`, `firefox-pages.mjs`, `bar-live.mjs`, `store-shots.mjs`. They run on patched copies of `dist/` made by `makeTestBuild()` in `e2e/lib.mjs`; extend that rather than patching by hand.
 - Chrome: Chrome for Testing only (branded Chrome ignores `--load-extension`). Headless never shows the host-permission prompt.
 - Firefox: selenium + geckodriver; it refuses navigation to and scripts in `moz-extension://` pages, so drive those through the UI.
 - Delete `.playwright-mcp/` afterwards, because the repo will be public.

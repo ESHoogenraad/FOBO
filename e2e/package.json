@@ -9,6 +9,7 @@
     "chrome": "node chrome-pages.mjs",
     "firefox": "node firefox-pages.mjs",
     "bar": "node bar-live.mjs",
+    "bar-fake": "node bar-fake.mjs",
     "shots": "node store-shots.mjs"
   },
   "devDependencies": {
