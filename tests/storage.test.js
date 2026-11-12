@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
   addUrge,
+  clearDemo,
   createInstall,
   editDevice,
   getDevice,
@@ -8,6 +9,8 @@ import {
   getSettings,
   getSettingsAndDevice,
   getUrges,
+  isDemo,
+  markDemo,
   migrate,
   newDevice,
   saveDevice,
@@ -141,5 +144,32 @@ describe('urges', () => {
     expect(urges.map((u) => u.id)).toEqual([first.id, second.id]);
     expect(urges[1]).toMatchObject({ source: 'popup', site: null, tag: 'launch_hype' });
     expect(urges[0]).not.toHaveProperty('tag');
+  });
+});
+
+describe('the first look from onboarding', () => {
+  const now = Date.parse('2026-11-12T10:00:00Z');
+
+  it('is off until onboarding marks it', async () => {
+    expect(await isDemo(now)).toBe(false);
+    await markDemo(now);
+    expect(await isDemo(now + 5_000)).toBe(true);
+  });
+
+  it('ends when the bar clears it', async () => {
+    await markDemo(now);
+    await clearDemo();
+    expect(await isDemo(now + 5_000)).toBe(false);
+    expect(await browser.storage.local.get('demoUntil')).toEqual({});
+  });
+
+  it('runs out by itself when the page never showed a bar', async () => {
+    await markDemo(now);
+    expect(await isDemo(now + 3 * 60 * 1000)).toBe(false);
+  });
+
+  it('ignores a mark that is not a time', async () => {
+    await browser.storage.local.set({ demoUntil: 'soon' });
+    expect(await isDemo(now)).toBe(false);
   });
 });

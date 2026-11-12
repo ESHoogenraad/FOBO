@@ -32,7 +32,7 @@ Only pages on the sites you allow in the setup: Tweakers, GSMArena, Coolblue, bo
 
 ## Links
 
-The need test can show links to iFixit, Repair Café and a YouTube search for your phone's review. They open only when you click them, like any link.
+The need test can show links to iFixit, Repair Café and a YouTube search for your phone's review. The last setup screen has a "See it on a phone page" button, which opens a phone page on GSMArena so you can see the bar. They open only when you click them, like any link.
 
 ## Questions
 

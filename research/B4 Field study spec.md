@@ -54,6 +54,8 @@ Events are batched locally and posted at most once an hour, and only while the o
 
 A showing can have several outcomes (card opened, then tab closed), so `bar_outcome` records each as a flag. All flags false means "nothing".
 
+**The first look is not a showing** (added 12 Nov 2026). Onboarding's last screen offers "See it on a phone page", which opens a phone page so the bar and its tour show within a minute of installing. That one showing records no `bar_shown` and no `bar_outcome`: nobody was tempted, and its headline is the own rule when reasons are set, not a random pick. The funnel's "first bar" and the 7-day rule below therefore still measure the first bar met while browsing, and "Share my stats" leaves the first look out too, because it is built from the same events. An urge or a cooldown started from the first look is the user's own action and is recorded as usual; on day 0, read `urge_logged` with that in mind. Nothing records whether the button was used: that would need a new event and a new Worker deploy, and the M6 interviews can ask.
+
 ## Headline randomisation
 
 This is the micro-randomised part (Klasnja et al. 2015): each showing, not each user, is randomised.

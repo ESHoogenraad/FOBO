@@ -7,16 +7,18 @@
 // title, and never sends anything anywhere.
 //
 // Each time the bar appears is a "showing" (B4 spec): bar_shown records the headline picked,
-// bar_outcome what the user did with it, until the page changes or 30 minutes pass.
+// bar_outcome what the user did with it, until the page changes or 30 minutes pass. The one
+// showing that records neither is the first look, opened from onboarding's last screen.
 
 import { render } from 'preact';
 import browser from 'webextension-polyfill';
+import { DEMO_PAGE_URL } from '../config.js';
 import { hideSite, isHidden, isPaused, todayIso } from '../lib/calc.js';
 import { newCooldown } from '../lib/cooldowns.js';
 import { recordEvent, updateEvent } from '../lib/events.js';
 import { eligibleHeadlines, headlineText, pickHeadline } from '../lib/headlines.js';
 import { isOwnModel, matchPage, siteForHost, siteOf } from '../lib/match.js';
-import { addUrge, getSettingsAndDevice, saveCooldown, updateSettings, updateUrge } from '../lib/storage.js';
+import { addUrge, clearDemo, getSettingsAndDevice, isDemo, saveCooldown, updateSettings, updateUrge } from '../lib/storage.js';
 import { Bar } from './BarView.jsx';
 import css from './bar.css?inline';
 
@@ -27,7 +29,7 @@ const SHOWING_MS = 30 * 60 * 1000;
  * { id, url, match, device, tour, headline, headlineText, deviceMatched, host, outcomeKey }.
  * tour: show the first-run tour. headlineText is fixed when the showing starts, so the bar keeps
  * saying what bar_shown recorded even if the phone is edited meanwhile. outcomeKey is a promise
- * of the bar_outcome event's key, set right after the bar is drawn.
+ * of the bar_outcome event's key, set right after the bar is drawn; the first look has none.
  */
 let showing = null;
 // Counts calls to update(), so an older call that is still reading storage gives way to a newer one.
@@ -37,7 +39,12 @@ let generation = 0;
 // page, so they keep the showing (B4 spec: a showing ends when the page navigates away).
 const pageUrl = () => location.origin + location.pathname;
 
-const readStorage = getSettingsAndDevice;
+/**
+ * [[settings, the phone or null], whether this is the first look from onboarding]. Only the page
+ * onboarding opens can be the first look, so no other page reads the mark, or loses its events
+ * to a mark left behind by a demo page that never showed a bar.
+ */
+const readStorage = () => Promise.all([getSettingsAndDevice(), DEMO_PAGE_URL && pageUrl() === DEMO_PAGE_URL ? isDemo() : false]);
 
 function blocked(settings, device, siteId) {
   return !device || isPaused(settings) || settings.sitesOff.includes(siteId) || isHidden(settings, siteId);
@@ -53,7 +60,7 @@ async function update(stored) {
   const match = matchPage(url, document.title);
   if (!match) return endShowing();
 
-  const [settings, device] = await (stored ?? readStorage());
+  const [[settings, device], demo] = await (stored ?? readStorage());
   if (run !== generation) return;
   if (blocked(settings, device, match.site.id)) return endShowing();
   if (showing?.url === url) {
@@ -62,12 +69,18 @@ async function update(stored) {
     return draw();
   }
   endShowing();
-  startShowing(url, match, device, settings);
+  startShowing(url, match, device, settings, demo);
 }
 
-function startShowing(url, match, device, settings) {
+/**
+ * `demo`: the first look, opened from onboarding ("See it on a phone page"). It is no temptation
+ * and its headline isn't drawn at random, so it stays out of the event log: no bar_shown and no
+ * bar_outcome (B4 spec). An urge or a cooldown the user starts from it is real and recorded.
+ */
+function startShowing(url, match, device, settings, demo) {
   const eligible = eligibleHeadlines(device);
-  const headline = pickHeadline(eligible);
+  // The first look shows the user's own rule when they set one: it is what the bar is for.
+  const headline = demo && eligible.includes('own_rule') ? 'own_rule' : pickHeadline(eligible);
   showing = {
     id: crypto.randomUUID(),
     url,
@@ -82,6 +95,10 @@ function startShowing(url, match, device, settings) {
   };
   showing.host.keeper = keepAttached(showing.host.element);
   draw();
+  if (demo) {
+    clearDemo(); // the next showing counts
+    return;
+  }
 
   // Recorded after the bar is on screen, so storage never delays it.
   const { id: showingId, deviceMatched } = showing;

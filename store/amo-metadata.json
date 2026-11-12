@@ -1,7 +1,7 @@
 {
   "categories": { "firefox": ["shopping"] },
   "summary": {
-    "en-US": "Shows up when you are tempted to replace a phone that still works, and checks the page against your own reasons."
+    "en-US": "Should you replace your phone? An honest answer: keep it, repair it or upgrade. Then it shows up on shop pages when you're tempted."
   },
   "tags": ["shopping", "privacy"],
   "requires_payment": false,

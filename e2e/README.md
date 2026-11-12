@@ -19,8 +19,8 @@ Branded Chrome ignores `--load-extension`, so the scripts use Chrome for Testing
 | Script | What it checks |
 | --- | --- |
 | `node chrome-pages.mjs` | Onboarding (lookup, month and year, errors), the need test (repair, upgrade, keep), milestone and badge, the day-14 prompt, Share my stats, export, and that the popup makes no outside requests |
-| `node firefox-pages.mjs` | The real flow in Firefox, including the site prompt and the data consent; `LIVE=1` adds the bar on the pages in `bar-pages.json` |
-| `node bar-fake.mjs` | The bar on a stand-in shop page the script serves itself, so no live site or network: the layout at three window sizes, the light bar on a dark page, the tour, filters and new pages, a phone edited during a showing, the bar coming back after the page clears `<body>`, urge tags and hide. Exits with 1 on any `BAD` line. Run it after any change to the bar |
+| `node firefox-pages.mjs` | The real flow in Firefox, including the site prompt and the data consent; `LIVE=1` adds the first look ("See it on a phone page" on onboarding's last screen, a real GSMArena page) and the bar on the pages in `bar-pages.json` |
+| `node bar-fake.mjs` | The bar on a stand-in shop page the script serves itself, so no live site or network: the layout at three window sizes, the light bar on a dark page, the tour, filters and new pages, a phone edited during a showing, the first look from onboarding (own rule, no events), the bar coming back after the page clears `<body>`, urge tags and hide. Exits with 1 on any `BAD` line. Run it after any change to the bar |
 | `node bar-live.mjs` | The bar on the pages in `bar-pages.json` in Chrome: shown on phone pages only, and how many ms after DOMContentLoaded; `INTERACT=1` also drives the card on a bol page |
 | `node store-shots.mjs` | Rewrites the store screenshots in `store/screenshots/` |
 

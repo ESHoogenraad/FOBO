@@ -1,6 +1,7 @@
 // The real flow in Firefox: onboarding, the one site prompt and the data consent (both granted
 // automatically by a test pref), then the popup: need test, Share my stats, export. With
-// ENDPOINT set, the counts upload to it. With LIVE=1, it then visits the pages in
+// ENDPOINT set, the counts upload to it. With LIVE=1, it also clicks "See it on a phone page" on
+// onboarding's last screen (a real GSMArena page), and at the end visits the pages in
 // bar-pages.json and checks the bar is there on phone pages and nowhere else.
 //
 // Firefox refuses to navigate to extension pages or run scripts in them, so everything on
@@ -71,6 +72,25 @@ try {
   await $('.onb-actions .btn-primary').click(); // Allow these sites
   await driver.sleep(1500);
   log('after allowing the sites:', await $('h1').getText());
+
+  // ---- The first look: "See it on a phone page" opens a phone page next to this tab
+  if (process.env.LIVE) {
+    const onboardingTab = await driver.getWindowHandle();
+    // Firefox starts with a blank tab of its own, so look for the tab that wasn't there before.
+    const before = await driver.getAllWindowHandles();
+    const added = async () => (await driver.getAllWindowHandles()).find((handle) => !before.includes(handle));
+    await button('See it on a phone page').click();
+    await driver.wait(added, 10000);
+    await driver.switchTo().window(await added());
+    const shown = await driver.wait(until.elementLocated(By.css('phone-check-bar')), 20000).then(() => true, () => false);
+    await driver.sleep(500);
+    const headline = shown && (await driver.executeScript(() => document.querySelector('phone-check-bar').shadowRoot?.querySelector('.bar-headline')?.textContent));
+    log(shown ? 'ok ' : 'BAD', 'first look:', shown ? `"${headline}" on` : 'no bar on', await driver.getCurrentUrl());
+    await driver.close();
+    await driver.switchTo().window(onboardingTab);
+    const left = await driver.findElements(By.xpath("//button[normalize-space()='See it on a phone page']"));
+    log(left.length === 0 ? 'ok ' : 'BAD', 'first look: the button is gone once used, Close is left');
+  }
 
   // ---- Popup (opened by the test build's Close button)
   await driver.manage().window().setRect({ width: 400, height: 800 });

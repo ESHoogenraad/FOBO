@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { DEMO_PAGE_URL } from '../src/config.js';
 import { DEFAULT_ORIGINS, isOwnModel, isPhoneProduct, matchPage, siteForHost, SITES, siteOf } from '../src/lib/match.js';
 
 const manifest = JSON.parse(readFileSync(join(import.meta.dirname, '..', 'manifest.json'), 'utf8'));
@@ -31,6 +32,22 @@ describe('the site table', () => {
     for (const site of SITES) {
       expect(['price_comparison', 'specs', 'shop', 'forum']).toContain(site.siteCategory);
     }
+  });
+});
+
+describe("the page onboarding's \"See it on a phone page\" opens", () => {
+  // Its title as read on the live site on 12 Nov 2026.
+  const title = 'Samsung Galaxy S26 Ultra - Full phone specifications';
+
+  it('is a phone page on a default site, so the bar shows there', () => {
+    const match = matchPage(DEMO_PAGE_URL, title);
+    expect(match?.item).toBe('Samsung Galaxy S26 Ultra');
+    expect(match.site.isDefault).toBe(true);
+  });
+
+  it('has no query or fragment, because the bar compares it with the page\'s origin and path', () => {
+    const { origin, pathname } = new URL(DEMO_PAGE_URL);
+    expect(origin + pathname).toBe(DEMO_PAGE_URL);
   });
 });
 

@@ -14,7 +14,7 @@ Stage 1 goal: 30 real users for 4 weeks, and evidence that the bar changes behav
 
 Source documents in this folder:
 
-- `Holdout Requirements & Roadmap.md`: goals, gates, scope
+- `Holdout Requirements & Roadmap.md`: goals, gates, adoption requirements, open decisions
 - `Holdout Research Plan.md`: the evidence behind each mechanic (IDs A1 to A9)
 - `research/B4 Field study spec.md`: event schema, headline randomisation, endpoint rules and analysis. Authoritative for everything in section 9
 - `design-reference/`: the chosen design is "Dark: Tokyo Night device bar"
@@ -65,7 +65,7 @@ F12, a satisfaction check-in after a purchase, is removed from Stage 1. The cool
 
 ### Out of scope
 
-Accounts, sync servers, more than one phone (the data model allows it, the interface doesn't), other device categories, trigger sites added by the user, automatic price lookup, CO2 figures, streaks, community features, leaderboards, newsletter, share cards, F12, a light theme for the popup and onboarding (later, see section 7), Firefox for Android (section 4).
+Accounts, sync, any server other than the opt-in counts endpoint, more than one phone (the data model allows it, the interface doesn't), other device categories, trigger sites added by the user (that would need a broad optional permission), automatic price lookup, CO2 figures, streaks, community features, leaderboards, newsletter, share cards, F12, a light theme for the popup and onboarding (later, see section 7), an Android app, Firefox for Android (section 4).
 
 ## 4. Architecture
 
@@ -256,7 +256,7 @@ All copy goes through `_locales`. Stage 1 ships English only; a later Dutch vers
 - **Onboarding step 1:** eyebrow "Before you buy", title "Which phone are you currently holding on to?", fields Phone / Purchase date / Price paid (EUR), footer "No account. Nothing leaves this browser unless you opt in."
 - **Onboarding step 2:** title "What would make you replace it?", helper "Pick any that apply. The need test checks these first when you are tempted." Options: Battery life, Speed, Camera, Screen, Storage, Updates ending, Damage, Something else. Note "Later you will see how this compares with what actually tempts you.", with the link "Want to know more? Run the need test" under it. Actions Continue / Skip for now. The need test runs in the onboarding tab with the reasons just picked; its result ends with Continue, on to step 3.
 - **Onboarding step 3:** title "Where Upgraditch shows up", the five sites listed, text "Upgraditch only looks at pages on these sites, to see whether they're about phones. It never reads anything else, and never sends the pages you visit anywhere." Button "Allow these sites" triggers the single permission prompt. Below it, the "Help test what works" opt-in, with the copy from the B4 spec.
-- **Onboarding done:** "You're set", then how to pin the icon to the toolbar, in two steps for the browser in use (Chrome and Brave: the pin; Edge: the eye; Firefox: the gear, then Pin to Toolbar). Where the browser reports the icon is on the toolbar (`action.getUserSettings`), the steps give way to "Upgraditch is pinned to your toolbar."
+- **Onboarding done:** "You're set", then how to pin the icon to the toolbar, in two steps for the browser in use (Chrome and Brave: the pin; Edge: the eye; Firefox: the gear, then Pin to Toolbar). Where the browser reports the icon is on the toolbar (`action.getUserSettings`), the steps give way to "Upgraditch is pinned to your toolbar." With the sites allowed, the primary button is "See it on a phone page" (added 12 Nov 2026): it opens `DEMO_PAGE_URL` (`src/config.js`, a GSMArena device page) in a new tab, so the first bar and its tour show within a minute of installing instead of at the next shop visit. That showing is the first look: it shows the own-rule headline when reasons are set, and it is not part of the field study (section 9). "Close tab" on its bar leads back to this screen.
 - **Popup:** phone summary with cost per month "and falling", lifespan bar, "Security updates until Oct 2027", cooling-down list ("Check again on 29 Oct"), "This page tempted me", "Run the need test", "Pause Upgraditch", sites on/off, the counts toggle, links "Share my stats" and "Feedback".
 - **Need test:** the checks come from the user's reasons, plus one question for everyone: "Do your banking, ID and work apps still run on it?" (a Dutch version names DigiD). "No" means upgrade. "Slow" leads to the battery check. If the user picked "Updates ending", say which updates: "New Android versions stopped in Feb 2026. Security updates still come." (the row above it already gives the security date). Only the end of security updates counts toward upgrade.
 - **Need test result:** "Keep it." / "Repair it." / "Upgrade it." with the checks listed. It must say upgrade when security updates have ended or the apps no longer run, and never hide that answer.
@@ -272,8 +272,9 @@ The authoritative spec is `research/B4 Field study spec.md`: events, fields, hea
 - Events: `install`, `onboarding_finished`, `permission_result`, `bar_shown`, `bar_outcome`, `urge_logged`, `cooldown_started`, `cooldown_ended`, `need_test_result`, `paused`. Every event carries `schemaVersion`, `clientId`, `eventId`, `build`, `browser`, `dayIndex` (whole days since install) and `event`. `browser` is detected once at install: Firefox from `runtime.getBrowserInfo` (Firefox only; the polyfill also defines `browser` in Chrome), Brave from `navigator.brave`, Edge from `navigator.userAgentData.brands`, otherwise Chrome.
 - Headlines: `own_rule` ("You said you'd replace it for battery or updates. Does this page fix either?", when reasons are set), `cost` ("€19.14 a month so far, and falling"), `support` ("Security updates until Oct 2027", when the end date is known), `time_held` ("Kept for 3 years 11 months"), `phone_voice` ("We've had 3 years 11 months together. I'm not done yet.": the same fact in the phone's voice). At each showing, pick uniformly at random among the eligible headlines with `crypto.getRandomValues`, and record the eligible list with the pick.
 - The layout is the same for every headline, and "Close tab" is the primary action on every variant. The headline is the only thing that varies in Stage 1.
+- The first look (the showing opened from onboarding's "See it on a phone page", section 8) records no `bar_shown` and no `bar_outcome`: it is a demonstration, not a temptation, and its headline isn't drawn at random. So the funnel's "first bar" stays the first bar the user met while browsing. An urge or a cooldown started from it is recorded as usual.
 - Never send device names, notes, URLs or timestamps. `siteCategory` comes from the site table, never from the URL.
-- The Worker (`worker/`): accepts `POST` with a JSON array of events, validates the schema and rejects unknown fields, answers CORS for the extension origins, never stores IP addresses (it passes them only to Cloudflare's rate limiter, 2 uploads a minute per address), caps the events it stores per day over all installs,, keeps request logging off, and stores rows with the day they arrived and nothing finer. Raw events are deleted after the Stage 1 analysis.
+- The Worker (`worker/`): accepts `POST` with a JSON array of events, validates the schema and rejects unknown fields, answers CORS for the extension origins, never stores IP addresses (it passes them only to Cloudflare's rate limiter, 2 uploads a minute per address), caps the events it stores per day over all installs, keeps request logging off, and stores rows with the day they arrived and nothing finer. Raw events are deleted after the Stage 1 analysis.
 
 ## 10. Share my stats (V2) schema
 
@@ -321,10 +322,7 @@ If a weekend overruns, cut Should items before extending.
 
 ## 13. Open decisions (ask the owner)
 
-- The final name (Checkpoint A).
-- Whether gathering.tweakers.net joins the default sites (Checkpoint A).
-- Final headline wording (Checkpoint A, after the prototype sessions).
-- More than one device (Checkpoint B).
+The open decisions, each with the checkpoint that settles it, are in the "Open decisions" table of `Holdout Requirements & Roadmap.md`. Ask before building anything that depends on one. Decisions that are settled are logged here.
 
 Settled on 22 Sep 2026: cooldowns default to 7 days and are adjustable; "money not spent" adds up dropped cooldown items; the phone gets `--device-1`; milestones and cooldown ends use the toolbar badge, not notifications.
 

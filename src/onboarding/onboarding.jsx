@@ -7,19 +7,20 @@
 import { render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import browser from 'webextension-polyfill';
-import { APP_NAME } from '../config.js';
+import { APP_NAME, DEMO_PAGE_URL } from '../config.js';
 import { parsePrice, pausedUntilFor, purchaseDateFor, todayIso } from '../lib/calc.js';
 import { eolFields } from '../lib/eol.js';
 import { detectBrowser } from '../lib/env.js';
 import { recordEvent } from '../lib/events.js';
 import { formatMonthYear, locale, localizePage, t } from '../lib/i18n.js';
-import { DEFAULT_ORIGINS, DEFAULT_SITES } from '../lib/match.js';
+import { DEFAULT_ORIGINS, DEFAULT_SITES, siteForHost } from '../lib/match.js';
 import { REASONS } from '../lib/reasons.js';
 import {
   createInstall,
   editDevice,
   getDevice,
   getInstall,
+  markDemo,
   saveDevice,
   updateInstall,
   updateSettings,
@@ -444,8 +445,38 @@ function SitesStep({ single, granted, onGranted, countsOptIn, onFinish }) {
 
 // ---- Done
 
+// With the sites allowed, "See it on a phone page" opens one, so the first bar and its tour show
+// now rather than at the next visit to a shop, which may be weeks away. The bar keeps that
+// showing out of the event log (markDemo in lib/storage.js). The page opens next to this tab and
+// as its child, so the bar's "Close tab" leads back here, to the pin steps.
+const demoSite = DEMO_PAGE_URL ? siteForHost(new URL(DEMO_PAGE_URL).hostname) : null;
+
 function DoneStep({ granted, browserName }) {
   const heading = useStepFocus();
+  const [demoOpened, setDemoOpened] = useState(false);
+  const offerDemo = granted && demoSite && !demoOpened;
+  const closeButton = useRef(null);
+
+  // The button that was clicked is gone, so focus moves to the one that is left.
+  useEffect(() => {
+    if (demoOpened) closeButton.current?.focus();
+  }, [demoOpened]);
+
+  // A second click while the first is still opening the page would open it twice.
+  const opening = useRef(false);
+
+  async function openDemo() {
+    if (opening.current) return;
+    opening.current = true;
+    try {
+      const [tab] = await Promise.all([browser.tabs.getCurrent(), markDemo()]);
+      await browser.tabs.create({ url: DEMO_PAGE_URL, ...(tab ? { index: tab.index + 1, openerTabId: tab.id } : {}) });
+      setDemoOpened(true); // seen once: Close is the next step now
+    } catch {
+      opening.current = false; // no page opened: the button stays, to try again
+    }
+  }
+
   return (
     <div class="onb-body">
       <div class="onb-intro">
@@ -456,7 +487,20 @@ function DoneStep({ granted, browserName }) {
       </div>
       <PinSteps browserName={browserName} />
       <div class="onb-actions">
-        <button type="button" class="btn btn-primary btn-lg btn-block" onClick={closeThisTab}>
+        {offerDemo && (
+          <>
+            <button type="button" class="btn btn-primary btn-lg btn-block" onClick={openDemo}>
+              {t('onbDoneDemo')}
+            </button>
+            <p class="onb-footnote">{t('onbDoneDemoHint', demoSite.label)}</p>
+          </>
+        )}
+        <button
+          ref={closeButton}
+          type="button"
+          class={offerDemo ? 'btn btn-ghost btn-block' : 'btn btn-primary btn-lg btn-block'}
+          onClick={closeThisTab}
+        >
           {t('close')}
         </button>
       </div>

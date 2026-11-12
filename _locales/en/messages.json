@@ -4,7 +4,7 @@
     "description": "Working name. Change it together with APP_NAME in src/config.js"
   },
   "appDescription": {
-    "message": "Shows up when you are tempted to replace a phone that still works, and checks the page against your own reasons.",
+    "message": "Should you replace your phone? An honest answer: keep it, repair it or upgrade. Then it shows up on shop pages when you're tempted.",
     "description": "Store and add-on manager description"
   },
   "locale": {
@@ -191,6 +191,18 @@
       "app": {
         "content": "$1",
         "example": "Upgraditch"
+      }
+    }
+  },
+  "onbDoneDemo": {
+    "message": "See it on a phone page"
+  },
+  "onbDoneDemoHint": {
+    "message": "Opens a phone page on $site$ in a new tab. The bar is at the bottom left.",
+    "placeholders": {
+      "site": {
+        "content": "$1",
+        "example": "GSMArena"
       }
     }
   },

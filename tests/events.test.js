@@ -143,6 +143,15 @@ describe('upload', () => {
     expect(JSON.parse(init.body).map((e) => e.event)).toEqual(['install', 'permission_result']);
   });
 
+  it('keeps the events for the next try when the browser is offline', async () => {
+    await saveCountsOptIn(true);
+    const offline = vi.fn(async () => {
+      throw new TypeError('Failed to fetch');
+    });
+    expect(await uploadPending({ endpoint, fetchImpl: offline })).toBe(0);
+    expect(await uploadPending({ endpoint, fetchImpl: ok() })).toBe(2);
+  });
+
   it("holds a showing's outcome back until the showing has ended, and fixes it then", async () => {
     await saveCountsOptIn(true);
     const start = Date.now();

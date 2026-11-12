@@ -15,6 +15,8 @@
 //             One key per record, so the popup, the onboarding page, the content script and the
 //             background script can all add records without overwriting each other's writes.
 //   eolCache  endoflife.date responses, per product, for 7 days (lib/eol.js)
+//   demoUntil a time in ms: until then, the next showing of the bar on DEMO_PAGE_URL is the
+//             first look from onboarding (see "The first look" below)
 
 import browser from 'webextension-polyfill';
 
@@ -112,6 +114,28 @@ export async function updateInstall(patch) {
   await local.set({ install: next });
   return next;
 }
+
+// ---- The first look (local)
+
+// "See it on a phone page" on onboarding's last screen opens a phone page, so the bar shows
+// within a minute of installing. That showing is a demonstration, not a temptation, so the bar
+// keeps it out of the event log (B4 spec, "Events"). Onboarding sets the mark, and the bar
+// clears it when it shows. Only the bar on DEMO_PAGE_URL reads the mark, so a phone page in
+// another tab is never taken for the first look. The mark is a time, so one left behind by a
+// page that never loaded, or wasn't a phone page after all, runs out by itself.
+const DEMO_MS = 2 * 60 * 1000;
+
+export async function markDemo(now = Date.now()) {
+  await local.set({ demoUntil: now + DEMO_MS });
+}
+
+/** Whether the next showing of the bar is the first look from onboarding. Asked on DEMO_PAGE_URL only. */
+export async function isDemo(now = Date.now()) {
+  const { demoUntil } = await local.get('demoUntil');
+  return typeof demoUntil === 'number' && now < demoUntil;
+}
+
+export const clearDemo = () => local.remove('demoUntil');
 
 // ---- Records kept one per key (local)
 

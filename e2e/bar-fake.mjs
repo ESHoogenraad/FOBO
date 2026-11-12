@@ -3,12 +3,14 @@
 // with the page's header free, the card right above the bar, inside the window, and the page
 // still clickable beside it), the light bar on a dark page, then the behaviour: a filter keeps
 // the showing, a new path starts one, editing the phone keeps the recorded headline, the bar
-// comes back when the page clears <body>, an urge takes a tag, and hide stores hiddenUntil. Screenshots go to e2e/out/fake-*.png.
+// comes back when the page clears <body>, an urge takes a tag, and hide stores hiddenUntil. Also the
+// first look from onboarding: the own rule, and no events. Screenshots go to e2e/out/fake-*.png.
 //
 //   node bar-fake.mjs
 
 import path from 'node:path';
 import { barScriptReady, launchChrome, log, makeTestBuild, out, SAMPLE_PHONE, sleep } from './lib.mjs';
+import { DEMO_PAGE_URL } from '../src/config.js';
 
 // A Coolblue phone category: the URL alone decides, so the title doesn't matter. The header
 // must stay clickable while the bar shows, and the link beside the card too.
@@ -44,6 +46,11 @@ try {
     const variant = new URL(route.request().url()).searchParams.get('page');
     route.fulfill({ contentType: 'text/html', body: PAGES[variant] ?? PAGE });
   });
+
+  // The page onboarding's "See it on a phone page" opens, with the title the live page has.
+  await ctx.route(DEMO_PAGE_URL, (route) =>
+    route.fulfill({ contentType: 'text/html', body: PAGE.replace(/<title>.*?<\/title>/, '<title>Samsung Galaxy S26 Ultra - Full phone specifications</title>') }),
+  );
 
   const page = await ctx.newPage();
   page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));
@@ -128,6 +135,31 @@ try {
   // date, which the phone edit below takes away.
   const shownCount = () =>
     sw.evaluate(async () => Object.entries(await chrome.storage.local.get(null)).filter(([key, value]) => key.startsWith('ev:') && value.event === 'bar_shown').length);
+
+  // The first look ("See it on a phone page" in onboarding): the user's own rule, and nothing in
+  // the event log. Only the page onboarding opens can be it: another phone page opened meanwhile
+  // is recorded and leaves the mark alone. The showing after the first look counts again.
+  await sw.evaluate(() => chrome.storage.local.set({ demoUntil: Date.now() + 60_000 }));
+  const beforeOther = await shownCount();
+  await open();
+  await sleep(300);
+  ok((await shownCount()) === beforeOther + 1, 'another phone page is no first look: it is recorded');
+  const beforeDemo = await shownCount();
+  const outcomeCount = () =>
+    sw.evaluate(async () => Object.values(await chrome.storage.local.get(null)).filter((value) => value?.event === 'bar_outcome').length);
+  const outcomesBefore = await outcomeCount();
+  await open(DEMO_PAGE_URL);
+  const demoHeadline = await text('.bar-headline');
+  await bar.locator('.bar-toggle').click();
+  await page.keyboard.press('Escape');
+  await sleep(300);
+  const mark = await sw.evaluate(async () => (await chrome.storage.local.get('demoUntil')).demoUntil);
+  ok(demoHeadline.startsWith('You said'), `the first look shows the own rule: "${demoHeadline}"`);
+  ok((await shownCount()) === beforeDemo && (await outcomeCount()) === outcomesBefore && mark === undefined, 'the first look records no bar_shown or bar_outcome, and clears its mark');
+  await open();
+  await sleep(300);
+  ok((await shownCount()) === beforeDemo + 1, 'the showing after the first look is recorded');
+
   let headline = '';
   for (let i = 0; i < 40 && !headline.startsWith('Security updates'); i++) {
     await open();

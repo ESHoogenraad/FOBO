@@ -196,13 +196,24 @@ export async function uploadPending({ endpoint = COUNTS_ENDPOINT, fetchImpl = gl
     .slice(0, MAX_BATCH);
   if (!pending.length) return 0;
 
-  const response = await fetchImpl(endpoint, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(pending.map(([, record]) => toPayload(record, install))),
-    credentials: 'omit',
-    referrerPolicy: 'no-referrer',
-  });
+  // Built outside the try below: a record that can't be turned into a payload is a bug to see in
+  // the console, not a browser that is offline.
+  const body = JSON.stringify(pending.map(([, record]) => toPayload(record, install)));
+
+  // Offline, or the endpoint is down: the events stay for the next hour, like a refused batch.
+  // Caught here, because the alarm that calls this has nobody to report a failure to.
+  let response;
+  try {
+    response = await fetchImpl(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body,
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer',
+    });
+  } catch {
+    return 0;
+  }
   if (!response.ok) return 0;
 
   await browser.storage.local.set(
