@@ -106,7 +106,7 @@ body {
 .onb-note {
   display: flex;
   flex-direction: column;
-  padding: 12px 14px;
+  padding: 12px 16px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -136,7 +136,7 @@ body {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   font-weight: 600;
 }
 
@@ -150,29 +150,21 @@ body {
   color: var(--muted);
 }
 
+/* One box on each of the last two steps: the same padding and title, and its text in line with
+   the site names in the list above it. */
 .counts-box,
 .pin-box {
-  margin-top: 8px;
-  padding: 20px;
+  padding: 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* Text in line with the site names in the list above it */
-.counts-box {
-  padding: 16px 14px;
-}
-
-.counts-box h2 {
-  font-size: 15px;
-  font-weight: 700;
-}
-
+.counts-box h2,
 .pin-box h2 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -192,7 +184,7 @@ body {
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 /* The need test in step 2: a back button beside the title, as in the popup. */

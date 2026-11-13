@@ -201,12 +201,12 @@ Reference markup: `design-reference/TokyoNight.dc.html`. The `.dc.html` files us
 
 ```css
 :root {
-  --bg: #1A1B26;           /* page-level surfaces */
-  --bg-deep: #16161E;      /* bar background */
-  --surface: #1F2335;      /* card */
-  --surface-2: #24283B;
-  --line: #292E42;
-  --line-strong: #3B4261;
+  --bg: #1F2335;           /* page-level surfaces */
+  --bg-deep: #1A1B26;      /* input fields; the darkest tone */
+  --surface: #24283B;      /* card, and the bar */
+  --surface-2: #292E42;
+  --line: #3B4261;
+  --line-strong: #414868;
   --text: #C0CAF5;
   --text-2: #A9B1D6;
   --muted: #9AA5CE;
@@ -235,6 +235,8 @@ Reference markup: `design-reference/TokyoNight.dc.html`. The `.dc.html` files us
 
 Rules:
 
+- The six neutrals above are one step lighter than the first build's (settled 13 Nov 2026): the popup was darker than the browser around it, and borders barely showed. The bar's background is `--surface`, the same as its card and the tour tip, not `--bg-deep`: a near-black bar was too heavy on a light page.
+- Spacing has no tokens, only rules (in `src/styles/tokens.css`): multiples of 4; a box has 16 px padding and a `--line` border; a list row 10 px by 16 px.
 - Teal (`--brand`) means "Upgraditch" or "take this action". Never use it for a device or a status.
 - Lime (`--ok`) means "this is fine". Never use it for a button.
 - The phone uses `--device-1`. The other device colours stay in the tokens for later.
@@ -270,7 +272,7 @@ The authoritative spec is `research/B4 Field study spec.md`: events, fields, hea
 
 - Events are always recorded locally (for "Share my stats") and sent only while opted in. Setup events recorded before the opt-in are sent once the user opts in; nothing is ever sent for people who don't.
 - Events: `install`, `onboarding_finished`, `permission_result`, `bar_shown`, `bar_outcome`, `urge_logged`, `cooldown_started`, `cooldown_ended`, `need_test_result`, `paused`. Every event carries `schemaVersion`, `clientId`, `eventId`, `build`, `browser`, `dayIndex` (whole days since install) and `event`. `browser` is detected once at install: Firefox from `runtime.getBrowserInfo` (Firefox only; the polyfill also defines `browser` in Chrome), Brave from `navigator.brave`, Edge from `navigator.userAgentData.brands`, otherwise Chrome.
-- Headlines: `own_rule` ("You said you'd replace it for battery or updates. Does this page fix either?", when reasons are set), `cost` ("€19.14 a month so far, and falling"), `support` ("Security updates until Oct 2027", when the end date is known), `time_held` ("Kept for 3 years 11 months"), `phone_voice` ("We've had 3 years 11 months together. I'm not done yet.": the same fact in the phone's voice). At each showing, pick uniformly at random among the eligible headlines with `crypto.getRandomValues`, and record the eligible list with the pick.
+- Headlines: `own_rule` ("You said you'd replace it for battery or updates. Does this fix either?", when reasons are set; "this" rather than "this page", because a listing shows many phones), `cost` ("€19.14 a month so far, and falling"), `support` ("Security updates until Oct 2027", when the end date is known), `time_held` ("Kept for 3 years 11 months"), `phone_voice` ("We've had 3 years 11 months together. I'm not done yet.": the same fact in the phone's voice). At each showing, pick uniformly at random among the eligible headlines with `crypto.getRandomValues`, and record the eligible list with the pick.
 - The layout is the same for every headline, and "Close tab" is the primary action on every variant. The headline is the only thing that varies in Stage 1.
 - The first look (the showing opened from onboarding's "See it on a phone page", section 8) records no `bar_shown` and no `bar_outcome`: it is a demonstration, not a temptation, and its headline isn't drawn at random. So the funnel's "first bar" stays the first bar the user met while browsing. An urge or a cooldown started from it is recorded as usual.
 - Never send device names, notes, URLs or timestamps. `siteCategory` comes from the site table, never from the URL.

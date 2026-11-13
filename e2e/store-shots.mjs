@@ -55,8 +55,11 @@ try {
     await p.goto(`chrome-extension://${id}/popup/popup.html`);
     await p.waitForSelector('main');
     if (act) await act(p);
+    // Enlarged, but only as far as the whole popup and its margins still fit the 800 px.
+    const height = await p.evaluate(() => document.body.offsetHeight);
+    const zoom = Math.min(1.25, 800 / (height + 50));
     await p.addStyleTag({
-      content: 'html{background:#16161E;min-height:100%} body{margin:24px auto !important;zoom:1.25;border:1px solid #292E42;border-radius:16px;overflow:hidden}',
+      content: `html{background:var(--bg-deep);min-height:100%} body{margin:24px auto !important;zoom:${zoom};border:1px solid var(--line);border-radius:16px;overflow:hidden}`,
     });
     await p.waitForTimeout(300);
     await p.screenshot({ path: path.join(dest, file) });

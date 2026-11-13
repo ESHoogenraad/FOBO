@@ -45,7 +45,7 @@ import {
   updateSettings,
   updateUrge,
 } from '../lib/storage.js';
-import { BackIcon, CartIcon, CartOffIcon, HourglassIcon, SettingsIcon } from '../ui/icons.jsx';
+import { BackIcon, CartIcon, CartOffIcon, CloseIcon, HourglassIcon, SettingsIcon } from '../ui/icons.jsx';
 import { Logo } from '../ui/Logo.jsx';
 import { Rating } from '../ui/Rating.jsx';
 import { UrgeTags } from '../ui/UrgeTags.jsx';
@@ -240,17 +240,20 @@ function Milestone({ device, milestone, onNeedTest }) {
   const action = milestone.years === 2 ? t('milestoneBatteryCheck') : milestone.id === 'updatesEnded' ? t('needRun') : null;
   return (
     <section class="notice milestone" aria-label={t('milestoneLabel')}>
-      <p>{text}</p>
-      <div class="pause-options">
-        {action && (
+      {/* The cross takes the message off the popup and the "1" off the toolbar icon. */}
+      <div class="notice-head">
+        <p>{text}</p>
+        <button type="button" class="icon-btn" aria-label={t('milestoneDismiss')} title={t('milestoneDismiss')} onClick={dismiss}>
+          <CloseIcon />
+        </button>
+      </div>
+      {action && (
+        <div class="pause-options">
           <button type="button" class="btn btn-secondary" onClick={onNeedTest}>
             {action}
           </button>
-        )}
-        <button type="button" class="btn btn-ghost" onClick={dismiss}>
-          {t('gotIt')}
-        </button>
-      </div>
+        </div>
+      )}
     </section>
   );
 }

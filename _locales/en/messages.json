@@ -465,7 +465,7 @@
     "message": "Your phone, at a glance"
   },
   "tourText_toggle": {
-    "message": "About your phone, sometimes in its own words. Click it to check whether this page fixes what would make you replace it."
+    "message": "About your phone, sometimes in its own words. Click it to check your own reasons for replacing it."
   },
   "tourTitle_closeTab": {
     "message": "Close tab"
@@ -544,7 +544,7 @@
     "message": "cooldown"
   },
   "headlineOwnRuleOne": {
-    "message": "You said you'd replace it for $reasons$. Does this page fix that?",
+    "message": "You said you'd replace it for $reasons$. Does this fix that?",
     "placeholders": {
       "reasons": {
         "content": "$1",
@@ -553,7 +553,7 @@
     }
   },
   "headlineOwnRuleTwo": {
-    "message": "You said you'd replace it for $reasons$. Does this page fix either?",
+    "message": "You said you'd replace it for $reasons$. Does this fix either?",
     "placeholders": {
       "reasons": {
         "content": "$1",
@@ -562,7 +562,7 @@
     }
   },
   "headlineOwnRuleMany": {
-    "message": "You said you'd replace it for $reasons$. Does this page fix any of them?",
+    "message": "You said you'd replace it for $reasons$. Does this fix any of them?",
     "placeholders": {
       "reasons": {
         "content": "$1",
@@ -703,7 +703,7 @@
     "message": "Neither has tipped over yet."
   },
   "ruleAdvice_noData": {
-    "message": "If this page doesn't fix it, the phone you have still does the job."
+    "message": "If this doesn't fix it, the phone you have still does the job."
   },
   "tileUpdates": {
     "message": "Security updates"
@@ -1197,6 +1197,9 @@
   },
   "milestoneLabel": {
     "message": "Milestone"
+  },
+  "milestoneDismiss": {
+    "message": "Dismiss"
   },
   "milestoneYears2": {
     "message": "$phone$: “Two years together. If my battery's tired, a new one resets the clock.”",

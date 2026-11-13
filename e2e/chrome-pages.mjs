@@ -104,10 +104,10 @@ try {
   await page.waitForSelector('.milestone');
   log('milestone:', await text(page.locator('.milestone')));
   await shot(page, 'milestone');
-  await page.getByRole('button', { name: 'Got it' }).click();
+  await page.getByRole('button', { name: 'Dismiss' }).click();
   await page.waitForFunction(() => !document.querySelector('.milestone'));
   await sleep(400);
-  log('badge after "Got it":', JSON.stringify(await sw.evaluate(() => chrome.action.getBadgeText({}))));
+  log('badge after "Dismiss":', JSON.stringify(await sw.evaluate(() => chrome.action.getBadgeText({}))));
 
   // ---- Day 14: stats prompt, Share my stats
   await sw.evaluate(async () => {

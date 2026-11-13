@@ -1,12 +1,12 @@
 /* Tokyo Night, dark (HANDOFF section 7). :host makes the same tokens work inside the bar's shadow root. */
 :root,
 :host {
-  --bg: #1A1B26;           /* page-level surfaces */
-  --bg-deep: #16161E;      /* bar background */
-  --surface: #1F2335;      /* card */
-  --surface-2: #24283B;
-  --line: #292E42;
-  --line-strong: #3B4261;
+  --bg: #1F2335;           /* page-level surfaces */
+  --bg-deep: #1A1B26;      /* input fields; the darkest tone */
+  --surface: #24283B;      /* card, and the bar */
+  --surface-2: #292E42;
+  --line: #3B4261;
+  --line-strong: #414868;
   --text: #C0CAF5;
   --text-2: #A9B1D6;
   --muted: #9AA5CE;
@@ -25,6 +25,11 @@
   --link: #7AA2F7;         /* link colour from the reference */
   --link-hover: #9DB8FA;
 
+  /* Spacing has no tokens, only rules (checked on every screen, 13 Nov 2026):
+     - multiples of 4: 4 inside one item, 8 between sibling controls, 12 inside a box,
+       16 between blocks, 20 or 24 between sections;
+     - a box has 16px padding and a --line border; a list row 10px 16px, which makes it 44px;
+     - controls keep their own insets (button 18px, chip 14px, input 12px). */
   --radius-sm: 10px;       /* buttons */
   --radius-md: 12px;       /* rows, tiles */
   --radius-lg: 16px;       /* bar, card */

@@ -2,11 +2,18 @@ body {
   width: 380px;
 }
 
+/* A view taller than the browser's 600px popup scrolls. The browser adds its scrollbar beside the
+   380px, which doubles the margin on the right: keep it thin and in the popup's own colours. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) var(--bg);
+}
+
 .pop {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .pop h1 {
@@ -130,7 +137,7 @@ body {
 .urge-patterns {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .urge-pill {
@@ -156,12 +163,26 @@ body {
   gap: 12px;
 }
 
+/* A notice with a dismiss cross in its corner. The margins pull the 44px button into the notice's
+   padding, so the cross sits in the corner and a one-line message stays one line tall. */
+.notice-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.notice-head .icon-btn {
+  flex-shrink: 0;
+  margin: -12px -12px -12px 0;
+}
+
 /* ---- This page tempted me */
 
 .tempted {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .tempted p {
@@ -170,12 +191,29 @@ body {
 
 /* ---- Settings */
 
+/* The title, its explanation and its switches sit 4px apart; buttons come 12px under the text. */
 .setting {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding-bottom: 14px;
+  gap: 4px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--line);
+}
+
+.setting > .pause-options,
+.setting > .notice-row {
+  margin-top: 8px;
+}
+
+/* Two equal columns, and an odd last button takes the whole row, so every set ends flush on both
+   sides: the three pause options no longer wrap to a ragged second row. */
+.setting .pause-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.setting .pause-options > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .setting:last-child {
@@ -212,10 +250,12 @@ body {
 
 /* ---- Cooling down */
 
+/* Its rows look like the buttons under them: 8px more than the popup's 16 keeps the two apart. */
 .cooldowns {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 8px;
 }
 
 .cooldown-list {
@@ -224,13 +264,13 @@ body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .cooldown-row {
   width: 100%;
   min-height: 44px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -280,7 +320,7 @@ body {
 .end-step {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .pop .end-step h2 {
@@ -291,11 +331,11 @@ body {
 .want-compare {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
 .want-compare > div {
-  padding: 12px 14px;
+  padding: 12px 16px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -323,7 +363,7 @@ body {
   --tone: var(--muted);
   width: 100%;
   min-height: 56px;
-  padding: 10px 14px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -389,7 +429,7 @@ body {
   margin: 0;
   max-height: 300px;
   overflow: auto;
-  padding: 12px;
+  padding: 12px 16px;
   background: var(--bg-deep);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);

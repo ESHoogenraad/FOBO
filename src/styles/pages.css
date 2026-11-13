@@ -35,6 +35,9 @@ body {
   font-family: var(--font-ui);
   font-size: 14px;
   line-height: 1.5;
+  /* Plus Jakarta Sans has a very narrow space (0.175em), and after its narrow "1" a label like
+     "1 day" reads as one word. This brings the space to about system-ui's width. */
+  word-spacing: 0.08em;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -114,7 +117,7 @@ a:hover {
 .check {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-height: 44px;
   font-weight: 600;
   cursor: pointer;
@@ -135,7 +138,7 @@ a:hover {
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 16px;
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--ok) 10%, transparent);
   border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
@@ -175,7 +178,7 @@ a:hover {
 
 .field-group legend {
   padding: 0;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .field-row-2 {
@@ -197,12 +200,12 @@ a:hover {
 /* ---- Notices (popup; the need test in onboarding too) */
 
 .notice {
-  padding: 14px;
+  padding: 16px;
   background: var(--surface);
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line);
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   color: var(--text-2);
 }

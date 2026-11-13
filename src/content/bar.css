@@ -30,6 +30,7 @@
   font-family: var(--font-ui);
   font-size: 14px;
   line-height: 1.5;
+  word-spacing: 0.08em; /* the font's own space is too narrow: see body in pages.css */
   text-align: left;
   -webkit-font-smoothing: antialiased;
 }
@@ -72,9 +73,11 @@ p {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 10px;
+  gap: 8px;
   padding: 8px;
-  background: var(--bg-deep);
+  /* The card's and the tour's surface, not the darkest tone: on a light page a near-black bar
+     was a heavy slab in the corner. One tone for the whole overlay. */
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-bar);
@@ -83,12 +86,13 @@ p {
 /* The phone on the first line, the headline beneath it (wrapping rather than cut off), the
    chevron beside both. The right side mirrors the buttons beneath: the headline ends where the
    Cooldown button does, and the chevron column (the hide button's 44 px, less the border) puts
-   the chevron above the hide button. */
+   the chevron above the hide button. On the left, 11px and the border put the phone's name
+   in line with the card's text above it. */
 .bar-toggle {
   flex: 1 1 0;
   min-width: 0;
   min-height: 44px;
-  padding: 8px 0 8px 12px;
+  padding: 8px 0 8px 11px;
   display: grid;
   grid-template: "phone chevron" auto "headline chevron" auto / minmax(0, 1fr) 43px;
   align-items: center;
@@ -102,7 +106,7 @@ p {
 }
 
 .bar-toggle:hover {
-  background: var(--surface);
+  background: var(--surface-2);
 }
 
 /* Open: device colour at 12%, --line-strong border, name in the device colour. */
@@ -222,10 +226,10 @@ p {
 .tour {
   position: absolute;
   bottom: calc(100% + 12px);
-  padding: 14px 16px 12px;
+  padding: 16px 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   background: var(--surface);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-lg);
@@ -255,11 +259,11 @@ p {
 }
 
 .tour-actions {
-  margin-top: 4px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 8px;
 }
 
 /* "Quick tour · 1 of 5", above the title, so the tip reads as a tour at once. */
@@ -330,12 +334,12 @@ p {
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .card-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .card-actions .btn {
@@ -358,12 +362,12 @@ p {
 .tiles {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .tile {
   --status: var(--ok);
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -395,8 +399,9 @@ p {
   font-size: 12px;
 }
 
+/* minmax(0, …): a plain 1fr lets the wider text input take room from the number input. */
 .field-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }

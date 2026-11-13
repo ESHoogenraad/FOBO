@@ -5,6 +5,7 @@
 .num {
   font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
+  word-spacing: normal; /* the wider space is for the UI font only */
 }
 
 /* The phone's colour dot (--device-1), next to its name. */
@@ -32,7 +33,7 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .logo-badge {
@@ -147,7 +148,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .field label,
@@ -195,13 +196,18 @@
   border-color: var(--warn);
 }
 
-.field-hint {
+/* A hint or an error belongs to the control above it: 4px under it, not the field's 8px. */
+.field-hint,
+.field-error {
+  margin-top: -4px;
   font-size: 12px;
+}
+
+.field-hint {
   color: var(--muted);
 }
 
 .field-error {
-  font-size: 12px;
   color: var(--warn);
 }
 
@@ -286,7 +292,7 @@
 }
 
 .rating-hint {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 12px;
   color: var(--muted);
 }
