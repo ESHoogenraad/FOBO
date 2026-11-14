@@ -6,11 +6,15 @@ body {
   padding: 32px 16px;
 }
 
+/* Type: this page has a whole tab to itself, so it runs a step larger than the popup and the bar:
+   16px text, 14px fine print, nothing smaller. The shared components keep their popup sizes;
+   the block at the end of this file lifts them here. */
 .onb {
   width: 100%;
-  max-width: 460px;
+  max-width: 520px;
   min-height: 560px;
   padding: 24px;
+  font-size: 16px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -27,7 +31,7 @@ body {
 }
 
 .onb-step {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
 }
 
@@ -45,7 +49,7 @@ body {
 }
 
 .eyebrow {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -53,7 +57,7 @@ body {
 }
 
 .onb h1 {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -98,7 +102,7 @@ body {
 
 .onb-footnote {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   color: var(--muted);
 }
@@ -110,7 +114,7 @@ body {
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-2);
 }
 
@@ -145,7 +149,7 @@ body {
 }
 
 .site-host {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--muted);
 }
@@ -164,12 +168,12 @@ body {
 
 .counts-box h2,
 .pin-box h2 {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
 }
 
 .counts-box p {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-2);
 }
 
@@ -193,4 +197,41 @@ body {
   align-items: center;
   gap: 4px;
   margin-left: -10px;
+}
+
+/* ---- The shared components at this page's sizes (see .onb). Each selector starts with .onb, so
+   it wins over components.css, pages.css and needtest.css whatever order they load in. */
+
+.onb .btn,
+.onb .chip,
+.onb .rating-option span,
+.onb .field .check {
+  font-size: 15px;
+}
+
+.onb .field label,
+.onb .field-label,
+.onb .field-hint,
+.onb .field-error,
+.onb .link-btn,
+.onb .rating-hint,
+.onb .need-summary,
+.onb .need-check-detail,
+.onb .need-footnote {
+  font-size: 14px;
+}
+
+/* After the 14px labels: a need test question is a label too, and it reads at body size. */
+.onb .btn-lg,
+.onb .field input,
+.onb .field select,
+.onb .need .need-intro,
+.onb .need-q > label,
+.onb .need-q > .field-label,
+.onb .need-advice h3 {
+  font-size: 16px;
+}
+
+.onb .need .need-verdict {
+  font-size: 28px;
 }

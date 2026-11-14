@@ -131,7 +131,7 @@
     }
   },
   "onbSitesText": {
-    "message": "$app$ only looks at pages on these sites, to see whether they're about phones. It never reads anything else, and never sends the pages you visit anywhere.",
+    "message": "$app$ only checks whether pages on these sites are about a phone. It never sends the pages you visit anywhere.",
     "placeholders": {
       "app": {
         "content": "$1",
@@ -158,7 +158,7 @@
     "message": "Help test what works"
   },
   "countsText": {
-    "message": "$app$ tries different wording in the bar to learn what helps. If you switch this on, it sends anonymous counts: which wording was shown and what you clicked. No device names, notes or web addresses. You can switch it off at any time in the popup.",
+    "message": "$app$ tries different wording in the bar. This sends anonymous counts of which wording you saw and what you clicked: no device names, notes or web addresses. You can switch it off in the popup.",
     "description": "Opt-in copy from research/B4 Field study spec.md",
     "placeholders": {
       "app": {

@@ -187,9 +187,10 @@ a:hover {
   gap: 8px;
 }
 
-/* Reserved, so the line appearing never moves the fields below it */
+/* Reserved (one line of onboarding's 14px fine print), so the line appearing never moves the
+   fields below it */
 .onb .eol-found {
-  min-height: 18px;
+  min-height: 21px;
 }
 
 /* An error line already sits there; the empty reserved line would double the gap. */

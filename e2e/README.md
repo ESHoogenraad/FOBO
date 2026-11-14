@@ -23,6 +23,7 @@ Branded Chrome ignores `--load-extension`, so the scripts use Chrome for Testing
 | `node bar-fake.mjs` | The bar on a stand-in shop page the script serves itself, so no live site or network: the layout at three window sizes, the light bar on a dark page, the tour, filters and new pages, a phone edited during a showing, the first look from onboarding (own rule, no events), the bar coming back after the page clears `<body>`, urge tags and hide. Exits with 1 on any `BAD` line. Run it after any change to the bar |
 | `node bar-live.mjs` | The bar on the pages in `bar-pages.json` in Chrome: shown on phone pages only, and how many ms after DOMContentLoaded; `INTERACT=1` also drives the card on a bol page |
 | `node store-shots.mjs` | Rewrites the store screenshots in `store/screenshots/` |
+| `node store-promo.mjs` | Rewrites the Chrome Web Store promo images in `store/` (small tile and marquee). Needs no build and no network |
 
 With `ENDPOINT=http://127.0.0.1:8787/events`, `chrome-pages.mjs` and `firefox-pages.mjs` also upload the opt-in counts to a local copy of the counts endpoint. Start that first (see [worker/README.md](../worker/README.md)):
 

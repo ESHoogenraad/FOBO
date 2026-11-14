@@ -13,7 +13,7 @@ What the extension and the counter endpoint need so the 4-week field study (rese
 ## Opt-in copy, onboarding
 
 > **Help test what works**
-> Upgraditch tries different wording in the bar to learn what helps. If you switch this on, it sends anonymous counts: which wording was shown and what you clicked. No device names, notes or web addresses. You can switch it off at any time in the popup.
+> Upgraditch tries different wording in the bar. This sends anonymous counts of which wording you saw and what you clicked: no device names, notes or web addresses. You can switch it off in the popup.
 >
 > [ ] Send anonymous counts
 

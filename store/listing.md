@@ -73,6 +73,14 @@ Chrome Web Store: 1280×800, up to 5. AMO: any size, 1280×800 works. In `store/
 4. `4-need-test.png`: the need test result
 5. `5-onboarding.png`: setup, step 1
 
+Chrome Web Store, other images (all in `store/`):
+
+- `icon-128.png`: the store icon, with the artwork at 96×96 and transparent padding, as Google's image guidelines ask. Rendered from `src/icons/icon.svg`: `magick -background none -density 1200 src/icons/icon.svg -resize 96x96 -gravity center -extent 128x128 PNG32:store/icon-128.png`
+- `promo-small-440x280.png`: the small promo tile
+- `promo-marquee-1400x560.png`: the marquee, shown only if the store features the extension
+
+`node store-promo.mjs` in `e2e/` redraws the two promo images from the name in `src/config.js`, so rerun it after a rename.
+
 The shop pages in the screenshots are real third-party sites. Check the stores' policies on showing them, or swap in a neutral page before submitting.
 
 ## Still needed from the owner
