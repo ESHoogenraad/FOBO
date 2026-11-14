@@ -1,5 +1,6 @@
 // Store screenshots at 1280x800, written to store/screenshots/ (see store/listing.md):
-// the bar and its card on a live Tweakers phone page, the popup, a need test result, and
+// the bar on a live Tweakers phone page (a light page, so the dark bar), its card on the same
+// page in Tweakers' dark theme (so the light bar), the popup, a need test result, and
 // onboarding step 1. The extension pages are drawn centred on a dark canvas.
 //
 //   node store-shots.mjs
@@ -38,14 +39,29 @@ try {
   // The bar and the card. Reload until the headline is the own-rule one, which shows best what it does.
   const page = await ctx.newPage();
   const url = 'https://tweakers.net/pricewatch/2254442/apple-iphone-17-pro-256gb-opslag-blauw.html';
+  const ownRule = async () => {
+    for (let i = 0; i < 12; i++) {
+      await page.goto(url, { waitUntil: 'load', timeout: 45000 });
+      await page.waitForTimeout(1200);
+      if (/You said/.test(await page.locator('phone-check-bar .bar-headline').innerText().catch(() => ''))) break;
+    }
+  };
+  const barIsLight = () => page.evaluate(() => document.querySelector('phone-check-bar').shadowRoot.querySelector('.root').classList.contains('theme-light'));
+
+  // 1: a light page, so the dark bar.
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.goto(url, { waitUntil: 'load', timeout: 45000 });
   await dismissSiteDialogs(page);
-  for (let i = 0; i < 12; i++) {
-    await page.goto(url, { waitUntil: 'load', timeout: 45000 });
-    await page.waitForTimeout(1200);
-    if (/You said/.test(await page.locator('phone-check-bar .bar-headline').innerText().catch(() => ''))) break;
-  }
+  await ownRule();
+  if (await barIsLight()) throw new Error('1-bar.png: expected the dark bar on a light page');
   await page.screenshot({ path: path.join(dest, '1-bar.png') });
+
+  // 2: the card, on the same page in Tweakers' dark theme, so the light bar. Tweakers follows
+  // the browser's colour scheme and remembers it in a cookie, which the light visit has set.
+  await ctx.clearCookies({ name: 'twk-theme' });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await ownRule();
+  if (!(await barIsLight())) throw new Error('2-card.png: expected the light bar on a dark page');
   await page.locator('phone-check-bar .bar-toggle').click();
   await page.waitForTimeout(400);
   await page.screenshot({ path: path.join(dest, '2-card.png') });

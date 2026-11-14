@@ -38,7 +38,7 @@ Source documents in this folder:
 | F1 | Onboarding in three steps (section 8). 1: phone name (free text, looked up on endoflife.date), purchase date, price paid. 2: "What would make you replace it?", one-tap multi-select. 3: "Where Upgraditch shows up": the default sites, one permission request, and the "Help test what works" opt-in | Must |
 | F2 | Derived numbers: age, cost per month, days until security updates end, money not spent (the prices of cooldown items the user dropped) | Must |
 | F3 | Trigger detection: the default sites (section 4), and on those only pages about phones (section 6). Each site can be switched off in the popup | Must |
-| F4 | The bar on phone pages (section 6): phone, random headline, "Close tab", "Log urge", "Cooldown", and hide for 24 hours on that site. Clicking it opens the own-rule card | Must |
+| F4 | The bar on phone pages (section 6): phone, random headline, "Close tab", "Log urge" (which then offers a cooldown), and hide for 24 hours on that site. Clicking it opens the own-rule card | Must |
 | F5 | Urge log: timestamp, site, source, optional reason tag, optional note. One tap from the bar | Must |
 | F6 | Cooldown: item, optional price, want rating 1 to 10, 7 days by default and adjustable, shown as a quiet end date ("Check again on 29 Oct"), never a countdown. End screen in section 8 | Must |
 | F7 | Popup: phone summary, cooling-down list with end dates, "This page tempted me", need test, pause switch, sites on/off, counts opt-in, "Share my stats", feedback. No streaks | Must |
@@ -187,15 +187,15 @@ Reference markup: `design-reference/TokyoNight.dc.html`. The `.dc.html` files us
 ### Layout and behaviour
 
 4. A panel fixed in the bottom-left corner, as wide as the card (440 px at most), laid over the page (no layout offset: pushing the page down breaks sites with sticky headers), inside a closed Shadow DOM. It never dims the page. Not at the top (settled 26 Sep 2026): there it covered the site's logo, search and cart, which never scroll out from under it.
-5. Two rows. First the device colour dot and phone name (with an "on this page" tag when the page is about the user's own model), with the headline (section 9) beneath them; it wraps rather than being cut off. Then "Close tab" (primary), "Log urge" and "Cooldown" as icon buttons (a note and an hourglass, named by `aria-label` and a tooltip), and a hide button (hides the bar on that site for 24 hours).
+5. Two rows. First the device colour dot and phone name (with an "on this page" tag when the page is about the user's own model), with the headline (section 9) beneath them; it wraps rather than being cut off. Then "Close tab" (primary) and "Log urge", the same size and both filled, each an icon with its name (a tab with a cross, a note), and a hide button (hides the bar on that site for 24 hours). The bar has no "Cooldown" button (settled 14 Nov 2026): the cooldown is offered after an urge, item 10.
 6. The name and headline form one `<button aria-expanded>` that opens the own-rule card above the bar. Clicking again or Escape closes it.
 7. Card with reasons set: the headline "Does this fix [reason A] or [reason B]?", built from the phone's reasons. One status tile per reason that has data (battery 81%, security updates 377 days); reasons without data (camera, screen, damage) appear only in the question. If "slow" is a reason, the battery tile comes first and the advice mentions it ("A worn battery makes a phone feel slow"). Then one sentence of advice and the buttons "Close tab" (primary, calls `chrome.tabs.remove` via the service worker) and "Something else" (shows the reason tags and logs an urge).
 8. Card with no reasons: "No rule for this phone yet" and a "Set my reasons" button that opens onboarding step 2.
 9. Never ask the user to explain why they want to buy (research A1: writing reasons for a purchase raises desire). Reason tags are one tap and optional.
-10. "Log urge" logs with one tap, then offers the reason tags.
-11. "Cooldown" opens a small form in the card: item (prefilled from the page title), optional price, want rating, days (7 by default).
+10. "Log urge" logs with one tap, then offers the reason tags and, under them, a cooldown: "Still want it? Wait a few days first." with a "Start a cooldown" button. The offer is there before a tag is picked and stays after one, because the tags are optional. "Something else" on the card ends in the same panel.
+11. "Start a cooldown" opens a small form in the card: item (prefilled from the page title), optional price, want rating, days (7 by default). It is the only way into the form.
 12. The bar renders within 200 ms of DOMContentLoaded, never blocks clicks on the page, and does no work after rendering except the URL check in step 3.
-13. The first time the bar appears, a five-step tour points at the headline, "Close tab", "Log urge", "Cooldown" and hide, one tip at a time above the bar, with Next and Skip. Escape, Skip, finishing it, or using any part of the bar ends it for good (`settings.barTourDone`). It never takes focus from the page.
+13. The first time the bar appears, a four-step tour points at the headline, "Close tab", "Log urge" (its tip mentions the cooldown) and hide, one tip at a time above the bar, with Next and Skip. Escape, Skip, finishing it, or using any part of the bar ends it for good (`settings.barTourDone`). It never takes focus from the page.
 
 ## 7. Design tokens (Tokyo Night, dark)
 
@@ -215,7 +215,12 @@ Reference markup: `design-reference/TokyoNight.dc.html`. The `.dc.html` files us
   --on-brand: #16161E;
   --ok: #9ECE6A;           /* status fine, never used for buttons */
   --warn: #E0AF68;         /* status near a limit */
-  --cooldown: #7AA2F7;     /* the bar's Cooldown button */
+  --tour: #BB9AF7;         /* the tour's ring round the part a tip explains */
+
+  /* Button fills beside --brand, with --on-brand text; the same in the light bar */
+  --urge: #E0AF68;         /* "Log urge" */
+  --cooldown: #7AA2F7;     /* the card's "Start a cooldown" */
+  --tour-fill: #BB9AF7;    /* the tour tip's Next and "Got it" */
 
   --device-1: #BB9AF7;     /* purple */
   --device-2: #7AA2F7;     /* blue */
@@ -242,7 +247,8 @@ Rules:
 - The phone uses `--device-1`. The other device colours stay in the tokens for later.
 - Open bar: device colour at 12% opacity as background, `--line-strong` border, name in the device colour.
 - Status tiles: status colour at 10% background, 35% border, number in the status colour.
-- Amber (`--warn`) also means "tempted": the urges in the popup and the bar's Log urge button. Blue (`--cooldown`) means "wait instead of buying": the bar's Cooldown button. Both buttons are tinted (16% background, 55% border, icon in the colour), so "Close tab" stays the only filled button (settled 26 Sep 2026). It shares its value with `--device-2`: pick another blue before a second device gets a colour.
+- Amber (`--warn`) also means "tempted": the urges in the popup and the bar's Log urge button (`--urge`). Blue (`--cooldown`) means "wait instead of buying": the card's "Start a cooldown" button. Both are filled like "Close tab", with `--on-brand` text and no border, so the bar's two buttons differ only in colour (settled 14 Nov 2026; before that they were tinted icon buttons beside the one filled "Close tab"). It shares its value with `--device-2`: pick another blue before a second device gets a colour.
+- Purple (`--tour`) is the first-run tour: a ring with a soft halo round the part a tip explains, the tip's "Quick tour · 1 of 4" line, and the tip's own Next and "Got it" (`--tour-fill`), so the only teal button in sight is "Close tab" (settled 14 Nov 2026). A teal ring went unnoticed, and a teal Next sat at the opposite end from the teal "Close tab". It shares its value with `--device-1`, the phone's dot.
 - Bundle fonts locally (both are OFL); never load from Google Fonts inside a host page.
 - The popup, onboarding and need test designs in `design-reference/` use an earlier warm light palette. Rebuild them with these tokens; keep their layout, copy and hierarchy. A light theme via `prefers-color-scheme` comes later.
 - The bar turns light on a dark page, so it stands out either way (decided 26 Sep 2026): `.theme-light` in `tokens.css` holds the same roles in darker hues, for 4.5:1 on white. `bar.jsx` reads the background under the bar's corner once as the bar appears, skipping see-through layers such as cookie overlays; it never watches the page for it.
@@ -327,6 +333,8 @@ If a weekend overruns, cut Should items before extending.
 The open decisions, each with the checkpoint that settles it, are in the "Open decisions" table of `Holdout Requirements & Roadmap.md`. Ask before building anything that depends on one. Decisions that are settled are logged here.
 
 Settled on 22 Sep 2026: cooldowns default to 7 days and are adjustable; "money not spent" adds up dropped cooldown items; the phone gets `--device-1`; milestones and cooldown ends use the toolbar badge, not notifications.
+
+Settled on 14 Nov 2026: the bar loses its "Cooldown" button. A cooldown starts from the urge panel ("Log urge" or the card's "Something else", then "Start a cooldown"), so the bar has two named buttons of one shape, "Close tab" and "Log urge", both filled, and the tour has four steps. Known cost: fewer cooldowns get started, because the form is one click further away and unseen by anyone who never logs an urge; Checkpoint C (B4 spec) reads its 10 to 40 cooldowns with that in mind. No event or payload changes; every cooldown now follows an `urge_logged`.
 
 Settled on 25 Sep 2026: Stage 1 ships in English only, for the Dutch audience too. The draft Dutch strings were removed and stay in git history (commit e7d220e, `_locales/nl/`).
 

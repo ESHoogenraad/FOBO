@@ -38,7 +38,7 @@ Point at each one:
 
 > Wat denk je dat deze knop doet?
 
-Ask about "Close tab", "Log urge" and "Cooldown", or whatever the build calls them.
+Ask about "Close tab" and "Log urge", or whatever the build calls them. Then have them press "Log urge" and point at "Start a cooldown" in the card that opens: the bar itself has no cooldown button.
 
 ### Closing questions
 
@@ -61,7 +61,7 @@ Read the bar:             read it aloud / glanced at it / ignored it
 In the way:               said so / covered something on the page (what: ) / no
 "Close tab" means:                                   correct? yes / no
 "Log urge" means:                                          correct? yes / no
-"Cooldown" means:                                          correct? yes / no
+"Start a cooldown" means:                                  correct? yes / no
 After opening the card:   (what they did)
 Speed:                    fine / page slowed down / something froze (where: )
 Cost line read as:        reason to keep it / reason to sell or trade in now / unclear
@@ -78,7 +78,7 @@ Other:
 | Said the bar gets in the way | __ of 5 | 2 or more: one collapsed line by default |
 | Misread "Close tab" | __ of 5 | 2 or more: rename it |
 | Misread "Log urge" | __ of 5 | 2 or more: rename it |
-| Misread "Cooldown" | __ of 5 | 2 or more: rename it |
+| Misread "Start a cooldown" | __ of 5 | 2 or more: rename it |
 | Any slowdown or freeze | __ of 5 | Any: fix before the field window |
 | Read the cost line as a reason to sell now | __ of 5 | 2 or more: reword it before B4, for example drop "and falling" |
 

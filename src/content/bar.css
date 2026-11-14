@@ -85,7 +85,7 @@ p {
 
 /* The phone on the first line, the headline beneath it (wrapping rather than cut off), the
    chevron beside both. The right side mirrors the buttons beneath: the headline ends where the
-   Cooldown button does, and the chevron column (the hide button's 44 px, less the border) puts
+   "Log urge" button does, and the chevron column (the hide button's 44 px, less the border) puts
    the chevron above the hide button. On the left, 11px and the border put the phone's name
    in line with the card's text above it. */
 .bar-toggle {
@@ -179,45 +179,42 @@ p {
   gap: 8px;
 }
 
+/* "Close tab" and "Log urge": one shape, an icon with its name, each half of the room beside
+   the hide button. Both filled, with no border; only the colour tells them apart. */
 .bar-actions .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 12px;
   white-space: nowrap;
 }
 
-.bar-close {
-  flex: 1;
+.btn svg {
+  flex-shrink: 0;
 }
 
-/* "Log urge" and "Cooldown": icons only, so the headline keeps the room. The tour and the
-   tooltips name them. */
-.btn-icon {
-  width: 44px;
-  padding: 0;
-  color: var(--text-2);
+/* Filled like "Close tab" (.btn-primary), in a colour of its own: "Log urge" in amber (the
+   temptation colour, as the urges in the popup), the card's "Start a cooldown" in blue, and the
+   tour's Next in the tour's purple. So teal is "Close tab" alone, also while the tour shows. */
+.btn-fill {
+  background: var(--fill);
+  color: var(--on-brand);
+  font-weight: 700;
 }
 
-.btn-icon:hover:not(:disabled) {
-  color: var(--text);
-}
-
-/* "Log urge" in amber (the temptation colour, as the urges in the popup) and "Cooldown" in blue:
-   a 16% tint and 55% border, so "Close tab" stays the only filled button. */
-.btn-tint {
-  background: color-mix(in srgb, var(--tone) 16%, transparent);
-  border-color: color-mix(in srgb, var(--tone) 55%, transparent);
-  color: var(--tone);
-}
-
-.btn-tint:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--tone) 24%, transparent);
-  color: var(--tone);
+.btn-fill:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--fill) 88%, white);
 }
 
 .bar-urge {
-  --tone: var(--warn);
+  --fill: var(--urge);
 }
 
-.bar-cooldown {
-  --tone: var(--cooldown);
+.offer-start {
+  --fill: var(--cooldown);
+}
+
+.tour-next {
+  --fill: var(--tour-fill);
 }
 
 /* ---- The first-run tour: a tip above the bar, its arrow on the part it explains. Placed
@@ -266,17 +263,20 @@ p {
   gap: 8px;
 }
 
-/* "Quick tour · 1 of 5", above the title, so the tip reads as a tour at once. */
+/* "Quick tour · 1 of 4", above the title, so the tip reads as a tour at once. In the ring's
+   colour, which ties the tip to the part it is about. */
 .tour-step {
-  color: var(--muted);
+  color: var(--tour);
   font-size: 12px;
   font-weight: 600;
 }
 
-/* The part the tip is about. */
+/* The part the tip is about: a purple ring with a soft halo. Not teal, which "Close tab" and
+   the tip's own Next button already are, so a teal ring went unnoticed. */
 .tour-target {
-  outline: 2px solid var(--brand);
+  outline: 2px solid var(--tour);
   outline-offset: 2px;
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--tour) 30%, transparent);
 }
 
 /* ---- The card, above the bar; it scrolls when the window is too short for it */
@@ -344,6 +344,15 @@ p {
 
 .card-actions .btn {
   flex: 1;
+}
+
+/* Under the urge's reason tags: the offer of a cooldown, set apart by a line. */
+.offer {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--line);
 }
 
 /* "Set my reasons": the phone's own colour, as in the reference. */

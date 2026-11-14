@@ -31,7 +31,7 @@ function usedKeys() {
   OUTCOMES.forEach((id) => keys.add(`outcome_${id}`));
   OUTCOMES.forEach((id) => keys.add(`outcomeHint_${id}`));
   // The bar's first-run tour (content/BarView.jsx, TOUR_STEPS).
-  ['toggle', 'closeTab', 'logUrge', 'cooldown', 'hide'].forEach((id) => ['tourTitle', 'tourText'].forEach((f) => keys.add(`${f}_${id}`)));
+  ['toggle', 'closeTab', 'logUrge', 'hide'].forEach((id) => ['tourTitle', 'tourText'].forEach((f) => keys.add(`${f}_${id}`)));
   ['One', 'Two', 'Many'].forEach((n) => keys.add(`headlineOwnRule${n}`));
   ['rule', 'urge', 'cooldown'].forEach((id) => keys.add(`cardHead_${id}`));
   ['updatesEnded', 'batteryWorn', 'slow', 'notYetOne', 'notYetMany', 'noData'].forEach((id) => keys.add(`ruleAdvice_${id}`));

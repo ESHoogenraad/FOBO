@@ -69,6 +69,14 @@ export const WrenchIcon = ({ size = 22 }) => (
   </svg>
 );
 
+/** "Close tab" on the bar: a tab with a cross in it. The bare cross is the bar's own hide button. */
+export const TabCloseIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} stroke-width="2" {...svgProps}>
+    <rect x="3" y="3" width="18" height="18" rx="3" />
+    <path d="M9.5 9.5l5 5M14.5 9.5l-5 5" />
+  </svg>
+);
+
 /** "Log urge" on the bar: a note being written. */
 export const NoteIcon = ({ size = 20 }) => (
   <svg width={size} height={size} stroke-width="2" {...svgProps}>
@@ -77,7 +85,7 @@ export const NoteIcon = ({ size = 20 }) => (
   </svg>
 );
 
-/** "Cooldown" on the bar: wait a few days. */
+/** A cooldown: wait a few days. */
 export const HourglassIcon = ({ size = 20 }) => (
   <svg width={size} height={size} stroke-width="2" {...svgProps}>
     <path d="M6 3h12M6 21h12M7 3c0 5 5 6 5 9s-5 4-5 9M17 3c0 5-5 6-5 9s5 4 5 9" />

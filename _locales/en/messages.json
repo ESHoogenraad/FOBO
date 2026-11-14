@@ -455,9 +455,6 @@
   "logUrge": {
     "message": "Log urge"
   },
-  "cooldown": {
-    "message": "Cooldown"
-  },
   "barHide": {
     "message": "Hide on this site for 24 hours"
   },
@@ -465,7 +462,7 @@
     "message": "Your phone, at a glance"
   },
   "tourText_toggle": {
-    "message": "About your phone, sometimes in its own words. Click it to check your own reasons for replacing it."
+    "message": "A line about your phone. Click it to check your own reasons for replacing it."
   },
   "tourTitle_closeTab": {
     "message": "Close tab"
@@ -477,19 +474,7 @@
     "message": "Log urge"
   },
   "tourText_logUrge": {
-    "message": "Tempted? One click notes it. Click the $app$ icon in your toolbar to see what tempts you most.",
-    "placeholders": {
-      "app": {
-        "content": "$1",
-        "example": "Upgraditch"
-      }
-    }
-  },
-  "tourTitle_cooldown": {
-    "message": "Cooldown"
-  },
-  "tourText_cooldown": {
-    "message": "Still want it? Wait a few days first. $app$ asks again when the time is up.",
+    "message": "Tempted? One click notes it. Still want it? Start a cooldown from there and wait a few days first. The $app$ icon in your toolbar shows what tempts you most.",
     "placeholders": {
       "app": {
         "content": "$1",
@@ -746,6 +731,18 @@
   },
   "tileBattery_below": {
     "message": "below the 80% line"
+  },
+  "cooldownOffer": {
+    "message": "Still want it? Wait a few days first. $app$ asks again when the time is up.",
+    "placeholders": {
+      "app": {
+        "content": "$1",
+        "example": "Upgraditch"
+      }
+    }
+  },
+  "cooldownOfferStart": {
+    "message": "Start a cooldown"
   },
   "cooldownItem": {
     "message": "What do you want?"

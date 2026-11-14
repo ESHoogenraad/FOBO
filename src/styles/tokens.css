@@ -15,7 +15,12 @@
   --on-brand: #16161E;
   --ok: #9ECE6A;           /* status fine, never used for buttons */
   --warn: #E0AF68;         /* status near a limit */
-  --cooldown: #7AA2F7;     /* the bar's Cooldown button: waiting instead of buying */
+  --tour: #BB9AF7;         /* the first-run tour: the ring round the part a tip explains */
+
+  /* Button fills beside --brand, each with --on-brand text. The same in both themes, as --brand. */
+  --urge: #E0AF68;         /* "Log urge": tempted (the amber of --warn) */
+  --cooldown: #7AA2F7;     /* "Start a cooldown": waiting instead of buying */
+  --tour-fill: #BB9AF7;    /* the tour tip's Next and "Got it" */
 
   --device-1: #BB9AF7;     /* purple: the phone */
   --device-2: #7AA2F7;     /* blue */
@@ -57,7 +62,7 @@
 
   --ok: #3A7219;
   --warn: #8A5A00;
-  --cooldown: #2D63D0;
+  --tour: #7340C9;
 
   --device-1: #7340C9;
   --device-2: #2D63D0;

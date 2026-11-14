@@ -1,8 +1,8 @@
 // The bar and its card (HANDOFF section 6, items 4 to 12). A panel in the bottom-left corner:
-// the phone and the headline, then "Close tab" (primary), "Log urge" and "Cooldown" as icon
-// buttons, and hide. The phone and headline are one button that opens the card above: the
-// own-rule check, the urge's reason tags, or the cooldown form. The first time the bar
-// appears, a short tour points at each part.
+// the phone and the headline, then "Close tab" (primary) and "Log urge", each an icon with its
+// name, and hide. The phone and headline are one button that opens the card above: the
+// own-rule check, or the urge's reason tags with the offer of a cooldown, which opens the
+// cooldown form. The first time the bar appears, a short tour points at each part.
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { APP_NAME } from '../config.js';
@@ -11,19 +11,19 @@ import { DEFAULT_COOLDOWN_DAYS, MAX_COOLDOWN_DAYS } from '../lib/cooldowns.js';
 import { reasonsPhrase } from '../lib/headlines.js';
 import { formatDayMonth, formatMonthYear, formatNumber, t } from '../lib/i18n.js';
 import { ownRule } from '../lib/rule.js';
-import { ChevronIcon, CloseIcon, HourglassIcon, NoteIcon } from '../ui/icons.jsx';
+import { ChevronIcon, CloseIcon, HourglassIcon, NoteIcon, TabCloseIcon } from '../ui/icons.jsx';
 import { Rating } from '../ui/Rating.jsx';
 import { UrgeTags } from '../ui/UrgeTags.jsx';
 
 /** The tour's steps, in order: each points at the part of the bar with the same name. */
-export const TOUR_STEPS = ['toggle', 'closeTab', 'logUrge', 'cooldown', 'hide'];
+export const TOUR_STEPS = ['toggle', 'closeTab', 'logUrge', 'hide'];
 
 export function Bar({ device, headlineText, deviceMatched, item, tour, light, actions }) {
   const [panel, setPanel] = useState(null); // null | "rule" | "urge" | "cooldown"
   const [urge, setUrge] = useState(null);
   const [tourStep, setTourStep] = useState(tour ? 0 : null);
   const bar = useRef(null);
-  const targets = { toggle: useRef(null), closeTab: useRef(null), logUrge: useRef(null), cooldown: useRef(null), hide: useRef(null) };
+  const targets = { toggle: useRef(null), closeTab: useRef(null), logUrge: useRef(null), hide: useRef(null) };
   const today = todayIso();
 
   function endTour() {
@@ -108,27 +108,12 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, light, ac
         </button>
         <div class="bar-actions">
           <button ref={targets.closeTab} type="button" class={`btn btn-primary bar-close${touring('closeTab')}`} onClick={act(actions.closeTab)}>
+            <TabCloseIcon />
             {t('closeTab')}
           </button>
-          <button
-            ref={targets.logUrge}
-            type="button"
-            class={`btn btn-secondary btn-icon btn-tint bar-urge${touring('logUrge')}`}
-            aria-label={t('logUrge')}
-            title={t('logUrge')}
-            onClick={() => logUrge('bar')}
-          >
+          <button ref={targets.logUrge} type="button" class={`btn btn-fill bar-urge${touring('logUrge')}`} onClick={() => logUrge('bar')}>
             <NoteIcon />
-          </button>
-          <button
-            ref={targets.cooldown}
-            type="button"
-            class={`btn btn-secondary btn-icon btn-tint bar-cooldown${touring('cooldown')}`}
-            aria-label={t('cooldown')}
-            title={t('cooldown')}
-            onClick={() => open('cooldown')}
-          >
-            <HourglassIcon />
+            {t('logUrge')}
           </button>
           <button
             ref={targets.hide}
@@ -167,7 +152,7 @@ export function Bar({ device, headlineText, deviceMatched, item, tour, light, ac
           {panel === 'rule' && (
             <RulePanel device={device} today={today} actions={actions} onSomethingElse={() => logUrge('card')} />
           )}
-          {panel === 'urge' && <UrgePanel urge={urge} actions={actions} />}
+          {panel === 'urge' && <UrgePanel urge={urge} actions={actions} onCooldown={() => open('cooldown')} />}
           {panel === 'cooldown' && <CooldownPanel item={item} actions={actions} />}
         </section>
       )}
@@ -219,7 +204,7 @@ function TourTip({ step, bar, target, onNext, onSkip }) {
             {t('tourSkip')}
           </button>
         )}
-        <button type="button" class="btn btn-primary" onClick={onNext}>
+        <button type="button" class="btn btn-fill tour-next" onClick={onNext}>
           {last ? t('gotIt') : t('tourNext')}
         </button>
       </div>
@@ -285,13 +270,24 @@ function Tile({ tile }) {
   );
 }
 
-// ---- After "Log urge" or "Something else": the optional reason tag.
+// ---- After "Log urge" or "Something else": the optional reason tag, and under it the offer of
+// a cooldown. The offer is there from the start and stays when a tag is picked: the tag is
+// optional, so the cooldown must not wait for it. This is the only way into the cooldown form.
 
-function UrgePanel({ urge, actions }) {
+function UrgePanel({ urge, actions, onCooldown }) {
   return (
-    <div aria-live="polite" class="panel">
-      <UrgeTags titleClass="card-title" onPick={(tag) => urge && actions.tagUrge(urge, tag)} />
-    </div>
+    <>
+      <div aria-live="polite" class="panel">
+        <UrgeTags titleClass="card-title" onPick={(tag) => urge && actions.tagUrge(urge, tag)} />
+      </div>
+      <div class="offer">
+        <p class="card-text">{t('cooldownOffer', APP_NAME)}</p>
+        <button type="button" class="btn btn-fill btn-block offer-start" onClick={onCooldown}>
+          <HourglassIcon />
+          {t('cooldownOfferStart')}
+        </button>
+      </div>
+    </>
   );
 }
 

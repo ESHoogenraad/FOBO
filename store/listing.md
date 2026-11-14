@@ -14,21 +14,20 @@ Should you replace your phone? An honest answer: keep it, repair it or upgrade. 
 
 ## Full description
 
-Should you replace your phone, or is it just the itch? Upgraditch gives you an honest answer: keep it, repair it, or upgrade.
+Should you replace your phone? Upgraditch gives you an honest answer: keep it, repair it or upgrade.
 
-Tell it which phone you have and what would make you replace it. A few questions later you have a verdict, with the checks behind it. It says "upgrade" plainly when security updates have ended or your banking, ID or work apps no longer run, which is why you can believe it when it says "keep".
+Tell it which phone you have and what would make you replace it. A few questions later you have a verdict and the checks behind it. Upgraditch says "upgrade" when security updates have ended, or when your banking, ID or work apps no longer run. That is why you can believe it when it says "keep".
 
-Then it shows up when you're tempted. On a phone page on Tweakers, GSMArena, Coolblue, bol or MediaMarkt, a small bar appears in the bottom-left corner, out of the way of the site's menu and search: your phone, one short fact about it, and a "Close tab" button. Click the bar and it checks the page against the reasons you gave: battery, updates, camera and so on. It is a second opinion, not a blocker: nothing on the page is ever blocked.
+When you open a phone page on Tweakers, GSMArena, Coolblue, bol or MediaMarkt, a small bar appears in the bottom-left corner. It shows your phone, one short line about it, and two buttons: "Close tab" and "Log urge". Click the bar and it checks the page against the reasons you gave, such as battery, updates or camera. The bar is a second opinion. It never blocks anything on the page.
 
-- **Need test.** Keep it, repair it, or upgrade, with each check listed. It never hides "upgrade". "It feels slow" is checked against the battery first: a worn battery is a repair, not a new phone.
-- **Your own rule.** Tell it once what would make you replace your phone. When you're tempted, it asks you back.
-- **Cooldown.** Want something? Give it a quiet end date, 7 days by default: "Check again on 29 Oct". No countdown. At the end, it asks whether you still want it.
-- **Urge log.** One tap to note that a page tempted you.
+- **Need test.** Keep it, repair it or upgrade, with every check listed. It never hides "upgrade". "It feels slow" is checked against the battery first, because a worn battery needs a repair and not a new phone.
+- **Your own rule.** Tell it once what would make you replace your phone. When you're tempted, it asks whether this page fixes that.
+- **Urge log.** One click notes that a page tempted you. The popup shows what tempts you most.
+- **Cooldown.** Still want it after logging an urge? Start a cooldown. It lasts 7 days unless you change that. You see a date ("Check again on 29 Oct") and never a countdown. When the date comes, it asks whether you still want it.
 - **Milestones.** 2, 3, 4 and 5 years with your phone, and the day its security updates end.
-- **Pause** for a day, a week, or until you switch it back on, for when the answer is "upgrade" or you're shopping for someone else.
+- **Pause.** Switch it off for a day, for a week, or until you switch it back on. Useful when the answer is "upgrade" or you're shopping for someone else.
 
-Private by design: no account, and your data stays in your browser. It looks only at pages on the sites you allow, and only at their address and title. It looks up the end of security updates on endoflife.date without sending your phone's name. Optional anonymous counts help test which wording in the bar works; they are off unless you switch them on. Open source.
-
+Private by design. There is no account, and your data stays in your browser. Upgraditch looks only at pages on the sites you allow, and there only at the address and title. It looks up the end of security updates on endoflife.date without sending your phone's name. Anonymous counts help test which wording in the bar works. They are optional and off unless you switch them on. The code is open source.
 
 ## Category
 
@@ -57,7 +56,7 @@ Private by design: no account, and your data stays in your browser. It looks onl
 
 ## Firefox Add-ons: notes for reviewers
 
-The code is bundled with Vite but not minified (`scripts/build.js`). Source code is uploaded with each version (`npm run package:source`). To build: Node 22, `npm ci`, `npm run build`; the output is `dist/`.
+The code is bundled with Vite but not minified (`scripts/build.js`). Source code is uploaded with each version (`npm run package:source`). To build: Linux or macOS with Node 22 or later (from nodejs.org; npm comes with it), `npm ci`, `npm run build`; the output is `dist/`, and `npm run package` zips it. Mozilla asks for the operating system and the tool versions, so name the ones used for that build in the notes (0.1.0: Linux, Node 22.23.1, npm 10.9.8).
 
 Data collection is declared in `manifest.json` (`data_collection_permissions`: required none, optional `technicalAndInteraction`). Switching the counts on asks for Firefox's data consent.
 
@@ -67,8 +66,8 @@ Data collection is declared in `manifest.json` (`data_collection_permissions`: r
 
 Chrome Web Store: 1280×800, up to 5. AMO: any size, 1280×800 works. In `store/screenshots/`:
 
-1. `1-bar.png`: the bar on a phone page
-2. `2-card.png`: the card with the user's own rule
+1. `1-bar.png`: the bar on a phone page (a light page, so the dark bar)
+2. `2-card.png`: the card with the user's own rule, on the same page in the site's dark theme (so the light bar)
 3. `3-popup.png`: the popup
 4. `4-need-test.png`: the need test result
 5. `5-onboarding.png`: setup, step 1

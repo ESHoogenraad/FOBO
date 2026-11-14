@@ -99,6 +99,6 @@ The cooldown's data model (want rating at the start and the end, adjustable leng
 ### Checkpoint C (1 to 2 weeks later)
 
 - Mean change from `wantStart` to `wantEnd`, paired per cooldown, and the share of outcomes
-- Rule: want ratings fall on average and most cooldowns end dropped or expired, so keep the cooldown. Ratings don't fall and most end in a purchase: the cooldown only delays, so stop promoting it on the bar
+- Rule: want ratings fall on average and most cooldowns end dropped or expired, so keep the cooldown. Ratings don't fall and most end in a purchase: the cooldown only delays, so stop offering it after an urge
 
-With 30 users, expect somewhere between 10 and 40 cooldowns. Read the result as a direction, not a finding.
+With 30 users, expect somewhere between 10 and 40 cooldowns. Read the result as a direction, not a finding. Since 14 Nov 2026 a cooldown starts only from the urge panel (HANDOFF section 6, item 10), not from a button on the bar, so expect the low end, and every `cooldown_started` follows an `urge_logged`.

@@ -168,7 +168,7 @@ Kit with setup checklist, session script and observation sheet: [research/B3 Pro
 - Their reaction to the permission prompt
 - Whether they notice the bar, and whether they read it
 - Whether it gets in the way of the page
-- What they expect "Close tab", "Log urge" and "Cooldown" to do
+- What they expect "Close tab" and "Log urge" to do, and "Start a cooldown" in the card after an urge
 - What they do after opening the card
 - Whether the page stays fast, and whether anything freezes. Run at least one session in Brave: in one sec's reviews, freezes and bypasses are what earn 1 star
 - How they read the cost line ("€19.14 a month so far, and falling"): as a reason to keep the phone, or as a reason to sell or trade it in while it's still worth something (A10, Reddit)
@@ -199,7 +199,7 @@ Build spec with the event schema, headline randomisation and analysis steps: [re
 - One headline clearly below the others on tabs closed: drop it (B)
 - Tabs closed or cards opened falling week by week: habituation. Vary more, show the bar less often (B)
 - Fewer than 6 in 10 who finish onboarding grant the permission: the permission step is the bottleneck (B)
-- Want ratings fall on average and most cooldowns end dropped or expired: keep the cooldown. Ratings don't fall and most end in a purchase: the cooldown only delays; stop promoting it on the bar and keep the card and urge log as the core (C)
+- Want ratings fall on average and most cooldowns end dropped or expired: keep the cooldown. Ratings don't fall and most end in a purchase: the cooldown only delays; stop offering it after an urge and keep the card and urge log as the core (C)
 
 ## Checkpoints and timeline
 
