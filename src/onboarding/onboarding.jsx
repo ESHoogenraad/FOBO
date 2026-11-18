@@ -10,7 +10,7 @@ import browser from 'webextension-polyfill';
 import { APP_NAME, DEMO_PAGE_URL } from '../config.js';
 import { parsePrice, pausedUntilFor, purchaseDateFor, todayIso } from '../lib/calc.js';
 import { eolFields } from '../lib/eol.js';
-import { detectBrowser } from '../lib/env.js';
+import { createTabBeside, detectBrowser } from '../lib/env.js';
 import { recordEvent } from '../lib/events.js';
 import { formatMonthYear, locale, localizePage, t } from '../lib/i18n.js';
 import { DEFAULT_ORIGINS, DEFAULT_SITES, siteForHost } from '../lib/match.js';
@@ -470,7 +470,7 @@ function DoneStep({ granted, browserName }) {
     opening.current = true;
     try {
       const [tab] = await Promise.all([browser.tabs.getCurrent(), markDemo()]);
-      await browser.tabs.create({ url: DEMO_PAGE_URL, ...(tab ? { index: tab.index + 1, openerTabId: tab.id } : {}) });
+      await createTabBeside(DEMO_PAGE_URL, tab);
       setDemoOpened(true); // seen once: Close is the next step now
     } catch {
       opening.current = false; // no page opened: the button stays, to try again

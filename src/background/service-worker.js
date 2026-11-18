@@ -6,7 +6,7 @@ import { UNINSTALL_SURVEY_URL } from '../config.js';
 import { todayIso } from '../lib/calc.js';
 import { isDue } from '../lib/cooldowns.js';
 import { currentMilestone } from '../lib/milestones.js';
-import { detectBrowser } from '../lib/env.js';
+import { createTabBeside, detectBrowser } from '../lib/env.js';
 import { eolFields, lookupEol } from '../lib/eol.js';
 import { dataConsentChange, pruneEvents, recordEvent, saveCountsOptIn, uploadPending } from '../lib/events.js';
 import { SITES } from '../lib/match.js';
@@ -160,7 +160,7 @@ browser.runtime.onMessage.addListener((message, sender) => {
   if (message?.type === 'closeTab') return browser.tabs.remove(sender.tab.id);
   if (message?.type === 'openOnboarding' && ONBOARDING_STEPS.includes(message.step)) {
     const url = browser.runtime.getURL(`onboarding/onboarding.html#${message.step}`);
-    return browser.tabs.create({ url, index: sender.tab.index + 1, openerTabId: sender.tab.id });
+    return createTabBeside(url, sender.tab);
   }
   return undefined;
 });

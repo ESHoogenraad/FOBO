@@ -230,7 +230,9 @@ p {
   background: var(--surface);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  /* Lifted upward, not down like the card's: the tip is a child of the bar, so a downward shadow
+     painted a grey smear over the bar's phone row. This one fades out within the 12 px gap. */
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .tour::before {

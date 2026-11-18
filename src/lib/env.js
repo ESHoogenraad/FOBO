@@ -19,3 +19,19 @@ export async function detectBrowser() {
   if (brands.includes('Google Chrome') || brands.includes('Chromium')) return 'chrome';
   return 'other';
 }
+
+/**
+ * Opens `url` in a new tab right after `tab` and as its child, so closing the new tab leads back.
+ * Firefox for Android supports neither placement option and rejects the whole call for
+ * `openerTabId`, so there the page opens in a plain new tab.
+ */
+export async function createTabBeside(url, tab) {
+  if (tab) {
+    try {
+      return await browser.tabs.create({ url, index: tab.index + 1, openerTabId: tab.id });
+    } catch {
+      // Firefox for Android: fall through.
+    }
+  }
+  return browser.tabs.create({ url });
+}
